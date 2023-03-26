@@ -16,8 +16,9 @@ public class DAOUser {
 	@Column
 	@JsonIgnore
 	private String password;
-	
+	@Column
 	private String usertype;
+	@Column
 	private boolean userstatus;
 	
 	public String getUsername() {
@@ -36,7 +37,7 @@ public class DAOUser {
 		this.password = password;
 	}
 
-	public String getUseryype() {
+	public String getUsertype() {
 		return usertype;
 	}
 	
