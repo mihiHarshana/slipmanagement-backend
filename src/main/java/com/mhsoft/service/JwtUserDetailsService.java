@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -61,10 +62,10 @@ public class JwtUserDetailsService implements UserDetailsService {
 			newUser.setUserType(user.getUsertype());
 			userDao.save(newUser);
 			Utils util = new Utils();
-			return util.JsonMessage("User registration successfull", "OK").toString();
+			return util.JsonMessage("User registration successfull", HttpStatus.ACCEPTED).toString();
 		} 
 		Utils util = new Utils();
-		return   util.JsonMessage("User Already Exists", "OK").toString();
+		return   util.JsonMessage("User Already Exists", HttpStatus.ACCEPTED).toString();
 		
 
 	}
