@@ -15,6 +15,7 @@ import com.fasterxml.jackson.databind.util.JSONPObject;
 import com.mhsoft.dao.UserDao;
 import com.mhsoft.model.DAOUser;
 import com.mhsoft.model.UserDTO;
+import com.mhsoft.utils.Utils;
 
 @Service
 public class JwtUserDetailsService implements UserDetailsService {
@@ -52,22 +53,19 @@ public class JwtUserDetailsService implements UserDetailsService {
 	public String save(UserDTO user) {
 
 		DAOUser tempUser = userDao.findByUsername(user.getUsername());
-		if (tempUser == null) {
+		if (tempUser == null ) {
 			DAOUser newUser = new DAOUser();
 			newUser.setUsername(user.getUsername());
 			newUser.setPassword(bcryptEncoder.encode(user.getPassword()));
 			newUser.setUserstatus(user.getUserStatus());
 			newUser.setUserType(user.getUsertype());
 			userDao.save(newUser);
-			JSONObject jo = new JSONObject();
-			jo.put("message", "User registration successfull");
-			jo.put("Status", "OK");
-			return jo.toString();
+			Utils util = new Utils();
+			return util.JsonMessage("User registration successfull", "OK").toString();
 		} 
-		JSONObject jo = new JSONObject();
-		jo.put("message", "User registed already exists.");
-		jo.put("Status", "OK");
-		return jo.toString();
+		Utils util = new Utils();
+		return   util.JsonMessage("User Already Exists", "OK").toString();
+		
 
 	}
 }
