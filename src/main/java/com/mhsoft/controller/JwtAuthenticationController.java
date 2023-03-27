@@ -2,6 +2,7 @@ package com.mhsoft.controller;
 
 import java.util.Objects;
 
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -39,17 +40,23 @@ public class JwtAuthenticationController {
 
 		authenticate(authenticationRequest.getUsername(), authenticationRequest.getPassword());
 
-		final UserDetails userDetails = userDetailsService
-				.loadUserByUsername(authenticationRequest.getUsername());
+		final UserDetails userDetails = userDetailsService.loadUserByUsername(authenticationRequest.getUsername());
 
 		final String token = jwtTokenUtil.generateToken(userDetails);
 
 		return ResponseEntity.ok(new JwtResponse(token));
 	}
-	
+
+	/*
+	 * @RequestMapping(value = "/register", method = RequestMethod.POST) public
+	 * ResponseEntity<?> saveUser(@RequestBody UserDTO user) throws Exception {
+	 * return ResponseEntity.ok(userDetailsService.save(user)); }
+	 */
 	@RequestMapping(value = "/register", method = RequestMethod.POST)
-	public ResponseEntity<?> saveUser(@RequestBody UserDTO user) throws Exception {
-		return ResponseEntity.ok(userDetailsService.save(user));
+	public String saveUser(@RequestBody UserDTO user) {
+		String jo = userDetailsService.save(user);
+
+		return jo;
 	}
 
 	private void authenticate(String username, String password) throws Exception {
