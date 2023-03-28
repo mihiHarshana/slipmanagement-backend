@@ -1,19 +1,18 @@
 package com.mhsoft.utils;
 
 import org.json.JSONObject;
+import org.springframework.http.HttpStatus;
 
 public class Utils {
 	
 	String message;
-	String statusCode;
+	HttpStatus statusCode;
 	
 	final String MESSAGE = "message";
 	final String STATUS_CODE= "status-code";
 	
 	
-	public String JsonMessage (String message, String statusCode) {
-		
-	
+	public String JsonMessage (String message, HttpStatus statusCode) {
 		
 		this.message = message;
 		this.statusCode = statusCode;
@@ -25,6 +24,7 @@ public class Utils {
 		return jo.toString();
 		
 	}
+	
 	
    
     

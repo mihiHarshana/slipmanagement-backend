@@ -2,6 +2,9 @@ package com.mhsoft.controller;
 
 import java.util.Objects;
 
+import javax.print.attribute.standard.DateTimeAtCompleted;
+
+import org.apache.tomcat.jni.Time;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -35,16 +38,39 @@ public class JwtAuthenticationController {
 	@Autowired
 	private JwtUserDetailsService userDetailsService;
 
+	/*
+	 * @RequestMapping(value = "/authenticate", method = RequestMethod.POST) public
+	 * ResponseEntity<?> createAuthenticationToken(@RequestBody JwtRequest
+	 * authenticationRequest) throws Exception {
+	 * 
+	 * authenticate(authenticationRequest.getUsername(),
+	 * authenticationRequest.getPassword());
+	 * 
+	 * final UserDetails userDetails =
+	 * userDetailsService.loadUserByUsername(authenticationRequest.getUsername());
+	 * 
+	 * final String token = jwtTokenUtil.generateToken(userDetails);
+	 * 
+	 * return ResponseEntity.ok(new JwtResponse(token)); }
+	 */
+	
+	
 	@RequestMapping(value = "/authenticate", method = RequestMethod.POST)
-	public ResponseEntity<?> createAuthenticationToken(@RequestBody JwtRequest authenticationRequest) throws Exception {
+	public String createAuthenticationToken(@RequestBody JwtRequest authenticationRequest) throws Exception {
 
 		authenticate(authenticationRequest.getUsername(), authenticationRequest.getPassword());
 
 		final UserDetails userDetails = userDetailsService.loadUserByUsername(authenticationRequest.getUsername());
 
 		final String token = jwtTokenUtil.generateToken(userDetails);
+		
+		
+		JSONObject jo = new JSONObject();
+		jo.put("token", token);
+		jo.put("mobile", userDetails.getUsername());
+		jo.put("logintime", System.currentTimeMillis());
 
-		return ResponseEntity.ok(new JwtResponse(token));
+		return jo.toString();
 	}
 
 	/*
