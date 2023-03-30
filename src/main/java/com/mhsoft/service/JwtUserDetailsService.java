@@ -1,22 +1,18 @@
 package com.mhsoft.service;
 
-import java.util.ArrayList;
-
-import org.json.JSONObject;
+import com.mhsoft.dao.UserDao;
+import com.mhsoft.model.DAOUser;
+import com.mhsoft.model.UserDTO;
+import com.mhsoft.utils.Utils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import com.fasterxml.jackson.databind.util.JSONPObject;
-import com.mhsoft.dao.UserDao;
-import com.mhsoft.model.DAOUser;
-import com.mhsoft.model.UserDTO;
-import com.mhsoft.utils.Utils;
+import java.util.ArrayList;
 
 @Service
 public class JwtUserDetailsService implements UserDetailsService {
@@ -37,20 +33,6 @@ public class JwtUserDetailsService implements UserDetailsService {
 				new ArrayList<>());
 	}
 
-	/*
-	 * public JSONObject checkUserAvailable(String username) { DAOUser user =
-	 * userDao.findByUsername(username); if (user != null) {
-	 * 
-	 * JSONObject jo = new JSONObject(); jo.put("message", "User not available.");
-	 * jo.put("stauts", "OK");
-	 * 
-	 * return jo; }
-	 * 
-	 * return new JSONObject();
-	 * 
-	 * }
-	 */
-
 	public String save(UserDTO user) {
 
 		DAOUser tempUser = userDao.findByUsername(user.getUsername());
@@ -58,7 +40,7 @@ public class JwtUserDetailsService implements UserDetailsService {
 			DAOUser newUser = new DAOUser();
 			newUser.setUsername(user.getUsername());
 			newUser.setPassword(bcryptEncoder.encode(user.getPassword()));
-			newUser.setUserstatus(user.getUserStatus());
+			newUser.setUserstatus("PENDING");
 			newUser.setUserType(user.getUsertype());
 			userDao.save(newUser);
 			Utils util = new Utils();

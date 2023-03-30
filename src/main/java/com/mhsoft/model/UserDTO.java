@@ -4,7 +4,7 @@ public class UserDTO {
 	private String username;
 	private String password;
 	private String usertype;
-	private boolean userstatus;
+	private String userstatus;
 
 	public String getUsername() {
 		return username;
@@ -30,11 +30,11 @@ public class UserDTO {
 		this.usertype = usertype;
 	}
 	
-	public void setUserstatus(boolean userstatus) {
+	public void setUserstatus(String userstatus) {
 		this.userstatus = userstatus;
 	}
 	
-	public Boolean  getUserStatus() {
+	public String  getUserStatus() {
 		return userstatus;
 	}
 }

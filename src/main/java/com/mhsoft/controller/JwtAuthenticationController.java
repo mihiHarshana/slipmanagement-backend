@@ -1,106 +1,101 @@
 package com.mhsoft.controller;
 
-import java.util.Objects;
-
-import javax.print.attribute.standard.DateTimeAtCompleted;
-
+import com.mhsoft.config.JwtTokenUtil;
+import com.mhsoft.model.DAOUser;
+import com.mhsoft.model.JwtRequest;
+import com.mhsoft.model.UserDTO;
+import com.mhsoft.repo.UserRepo;
+import com.mhsoft.service.JwtUserDetailsService;
 import com.mhsoft.utils.Utils;
-import com.mysql.cj.util.Util;
-import org.apache.tomcat.jni.Time;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.ui.context.support.UiApplicationContextUtils;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
-
-import com.mhsoft.config.JwtTokenUtil;
-import com.mhsoft.model.JwtRequest;
-import com.mhsoft.model.JwtResponse;
-import com.mhsoft.model.UserDTO;
-import com.mhsoft.service.JwtUserDetailsService;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @CrossOrigin
 public class JwtAuthenticationController {
 
-	@Autowired
-	private AuthenticationManager authenticationManager;
+    @Autowired
+    private AuthenticationManager authenticationManager;
 
-	@Autowired
-	private JwtTokenUtil jwtTokenUtil;
+    @Autowired
+    private JwtTokenUtil jwtTokenUtil;
 
-	@Autowired
-	private JwtUserDetailsService userDetailsService;
+    @Autowired
+    private JwtUserDetailsService userDetailsService;
 
-	/*
-	 * @RequestMapping(value = "/authenticate", method = RequestMethod.POST) public
-	 * ResponseEntity<?> createAuthenticationToken(@RequestBody JwtRequest
-	 * authenticationRequest) throws Exception {
-	 * 
-	 * authenticate(authenticationRequest.getUsername(),
-	 * authenticationRequest.getPassword());
-	 * 
-	 * final UserDetails userDetails =
-	 * userDetailsService.loadUserByUsername(authenticationRequest.getUsername());
-	 * 
-	 * final String token = jwtTokenUtil.generateToken(userDetails);
-	 * 
-	 * return ResponseEntity.ok(new JwtResponse(token)); }
-	 */
-	
-	
-	@RequestMapping(value = "/login", method = RequestMethod.POST)
-	public String createAuthenticationToken(@RequestBody JwtRequest authenticationRequest) throws Exception {
-		try {
-			authenticate(authenticationRequest.getUsername(), authenticationRequest.getPassword());
-
-			final UserDetails userDetails = userDetailsService.loadUserByUsername(authenticationRequest.getUsername());
-
-			final String token = jwtTokenUtil.generateToken(userDetails);
+    @Autowired
+    private UserRepo userRepo;
 
 
-			JSONObject jo = new JSONObject();
-			jo.put("token", token);
-			jo.put("mobile", userDetails.getUsername());
-			jo.put("logintime", System.currentTimeMillis());
+    @RequestMapping(value = "/login", method = RequestMethod.POST)
+    public String createAuthenticationToken(@RequestBody JwtRequest authenticationRequest) throws Exception {
+        Utils utils = new Utils();
+        try {
+            authenticate(authenticationRequest.getUsername(), authenticationRequest.getPassword());
+            final UserDetails userDetails = userDetailsService.loadUserByUsername(authenticationRequest.getUsername());
 
-			return jo.toString();
-		} catch (Exception e){
-			Utils utils = new Utils();
-			return  utils.JsonMessage("Invalid Credentails", HttpStatus.ACCEPTED);
-		}
+            final String token = jwtTokenUtil.generateToken(userDetails);
+            DAOUser daoUser = userRepo.getUserByUserName(authenticationRequest.getUsername());
 
-	}
+            if (daoUser != null) {
+                if (daoUser.getUserStatus().equals("APPROVED")) {
+                    JSONObject jo = new JSONObject();
+                    jo.put("token", token);
+                    jo.put("mobile", daoUser.getUsername());
+                    jo.put("logintime", System.currentTimeMillis());
+                    jo.put("usertype", daoUser.getUsertype());
+                    jo.put("userstatus", daoUser.getUserStatus());
 
-	/*
-	 * @RequestMapping(value = "/register", method = RequestMethod.POST) public
-	 * ResponseEntity<?> saveUser(@RequestBody UserDTO user) throws Exception {
-	 * return ResponseEntity.ok(userDetailsService.save(user)); }
-	 */
-	@RequestMapping(value = "/register", method = RequestMethod.POST)
-	public String saveUser(@RequestBody UserDTO user) {
-		String jo = userDetailsService.save(user);
+                    return jo.toString();
+                } else if (daoUser.getUserStatus().equals("PENDING")) {
+                    return utils.JsonMessage("User Not approved", HttpStatus.NOT_ACCEPTABLE);
+                } else if (daoUser.getUserStatus().equals("SUSPENDED")) {
+                    return utils.JsonMessage("User is Suspended", HttpStatus.NOT_ACCEPTABLE);
+                }else if (daoUser.getUserStatus().equals("DEACTIVATED")) {
+                    return utils.JsonMessage("User Deactivated", HttpStatus.NOT_ACCEPTABLE);
+                }
 
-		return jo;
-	}
+                else  {
+                    return utils.JsonMessage("Unknow status ", HttpStatus.NOT_ACCEPTABLE);
+                }
 
-	private void authenticate(String username, String password) throws Exception {
-		try {
-			authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, password));
-		} catch (DisabledException e) {
-			throw new Exception("USER_DISABLED", e);
-		} catch (BadCredentialsException e) {
-			throw new Exception("INVALID_CREDENTIALS", e);
-		}
-	}
+            } else {
+                return utils.JsonMessage("User Not available", HttpStatus.NOT_ACCEPTABLE);
+            }
+
+        } catch (Exception e) {
+
+            return utils.JsonMessage("Invalid Credentails", HttpStatus.ACCEPTED);
+        }
+
+    }
+
+    /*
+     * @RequestMapping(value = "/register", method = RequestMethod.POST) public
+     * ResponseEntity<?> saveUser(@RequestBody UserDTO user) throws Exception {
+     * return ResponseEntity.ok(userDetailsService.save(user)); }
+     */
+    @RequestMapping(value = "/register", method = RequestMethod.POST)
+    public String saveUser(@RequestBody UserDTO user) {
+        String jo = userDetailsService.save(user);
+
+        return jo;
+    }
+
+    private void authenticate(String username, String password) throws Exception {
+        try {
+            authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, password));
+        } catch (DisabledException e) {
+            throw new Exception("USER_DISABLED", e);
+        } catch (BadCredentialsException e) {
+            throw new Exception("INVALID_CREDENTIALS", e);
+        }
+    }
 }
