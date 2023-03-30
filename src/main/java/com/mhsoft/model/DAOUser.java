@@ -19,7 +19,7 @@ public class DAOUser {
 	@Column
 	private String usertype;
 	@Column
-	private boolean userstatus;
+	private String userstatus;
 	
 	public String getUsername() {
 		return username;
@@ -41,11 +41,11 @@ public class DAOUser {
 		return usertype;
 	}
 	
-	public boolean  getUserStatus() {
+	public String  getUserStatus() {
 		return userstatus;
 	}
 	
-	public void setUserstatus(boolean userstatus) {
+	public void setUserstatus(String userstatus) {
 		this.userstatus = userstatus;
 	}
 	
