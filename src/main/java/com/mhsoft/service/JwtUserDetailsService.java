@@ -11,6 +11,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 
@@ -48,7 +49,21 @@ public class JwtUserDetailsService implements UserDetailsService {
 		} 
 		Utils util = new Utils();
 		return   util.JsonMessage("User Already Exists", HttpStatus.ACCEPTED).toString();
-		
+		}
 
+
+	public String update(UserDTO user) {
+		DAOUser tempUser = userDao.findByUsername(user.getUsername());
+	//	if (tempUser == null ) {
+			DAOUser newUser = new DAOUser();
+			newUser.setUserId(tempUser.getUserid());
+			newUser.setUsername(user.getUsername());
+			newUser.setPassword(bcryptEncoder.encode(user.getPassword()));
+			newUser.setUserstatus(user.getUserStatus());
+			newUser.setUserType(user.getUsertype());
+			userDao.save(newUser);
+			Utils util = new Utils();
+			return util.JsonMessage("User details updated successfull", HttpStatus.ACCEPTED).toString();
+		//}
 	}
 }

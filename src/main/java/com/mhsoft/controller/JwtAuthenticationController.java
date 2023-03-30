@@ -85,7 +85,12 @@ public class JwtAuthenticationController {
     @RequestMapping(value = "/register", method = RequestMethod.POST)
     public String saveUser(@RequestBody UserDTO user) {
         String jo = userDetailsService.save(user);
+        return jo;
+    }
 
+    @RequestMapping(value = "/update", method = RequestMethod.POST)
+    public String updateUser(@RequestBody UserDTO user) {
+        String jo = userDetailsService.update(user);
         return jo;
     }
 
