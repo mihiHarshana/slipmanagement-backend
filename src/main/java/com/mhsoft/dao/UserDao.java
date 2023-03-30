@@ -9,5 +9,7 @@ import com.mhsoft.model.DAOUser;
 public interface UserDao extends CrudRepository<DAOUser, Integer> {
 	
 	DAOUser findByUsername(String username);
+
+
 	
 }
