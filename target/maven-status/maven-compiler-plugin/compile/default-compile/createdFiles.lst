@@ -1,5 +1,8 @@
 com\mhsoft\config\JwtTokenUtil.class
+com\mhsoft\entity\User.class
+com\mhsoft\service\UserService.class
 com\mhsoft\model\JwtRequest.class
+com\mhsoft\repo\UserRepo.class
 com\mhsoft\config\JwtRequestFilter.class
 com\mhsoft\controller\JwtAuthenticationController.class
 com\mhsoft\model\JwtResponse.class
@@ -7,8 +10,10 @@ com\mhsoft\config\JwtAuthenticationEntryPoint.class
 com\mhsoft\service\JwtUserDetailsService.class
 com\mhsoft\SpringBootSlipManagementBackEnd.class
 com\mhsoft\model\UserDTO.class
-com\mhsoft\dao\UserDao.class
+com\mhsoft\controller\UserController.class
 com\mhsoft\controller\HelloWorldController.class
-com\mhsoft\model\DAOUser.class
+com\mhsoft\service\UserService$Types.class
 com\mhsoft\config\WebSecurityConfig.class
 com\mhsoft\utils\Utils.class
+com\mhsoft\service\UserService$Status.class
+com\mhsoft\dto\UserDTO.class

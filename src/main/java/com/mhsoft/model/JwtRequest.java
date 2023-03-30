@@ -17,12 +17,11 @@ public class JwtRequest implements Serializable {
 		
 	}
 
-	public JwtRequest(String username, String password, boolean status, String type) {
+	public JwtRequest(String username, String password) {
 		this.setUsername(username);
 		this.setPassword(password);
-		this.setStatus(status);
-		this.setType(type);
-		
+
+
 	}
 
 	public String getUsername() {
@@ -41,19 +40,5 @@ public class JwtRequest implements Serializable {
 		this.password = password;
 	}
 	
-	public String getType() {
-		return type;
-	}
-	
-	public boolean getStatus () {
-		return status;
-	}
-	
-	public void setType(String type) {
-		this.type=type;
-	}
-	
-	public void setStatus (Boolean status ) {
-		this.status = status;
-	}
+
 }

@@ -4,6 +4,7 @@ import java.util.Objects;
 
 import javax.print.attribute.standard.DateTimeAtCompleted;
 
+import com.mhsoft.dto.UserDTO;
 import com.mhsoft.utils.Utils;
 import com.mysql.cj.util.Util;
 import org.apache.tomcat.jni.Time;
@@ -26,7 +27,6 @@ import org.springframework.web.bind.annotation.RestController;
 import com.mhsoft.config.JwtTokenUtil;
 import com.mhsoft.model.JwtRequest;
 import com.mhsoft.model.JwtResponse;
-import com.mhsoft.model.UserDTO;
 import com.mhsoft.service.JwtUserDetailsService;
 
 @RestController
@@ -42,31 +42,17 @@ public class JwtAuthenticationController {
 	@Autowired
 	private JwtUserDetailsService userDetailsService;
 
-	/*
-	 * @RequestMapping(value = "/authenticate", method = RequestMethod.POST) public
-	 * ResponseEntity<?> createAuthenticationToken(@RequestBody JwtRequest
-	 * authenticationRequest) throws Exception {
-	 * 
-	 * authenticate(authenticationRequest.getUsername(),
-	 * authenticationRequest.getPassword());
-	 * 
-	 * final UserDetails userDetails =
-	 * userDetailsService.loadUserByUsername(authenticationRequest.getUsername());
-	 * 
-	 * final String token = jwtTokenUtil.generateToken(userDetails);
-	 * 
-	 * return ResponseEntity.ok(new JwtResponse(token)); }
-	 */
+
+
 	
-	
-	@RequestMapping(value = "/login", method = RequestMethod.POST)
-	public String createAuthenticationToken(@RequestBody JwtRequest authenticationRequest) throws Exception {
+	@RequestMapping(value = "/login2", method = RequestMethod.POST)
+	public String createAuthenticationToken(@RequestBody UserDTO authenticationRequest) throws Exception {
 		try {
 			authenticate(authenticationRequest.getUsername(), authenticationRequest.getPassword());
 
 			final UserDetails userDetails = userDetailsService.loadUserByUsername(authenticationRequest.getUsername());
 
-			final String token = jwtTokenUtil.generateToken(userDetails);
+			final String token = jwtTokenUtil.generateToken(authenticationRequest.getUsername()); // now hardcoded
 
 
 			JSONObject jo = new JSONObject();
@@ -87,12 +73,12 @@ public class JwtAuthenticationController {
 	 * ResponseEntity<?> saveUser(@RequestBody UserDTO user) throws Exception {
 	 * return ResponseEntity.ok(userDetailsService.save(user)); }
 	 */
-	@RequestMapping(value = "/register", method = RequestMethod.POST)
+/*	@RequestMapping(value = "/register", method = RequestMethod.POST)
 	public String saveUser(@RequestBody UserDTO user) {
 		String jo = userDetailsService.save(user);
 
 		return jo;
-	}
+	}*/
 
 	private void authenticate(String username, String password) throws Exception {
 		try {
