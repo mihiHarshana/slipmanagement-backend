@@ -11,59 +11,54 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 
 @Service
 public class JwtUserDetailsService implements UserDetailsService {
 
-	@Autowired
-	private UserDao userDao;
+    @Autowired
+    private UserDao userDao;
 
-	@Autowired
-	private PasswordEncoder bcryptEncoder;
+    @Autowired
+    private PasswordEncoder bcryptEncoder;
 
-	@Override
-	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-		DAOUser user = userDao.findByUsername(username);
-		if (user == null) {
-			throw new UsernameNotFoundException("User not found with username: " + username);
-		}
-		return new org.springframework.security.core.userdetails.User(user.getUsername(), user.getPassword(),
-				new ArrayList<>());
-	}
+    @Override
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        DAOUser user = userDao.findByUsername(username);
+        if (user == null) {
+            throw new UsernameNotFoundException("User not found with username: " + username);
+        }
+        return new org.springframework.security.core.userdetails.User(user.getUsername(), user.getPassword(),
+                new ArrayList<>());
+    }
 
-	public String save(UserDTO user) {
+    public String save(UserDTO user) {
 
-		DAOUser tempUser = userDao.findByUsername(user.getUsername());
-		if (tempUser == null ) {
-			DAOUser newUser = new DAOUser();
-			newUser.setUsername(user.getUsername());
-			newUser.setPassword(bcryptEncoder.encode(user.getPassword()));
-			newUser.setUserstatus("PENDING");
-			newUser.setUserType(user.getUsertype());
-			userDao.save(newUser);
-			Utils util = new Utils();
-			return util.JsonMessage("User registration successfull", HttpStatus.ACCEPTED).toString();
-		} 
-		Utils util = new Utils();
-		return   util.JsonMessage("User Already Exists", HttpStatus.ACCEPTED).toString();
-		}
-
-
-	public String update(UserDTO user) {
-		DAOUser tempUser = userDao.findByUsername(user.getUsername());
-	//	if (tempUser == null ) {
-			DAOUser newUser = new DAOUser();
-			newUser.setUserId(tempUser.getUserid());
-			newUser.setUsername(user.getUsername());
-			newUser.setPassword(bcryptEncoder.encode(user.getPassword()));
-			newUser.setUserstatus(user.getUserStatus());
-			newUser.setUserType(user.getUsertype());
-			userDao.save(newUser);
-			Utils util = new Utils();
-			return util.JsonMessage("User details updated successfull", HttpStatus.ACCEPTED).toString();
-		//}
-	}
+        DAOUser tempUser = userDao.findByUsername(user.getUsername());
+        if (tempUser == null) {
+            DAOUser newUser = new DAOUser();
+            newUser.setUsername(user.getUsername());
+            newUser.setPassword(bcryptEncoder.encode(user.getPassword()));
+            newUser.setUserstatus("PENDING");
+            newUser.setUserType(user.getUsertype());
+            userDao.save(newUser);
+            Utils util = new Utils();
+            return util.JsonMessage("User registration successfull", HttpStatus.ACCEPTED).toString();
+        }
+        Utils util = new Utils();
+        return util.JsonMessage("User Already Exists", HttpStatus.ACCEPTED).toString();
+    }
+    public String update(UserDTO user) {
+        DAOUser tempUser = userDao.findByUsername(user.getUsername());
+        DAOUser newUser = new DAOUser();
+        newUser.setUserId(tempUser.getUserid());
+        newUser.setUsername(user.getUsername());
+        newUser.setPassword(bcryptEncoder.encode(user.getPassword()));
+        newUser.setUserstatus(user.getUserStatus());
+        newUser.setUserType(user.getUsertype());
+        userDao.save(newUser);
+        Utils util = new Utils();
+        return util.JsonMessage("User details updated successfull", HttpStatus.ACCEPTED).toString();
+    }
 }

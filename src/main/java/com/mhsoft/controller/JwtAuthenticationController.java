@@ -33,7 +33,6 @@ public class JwtAuthenticationController {
     @Autowired
     private UserRepo userRepo;
 
-
     @RequestMapping(value = "/login", method = RequestMethod.POST)
     public String createAuthenticationToken(@RequestBody JwtRequest authenticationRequest) throws Exception {
         Utils utils = new Utils();
@@ -58,30 +57,20 @@ public class JwtAuthenticationController {
                     return utils.JsonMessage("User Not approved", HttpStatus.NOT_ACCEPTABLE);
                 } else if (daoUser.getUserStatus().equals("SUSPENDED")) {
                     return utils.JsonMessage("User is Suspended", HttpStatus.NOT_ACCEPTABLE);
-                }else if (daoUser.getUserStatus().equals("DEACTIVATED")) {
+                } else if (daoUser.getUserStatus().equals("DEACTIVATED")) {
                     return utils.JsonMessage("User Deactivated", HttpStatus.NOT_ACCEPTABLE);
-                }
-
-                else  {
+                } else {
                     return utils.JsonMessage("Unknow status ", HttpStatus.NOT_ACCEPTABLE);
                 }
 
             } else {
                 return utils.JsonMessage("User Not available", HttpStatus.NOT_ACCEPTABLE);
             }
-
         } catch (Exception e) {
-
             return utils.JsonMessage("Invalid Credentails", HttpStatus.ACCEPTED);
         }
-
     }
 
-    /*
-     * @RequestMapping(value = "/register", method = RequestMethod.POST) public
-     * ResponseEntity<?> saveUser(@RequestBody UserDTO user) throws Exception {
-     * return ResponseEntity.ok(userDetailsService.save(user)); }
-     */
     @RequestMapping(value = "/register", method = RequestMethod.POST)
     public String saveUser(@RequestBody UserDTO user) {
         String jo = userDetailsService.save(user);
