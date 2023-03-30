@@ -6,9 +6,13 @@ public class UserDTO {
 	private String usertype;
 	private String userstatus;
 
+	private  int id;
+
 	public String getUsername() {
 		return username;
 	}
+
+	public int getId() {return  id;}
 
 	public void setUsername(String username) {
 		this.username = username;
@@ -36,5 +40,8 @@ public class UserDTO {
 	
 	public String  getUserStatus() {
 		return userstatus;
+	}
+	public void setId(int userid) {
+		this.id = userid;
 	}
 }

@@ -10,7 +10,7 @@ public class DAOUser {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private long id;
+	private int id;
 	@Column
 	private String username;
 	@Column
@@ -51,6 +51,12 @@ public class DAOUser {
 	
 	public void setUserType(String userType) {
 		this.usertype = userType;
+	}
+
+	public int getUserid() {return  id;}
+
+	public void setUserId(int userId) {
+		this.id= userId;
 	}
 	
 
