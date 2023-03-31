@@ -42,6 +42,8 @@ public class JwtUserDetailsService implements UserDetailsService {
             newUser.setPassword(bcryptEncoder.encode(user.getPassword()));
             newUser.setUserstatus("PENDING");
             newUser.setUserType(user.getUsertype());
+            newUser.setUserfname(user.getUserfname());
+            newUser.setUserlname(user.getUserlname());
             userDao.save(newUser);
             Utils util = new Utils();
             return util.JsonMessage("User registration successfull", HttpStatus.ACCEPTED).toString();
@@ -57,6 +59,8 @@ public class JwtUserDetailsService implements UserDetailsService {
         newUser.setPassword(bcryptEncoder.encode(user.getPassword()));
         newUser.setUserstatus(user.getUserStatus());
         newUser.setUserType(user.getUsertype());
+        newUser.setUserfname(user.getUserfname());
+        newUser.setUserlname(user.getUserlname());
         userDao.save(newUser);
         Utils util = new Utils();
         return util.JsonMessage("User details updated successfull", HttpStatus.ACCEPTED).toString();

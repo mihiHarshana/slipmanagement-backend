@@ -8,6 +8,8 @@ public class UserDTO {
 
 	private  int id;
 
+	private String userfname;
+	private String userlname;
 	public String getUsername() {
 		return username;
 	}
@@ -43,5 +45,21 @@ public class UserDTO {
 	}
 	public void setId(int userid) {
 		this.id = userid;
+	}
+
+	public String getUserfname() {
+		return userfname;
+	}
+
+	public String getUserlname() {
+		return userlname;
+	}
+
+	public void setUserfname(String userfname) {
+		this.userfname = userfname;
+	}
+
+	public void setUserlname(String userlname) {
+		this.userlname = userlname;
 	}
 }
