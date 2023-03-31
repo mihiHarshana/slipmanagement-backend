@@ -9,7 +9,7 @@ public class Utils {
 	HttpStatus statusCode;
 	
 	final String MESSAGE = "message";
-	final String STATUS_CODE= "status-code";
+	final String STATUS_CODE= "statusCode";
 	
 	
 	public String JsonMessage (String message, HttpStatus statusCode) {
@@ -19,7 +19,7 @@ public class Utils {
 		
 		JSONObject jo = new JSONObject();
 		jo.put(MESSAGE, message);
-		jo.put(STATUS_CODE, statusCode);
+		jo.put(STATUS_CODE, statusCode.value());
 		
 		return jo.toString();
 		
