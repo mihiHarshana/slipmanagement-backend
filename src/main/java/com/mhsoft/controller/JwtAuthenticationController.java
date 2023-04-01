@@ -46,12 +46,13 @@ public class JwtAuthenticationController {
             if (daoUser != null) {
                 if (daoUser.getUserStatus().equals("APPROVED")) {
                     JSONObject jo = new JSONObject();
+                    JSONObject userobj = new JSONObject();
+                    userobj.put("mobile", daoUser.getUsername());
+                    userobj.put("usertype", daoUser.getUsertype());
+                    userobj.put("userstatus", daoUser.getUserStatus());
                     jo.put("token", token);
-                    jo.put("mobile", daoUser.getUsername());
                     jo.put("logintime", System.currentTimeMillis());
-                    jo.put("usertype", daoUser.getUsertype());
-                    jo.put("userstatus", daoUser.getUserStatus());
-
+                    jo.put("user", userobj);
                     return jo.toString();
                 } else if (daoUser.getUserStatus().equals("PENDING")) {
                     return utils.JsonMessage("User Not approved", HttpStatus.NOT_ACCEPTABLE);
@@ -60,14 +61,14 @@ public class JwtAuthenticationController {
                 } else if (daoUser.getUserStatus().equals("DEACTIVATED")) {
                     return utils.JsonMessage("User Deactivated", HttpStatus.NOT_ACCEPTABLE);
                 } else {
-                    return utils.JsonMessage("Unknow status ", HttpStatus.NOT_ACCEPTABLE);
+                    return utils.JsonMessage("Unknown status ", HttpStatus.NOT_ACCEPTABLE);
                 }
 
             } else {
                 return utils.JsonMessage("User Not available", HttpStatus.NOT_ACCEPTABLE);
             }
         } catch (Exception e) {
-            return utils.JsonMessage("Invalid Credentails", HttpStatus.ACCEPTED);
+            return utils.JsonMessage("Invalid Credentails", HttpStatus.NOT_ACCEPTABLE);
         }
     }
 
