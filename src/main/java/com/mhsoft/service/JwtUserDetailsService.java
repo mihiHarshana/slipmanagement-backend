@@ -49,7 +49,7 @@ public class JwtUserDetailsService implements UserDetailsService {
             return util.JsonMessage("User registration successfull", HttpStatus.ACCEPTED).toString();
         }
         Utils util = new Utils();
-        return util.JsonMessage("User Already Exists", HttpStatus.ACCEPTED).toString();
+        return util.JsonMessage("User Already Exists", HttpStatus.ALREADY_REPORTED).toString();
     }
     public String update(UserDTO user) {
         DAOUser tempUser = userDao.findByUsername(user.getUsername());
