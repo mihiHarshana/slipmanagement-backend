@@ -12,15 +12,15 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
-@Controller
+@RestController
 public class FileUploadController {
 
     private static String UPLOADED_FOLDER = "E:\\projects\\fileuploads\\";
 
-    @RequestMapping(value="/", method = RequestMethod.GET)
+/*    @RequestMapping(value="/", method = RequestMethod.GET)
     public String index() {
         return "upload";
-    }
+    }*/
 
     @RequestMapping(value = "/upload", method = RequestMethod.POST)// //new annotation since 4.3
     public String singleFileUpload(@RequestParam("file") MultipartFile file,
