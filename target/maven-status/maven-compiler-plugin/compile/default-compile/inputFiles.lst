@@ -11,6 +11,7 @@ E:\projects\slipmanagement-backend\src\main\java\com\mhsoft\model\JwtRequest.jav
 E:\projects\slipmanagement-backend\src\main\java\com\mhsoft\controller\JwtAuthenticationController.java
 E:\projects\slipmanagement-backend\src\main\java\com\mhsoft\repo\UserRepo.java
 E:\projects\slipmanagement-backend\src\main\java\com\mhsoft\config\JwtTokenUtil.java
+E:\projects\slipmanagement-backend\src\main\java\com\mhsoft\model\DAOBank.java
 E:\projects\slipmanagement-backend\src\main\java\com\mhsoft\config\JwtRequestFilter.java
 E:\projects\slipmanagement-backend\src\main\java\com\mhsoft\config\JwtAuthenticationEntryPoint.java
 E:\projects\slipmanagement-backend\src\main\java\com\mhsoft\SpringBootSlipManagementBackEnd.java

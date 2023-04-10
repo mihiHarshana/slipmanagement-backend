@@ -12,6 +12,7 @@ com\mhsoft\model\UserDTO.class
 com\mhsoft\controller\UserController.class
 com\mhsoft\service\StorageService.class
 com\mhsoft\dao\UserDao.class
+com\mhsoft\model\DAOBank.class
 com\mhsoft\controller\HelloWorldController.class
 com\mhsoft\model\DAOUser.class
 com\mhsoft\config\WebSecurityConfig.class
