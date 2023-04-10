@@ -1,6 +1,5 @@
 package com.mhsoft.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
 
