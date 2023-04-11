@@ -1,23 +1,16 @@
 package com.mhsoft.controller;
 
-import com.mhsoft.config.JwtTokenUtil;
 import com.mhsoft.dao.BankDao;
 import com.mhsoft.model.DAOBank;
-import com.mhsoft.model.DAOUser;
-import com.mhsoft.model.UserDTO;
 import com.mhsoft.service.BankService;
-import org.json.JSONArray;
+import com.mhsoft.utils.Utils;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.util.ArrayList;
 
 @RestController
 public class BankController {
@@ -29,14 +22,22 @@ public class BankController {
     BankService bankService;
 
 
-    @RequestMapping(value = "/api/bankdetails" ,method = RequestMethod.POST )
-    public String getBankDetailsByUserID(@RequestBody Integer userid) {
+    @RequestMapping(value = "/api/bankdetails", method = RequestMethod.POST)
+    public String getBankDetailsByUserID(@RequestBody DAOBank userDetails) {
         //int int_userId = Integer.parseInt(userid);
-        String  bankDetailsOfUser = bankService.getBankDetailsByIUserId(userid);
-     //   String bankDetailOfAgent =
-
-
-        return bankDetailsOfUser;
+        DAOBank bankDetailsOfUser = bankService.getBankDetailsByIUserId(userDetails.getUserid());
+        //   String bankDetailOfAgent =
+        if (bankDetailsOfUser == null) {
+            Utils utils = new Utils();
+            return utils.JsonMessage("Bank details not availale for the user", HttpStatus.NOT_ACCEPTABLE);
+        }
+        JSONObject jo = new JSONObject();
+        jo.put("bankname", bankDetailsOfUser.getBankname());
+        jo.put("bankcode", bankDetailsOfUser.getBankcode());
+        jo.put("branchname", bankDetailsOfUser.getBranchname());
+        jo.put("bandinstructions", bankDetailsOfUser.getBankinst());
+        jo.put("bankaccno", bankDetailsOfUser.getBankaccno());
+        return jo.toString();
     }
 
 /*

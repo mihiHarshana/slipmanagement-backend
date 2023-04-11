@@ -7,21 +7,30 @@ import javax.persistence.*;
 @Table(name = "bankdetails")
 public class DAOBank {
 
-        @Id
-        @GeneratedValue(strategy = GenerationType.IDENTITY)
-        private int id;
-        @Column
-        private int userid;
-        @Column
-        private String bankname;
-        @Column
-        private String bankcode;
-        @Column
-        private String bankaccno;
-        @Column
-        private String bankinst;
-        @Column
-        private boolean latest;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private int id;
+    @Column
+    private int userid;
+
+    public String getBranchname() {
+        return branchname;
+    }
+    public void setBranchname(String branchname) {
+        this.branchname = branchname;
+    }
+    @Column
+    private String bankname;
+    @Column
+    private String bankcode;
+    @Column
+    private String bankaccno;
+    @Column
+    private String bankinst;
+    @Column
+    private String branchname;
+    @Column
+    private boolean latest;
 
     public int getId() {
         return id;
