@@ -49,4 +49,15 @@ public class BankController {
         return new org.springframework.security.core.userdetails.User(user.getUsername(), user.getPassword(),
                 new ArrayList<>());
     }*/
+
+    @RequestMapping(value = "/api/savebankdetails", method = RequestMethod.POST)
+        public String setBankDetailsByUserID(@RequestBody DAOBank bankdetails) {
+        DAOBank bankDao1 = bankDao.save(bankdetails);
+        Utils utils = new Utils();
+        if(bankDao1 != null) {
+          return   utils.JsonMessage("Bank details saved successfully", HttpStatus.ACCEPTED);
+        } else {
+           return  utils.JsonMessage("Error saving bank details.", HttpStatus.NOT_ACCEPTABLE);
+        }
+    }
 }
