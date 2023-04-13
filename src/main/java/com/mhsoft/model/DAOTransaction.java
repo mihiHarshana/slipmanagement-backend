@@ -1,7 +1,8 @@
 package com.mhsoft.model;
 
 import javax.persistence.*;
-import java.sql.Time;
+import java.sql.Date;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "transaction")
@@ -10,7 +11,7 @@ public class DAOTransaction {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int trid;
 
-    private Time trdatetime;
+    private LocalDateTime trdatetime;
     private String trtype;
     private double tramount;
     private String trstatus;
@@ -24,11 +25,11 @@ public class DAOTransaction {
         this.trid = trid;
     }
 
-    public Time getTrdatetime() {
+    public LocalDateTime getTrdatetime() {
         return trdatetime;
     }
 
-    public void setTrdatetime(Time trdatetime) {
+    public void setTrdatetime(LocalDateTime trdatetime) {
         this.trdatetime = trdatetime;
     }
 
