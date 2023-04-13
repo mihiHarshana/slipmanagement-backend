@@ -5,11 +5,9 @@ import com.mhsoft.model.DAOBank;
 import com.mhsoft.model.DAOTransaction;
 import com.mhsoft.service.BankService;
 import com.mhsoft.service.TransactionService;
-import com.mhsoft.utils.Utils;
-import org.json.JSONArray;
+import com.mhsoft.service.UserDetailService;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -23,44 +21,50 @@ public class UserDetailsController {
     BankService bankService;
     @Autowired
     TransactionService trService;
+    @Autowired
+    UserDetailService userDetailService;
+
 
     @RequestMapping(value = "/api/bankTrDetails", method = RequestMethod.POST)
     public String getUserBankTransactionDetails(@RequestBody DAOBank userDetails) {
         DAOBank bankDetailsOfUser = bankService.getBankDetailsByIUserId(userDetails.getUserid());
-        //   String bankDetailOfAgent =
         JSONObject userBankDetails = new JSONObject();
         if (bankDetailsOfUser == null) {
-            userBankDetails.put("bankname", bankDetailsOfUser.getBankname());
-            userBankDetails.put("bankcode", bankDetailsOfUser.getBankcode());
-            userBankDetails.put("branchname", bankDetailsOfUser.getBranchname());
-            userBankDetails.put("bandinstructions", bankDetailsOfUser.getBankinst());
-            userBankDetails.put("bankaccno", bankDetailsOfUser.getBankaccno());
-/*            Utils utils = new Utils();
-            return utils.JsonMessage("Bank details not availale for the user", HttpStatus.NOT_ACCEPTABLE);*/
+            userBankDetails.put("bankName", bankDetailsOfUser.getBankname());
+            userBankDetails.put("bankCode", bankDetailsOfUser.getBankcode());
+            userBankDetails.put("branchName", bankDetailsOfUser.getBranchname());
+            userBankDetails.put("bankIns", bankDetailsOfUser.getBankinst());
+            userBankDetails.put("bankAccNo", bankDetailsOfUser.getBankaccno());
         }
-        //JSONObject userBankDetails = new JSONObject();
-        userBankDetails.put("bankname", bankDetailsOfUser.getBankname());
-        userBankDetails.put("bankcode", bankDetailsOfUser.getBankcode());
-        userBankDetails.put("branchname", bankDetailsOfUser.getBranchname());
-        userBankDetails.put("bandinstructions", bankDetailsOfUser.getBankinst());
-        userBankDetails.put("bankaccno", bankDetailsOfUser.getBankaccno());
+        userBankDetails.put("bankName", bankDetailsOfUser.getBankname());
+        userBankDetails.put("bankCode", bankDetailsOfUser.getBankcode());
+        userBankDetails.put("branchName", bankDetailsOfUser.getBranchname());
+        userBankDetails.put("bankIns", bankDetailsOfUser.getBankinst());
+        userBankDetails.put("bankAccNo", bankDetailsOfUser.getBankaccno());
 
+        DAOTransaction [] userTrDetails =   trService.getTransactionsByUserId(userDetails.getUserid());
+        String [] tempAgentDetails = userDetailService.getAgentDetailsByUserId(userDetails.getUserid());
 
-        DAOTransaction [] trOfUser =   trService.getTransactionsByUserId(userDetails.getUserid());
+        JSONObject jsonAgentDetalils = new JSONObject();
 
-        DAOTransaction[] userTrDetails = trOfUser;
-
-        JSONObject userAgentDetails = new JSONObject();
-
-        userAgentDetails.put("testagent", "Agent0001Test");
-
+        if (tempAgentDetails == null) {
+            jsonAgentDetalils.put("agentBankAccNo","null");
+            jsonAgentDetalils.put("agentBankCode","null");
+            jsonAgentDetalils.put("agentBankIns","null");
+            jsonAgentDetalils.put("agentBankName","null");
+            jsonAgentDetalils.put("agentBankBranch","null");
+        } else {
+            jsonAgentDetalils.put("agentBankAccNo",tempAgentDetails[0]);
+            jsonAgentDetalils.put("agentBankCode",tempAgentDetails[1]);
+            jsonAgentDetalils.put("agentBankIns",tempAgentDetails[2]);
+            jsonAgentDetalils.put("agentBankName",tempAgentDetails[3]);
+            jsonAgentDetalils.put("agentBankBranch",tempAgentDetails[4]);
+        }
         JSONObject allDetails = new JSONObject();
-
         allDetails.put("userBankDetails",userBankDetails );
         allDetails.put("userTransDetails", userTrDetails);
-        allDetails.put("userAgentDetails", userAgentDetails);
+        allDetails.put("userAgentDetails", jsonAgentDetalils);
 
         return allDetails.toString();
-
     }
 }

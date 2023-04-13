@@ -1,4 +1,6 @@
 com\mhsoft\config\JwtTokenUtil.class
+com\mhsoft\repo\UserDetailsRepo.class
+com\mhsoft\repo\AgentCodeRepo.class
 com\mhsoft\repo\BankRepo.class
 com\mhsoft\config\JwtRequestFilter.class
 com\mhsoft\config\JwtAuthenticationEntryPoint.class
@@ -6,11 +8,14 @@ com\mhsoft\dao\BankDao.class
 com\mhsoft\service\JwtUserDetailsService.class
 com\mhsoft\SpringBootSlipManagementBackEnd.class
 com\mhsoft\model\UserDTO.class
+com\mhsoft\model\DAOAgentUser.class
+com\mhsoft\service\AgentUserService.class
 com\mhsoft\service\StorageService.class
 com\mhsoft\controller\UserDetailsController.class
 com\mhsoft\dao\UserDao.class
 com\mhsoft\model\DAOBank.class
 com\mhsoft\model\DAOUser.class
+com\mhsoft\service\AgentCodeService.class
 com\mhsoft\config\WebSecurityConfig.class
 com\mhsoft\controller\TransactionController.class
 com\mhsoft\service\BankService.class
@@ -21,8 +26,11 @@ com\mhsoft\repo\UserRepo.class
 com\mhsoft\controller\FileUploadController.class
 com\mhsoft\controller\JwtAuthenticationController.class
 com\mhsoft\model\JwtResponse.class
+com\mhsoft\service\UserDetailService.class
+com\mhsoft\repo\AgentUserRepo.class
 com\mhsoft\repo\TransactionRepo.class
 com\mhsoft\service\TransactionService.class
 com\mhsoft\controller\UserController.class
+com\mhsoft\model\DAOAgentCode.class
 com\mhsoft\controller\HelloWorldController.class
 com\mhsoft\model\DAOTransaction.class
