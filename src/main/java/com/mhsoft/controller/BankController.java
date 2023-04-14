@@ -25,18 +25,19 @@ public class BankController {
     @RequestMapping(value = "/api/bankdetails", method = RequestMethod.POST)
     public String getBankDetailsByUserID(@RequestBody DAOBank userDetails) {
         //int int_userId = Integer.parseInt(userid);
-        DAOBank bankDetailsOfUser = bankService.getBankDetailsByIUserId(userDetails.getUserid());
+        DAOBank [] bankDetailsOfUser = bankService.getBankDetailsByIUserId(userDetails.getUserid());
         //   String bankDetailOfAgent =
         if (bankDetailsOfUser == null) {
             Utils utils = new Utils();
             return utils.JsonMessage("Bank details not availale for the user", HttpStatus.NOT_ACCEPTABLE);
         }
         JSONObject jo = new JSONObject();
-        jo.put("bankname", bankDetailsOfUser.getBankname());
+        jo.put("userbankdetails", bankDetailsOfUser);
+/*        jo.put("bankname", bankDetailsOfUser.getBankname());
         jo.put("bankcode", bankDetailsOfUser.getBankcode());
         jo.put("branchname", bankDetailsOfUser.getBranchname());
         jo.put("bandinstructions", bankDetailsOfUser.getBankinst());
-        jo.put("bankaccno", bankDetailsOfUser.getBankaccno());
+        jo.put("bankaccno", bankDetailsOfUser.getBankaccno());*/
         return jo.toString();
     }
 
