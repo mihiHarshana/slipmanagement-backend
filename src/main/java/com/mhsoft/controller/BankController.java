@@ -28,8 +28,8 @@ public class BankController {
         DAOBank bankDetailsOfUser = bankService.getBankDetailsByIUserId(userDetails.getUserid());
         //   String bankDetailOfAgent =
         if (bankDetailsOfUser == null) {
-            Utils utils = new Utils();
-            return utils.JsonMessage("Bank details not availale for the user", HttpStatus.NOT_ACCEPTABLE);
+            return Utils.getInstance().JsonMessage("Bank details not availale for the user",
+                    HttpStatus.NOT_ACCEPTABLE);
         }
         JSONObject jo = new JSONObject();
         jo.put("bankname", bankDetailsOfUser.getBankname());
@@ -53,11 +53,11 @@ public class BankController {
     @RequestMapping(value = "/api/savebankdetails", method = RequestMethod.POST)
         public String setBankDetailsByUserID(@RequestBody DAOBank bankdetails) {
         DAOBank bankDao1 = bankDao.save(bankdetails);
-        Utils utils = new Utils();
+
         if(bankDao1 != null) {
-          return   utils.JsonMessage("Bank details saved successfully", HttpStatus.ACCEPTED);
+          return Utils.getInstance().JsonMessage("Bank details saved successfully", HttpStatus.ACCEPTED);
         } else {
-           return  utils.JsonMessage("Error saving bank details.", HttpStatus.NOT_ACCEPTABLE);
+           return  Utils.getInstance().JsonMessage("Error saving bank details.", HttpStatus.NOT_ACCEPTABLE);
         }
     }
 }

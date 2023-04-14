@@ -45,11 +45,9 @@ public class JwtUserDetailsService implements UserDetailsService {
             newUser.setUserfname(user.getUserfname());
             newUser.setUserlname(user.getUserlname());
             userDao.save(newUser);
-            Utils util = new Utils();
-            return util.JsonMessage("User registration successfull", HttpStatus.ACCEPTED).toString();
+            return Utils.getInstance().JsonMessage("User registration successfull", HttpStatus.ACCEPTED).toString();
         }
-        Utils util = new Utils();
-        return util.JsonMessage("User Already Exists", HttpStatus.ACCEPTED).toString();
+        return Utils.getInstance().JsonMessage("User Already Exists", HttpStatus.ACCEPTED).toString();
     }
     public String update(UserDTO user) {
         DAOUser tempUser = userDao.findByUsername(user.getUsername());
@@ -62,7 +60,6 @@ public class JwtUserDetailsService implements UserDetailsService {
         newUser.setUserfname(user.getUserfname());
         newUser.setUserlname(user.getUserlname());
         userDao.save(newUser);
-        Utils util = new Utils();
-        return util.JsonMessage("User details updated successfull", HttpStatus.ACCEPTED).toString();
+        return Utils.getInstance().JsonMessage("User details updated successfull", HttpStatus.ACCEPTED).toString();
     }
 }

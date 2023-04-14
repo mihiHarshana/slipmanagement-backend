@@ -18,28 +18,26 @@ public class TransactionController {
 
     @RequestMapping(value = "/api/withdraw", method = RequestMethod.POST)
     public String setWithdrawal(@RequestBody  DAOTransaction daoTrans) {
-        Utils utils = new Utils();
         if (daoTrans != null ) {
             DAOTransaction temp = transRepo.save(saveTrData(daoTrans));
             if (temp == null) {
-                return utils.JsonMessage("Cannot save withdrawal Try again", HttpStatus.NOT_ACCEPTABLE);
+                return Utils.getInstance().JsonMessage("Cannot save withdrawal Try again", HttpStatus.NOT_ACCEPTABLE);
             }
-            return utils.JsonMessage("Withdrawal Successful", HttpStatus.ACCEPTED);
+            return Utils.getInstance().JsonMessage("Withdrawal Successful", HttpStatus.ACCEPTED);
         }
-        return utils.JsonMessage("No data available for withdrawal", HttpStatus.NOT_ACCEPTABLE);
+        return Utils.getInstance().JsonMessage("No data available for withdrawal", HttpStatus.NOT_ACCEPTABLE);
     }
 
     @RequestMapping(value = "/api/deposit", method = RequestMethod.POST)
     public String setDeposit(@RequestBody DAOTransaction daoTrans) {
-        Utils utils = new Utils();
         if (daoTrans != null ) {
             DAOTransaction temp = transRepo.save(saveTrData(daoTrans));
             if (temp == null) {
-                return utils.JsonMessage("Cannot save deposit Try again", HttpStatus.NOT_ACCEPTABLE);
+                return Utils.getInstance().JsonMessage("Cannot save deposit Try again", HttpStatus.NOT_ACCEPTABLE);
             }
-            return utils.JsonMessage("Deposit Successful", HttpStatus.ACCEPTED);
+            return Utils.getInstance().JsonMessage("Deposit Successful", HttpStatus.ACCEPTED);
         }
-        return utils.JsonMessage("No data available for Deposit", HttpStatus.NOT_ACCEPTABLE);
+        return Utils.getInstance().JsonMessage("No data available for Deposit", HttpStatus.NOT_ACCEPTABLE);
     }
 
     private DAOTransaction saveTrData(DAOTransaction daoTrans) {
