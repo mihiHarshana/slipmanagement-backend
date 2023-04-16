@@ -2,8 +2,10 @@ package com.mhsoft.controller;
 
 import com.mhsoft.model.DAOAgentCode;
 import com.mhsoft.service.AgentCodeService;
+import com.mhsoft.utils.Utils;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -45,5 +47,12 @@ public class AgentController {
 
         return jo.toString();
 
+    }
+
+    @RequestMapping(value = "/api/saveAgentCode", method = RequestMethod.POST)
+    public String saveAgentCode(@RequestBody DAOAgentCode agentCode) {
+        agentCodeService.saveAgentData(agentCode);
+
+        return Utils.getInstance().JsonMessage("Agent Code Saved", HttpStatus.ACCEPTED).toString();
     }
 }
