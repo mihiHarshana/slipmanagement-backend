@@ -27,6 +27,7 @@ com\mhsoft\controller\FileUploadController.class
 com\mhsoft\controller\JwtAuthenticationController.class
 com\mhsoft\model\JwtResponse.class
 com\mhsoft\service\UserDetailService.class
+com\mhsoft\controller\AgentController.class
 com\mhsoft\repo\AgentUserRepo.class
 com\mhsoft\repo\TransactionRepo.class
 com\mhsoft\service\TransactionService.class
