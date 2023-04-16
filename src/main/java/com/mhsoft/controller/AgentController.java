@@ -23,9 +23,10 @@ public class AgentController {
     @RequestMapping(value = "/api/generateAgentCode", method = RequestMethod.POST)
     public String generateCodeForAgent(@RequestBody DAOAgentCode agentCode) {
         DAOAgentCode [] agentData = agentCodeService.generateAgentCode(agentCode);
-        List agentCodesList = new ArrayList();
-        for (int i=0; i< agentData.length; i++ ){
-            agentCodesList.add(agentData[i].getAgentCode());
+        List<String> agentCodesList = new ArrayList<>();
+
+        for (DAOAgentCode tempCode: agentData) {
+            agentCodesList.add(tempCode.getAgentCode());
         }
         String generatedCode = null;
 
@@ -53,6 +54,6 @@ public class AgentController {
     public String saveAgentCode(@RequestBody DAOAgentCode agentCode) {
         agentCodeService.saveAgentData(agentCode);
 
-        return Utils.getInstance().JsonMessage("Agent Code Saved", HttpStatus.ACCEPTED).toString();
+        return Utils.getInstance().JsonMessage("Agent Code Saved", HttpStatus.ACCEPTED);
     }
 }
