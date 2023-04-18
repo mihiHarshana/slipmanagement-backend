@@ -15,6 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+
 @RestController
 public class AgentController {
     @Autowired
@@ -31,10 +32,10 @@ public class AgentController {
         String generatedCode = null;
 
         Random ran = new Random();
-        int ranNum; ran.nextInt(1000,9999);
+        int ranNum=0;
         for (int i=0; i<agentCodesList.size(); i++) {
             if (i==0) {
-                ranNum =ran.nextInt(1000,9999);
+                  ranNum = ran.nextInt(9999);
                 generatedCode = agentCode.getAgentid() + Integer.toString(ranNum);
             }
             if (generatedCode.equals(agentCodesList.get(i))) {
