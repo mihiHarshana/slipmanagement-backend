@@ -26,7 +26,7 @@ public class UserDetailsController {
     UserDetailService userDetailService;
 
 
-    @RequestMapping(value = "/api/bankTrDetails", method = RequestMethod.POST)
+    @RequestMapping(value = "/api/customer-details", method = RequestMethod.POST)
     public String getUserBankTransactionDetails(@RequestBody DAOBank userDetails) {
         DAOBank bankDetailsOfUser = bankService.getBankDetailsByIUserId(userDetails.getUserid());
         JSONObject userBankDetails = new JSONObject();
@@ -38,12 +38,14 @@ public class UserDetailsController {
             userBankDetails.put(Utils.BANK_BRANCH, "null");
             userBankDetails.put(Utils.BANK_INS, "null");
             userBankDetails.put(Utils.BANK_ACC_NO, "null");
+        } else {
+            userBankDetails.put(Utils.BANK_NAME, bankDetailsOfUser.getBankname());
+            userBankDetails.put(Utils.BANK_CODE, bankDetailsOfUser.getBankcode());
+            userBankDetails.put(Utils.BANK_BRANCH, bankDetailsOfUser.getBranchname());
+            userBankDetails.put(Utils.BANK_INS, bankDetailsOfUser.getBankinst());
+            userBankDetails.put(Utils.BANK_ACC_NO, bankDetailsOfUser.getBankaccno());
         }
-        userBankDetails.put(Utils.BANK_NAME, bankDetailsOfUser.getBankname());
-        userBankDetails.put(Utils.BANK_CODE, bankDetailsOfUser.getBankcode());
-        userBankDetails.put(Utils.BANK_BRANCH, bankDetailsOfUser.getBranchname());
-        userBankDetails.put(Utils.BANK_INS, bankDetailsOfUser.getBankinst());
-        userBankDetails.put(Utils.BANK_ACC_NO, bankDetailsOfUser.getBankaccno());
+
 
         DAOTransaction [] userTrDetails =   trService.getTransactionsByUserId(userDetails.getUserid());
         String [] tempAgentDetails = userDetailService.getAgentDetailsByUserId(userDetails.getUserid());
