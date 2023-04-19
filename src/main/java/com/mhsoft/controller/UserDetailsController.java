@@ -1,18 +1,21 @@
 package com.mhsoft.controller;
 
+import com.mhsoft.config.JwtRequestFilter;
+import com.mhsoft.config.JwtTokenUtil;
 import com.mhsoft.dao.BankDao;
 import com.mhsoft.model.DAOBank;
 import com.mhsoft.model.DAOTransaction;
+import com.mhsoft.model.DAOUser;
+import com.mhsoft.repo.UserRepo;
 import com.mhsoft.service.BankService;
 import com.mhsoft.service.TransactionService;
 import com.mhsoft.service.UserDetailService;
 import com.mhsoft.utils.Utils;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import javax.servlet.http.HttpServletRequest;
 
 @RestController
 public class UserDetailsController {
@@ -24,11 +27,27 @@ public class UserDetailsController {
     TransactionService trService;
     @Autowired
     UserDetailService userDetailService;
+    @Autowired
+    private JwtTokenUtil jwtTokenUtil;
+
+    @Autowired
+    private UserRepo userRepo;
 
 
-    @RequestMapping(value = "/api/customer-details", method = RequestMethod.POST)
-    public String getUserBankTransactionDetails(@RequestBody DAOBank userDetails) {
-        DAOBank bankDetailsOfUser = bankService.getBankDetailsByIUserId(userDetails.getUserid());
+    @RequestMapping(value = "/api/customer-details", method = RequestMethod.GET)
+    public String getUserBankTransactionDetails(@RequestHeader String Authorization) {
+       // JwtTokenUtil jwtTokenUtil = new JwtTokenUtil();
+        int USER_ID =0;
+        String  token = Authorization.substring(7);
+
+        System.out.println("Tokent ============ : " + token);
+
+        String username = jwtTokenUtil.getUsernameFromToken(token);
+        DAOUser DAOUser = userRepo.getUserByUserName(username);
+        USER_ID = DAOUser.getUserid();
+
+       // System.out.println("user name ============ : " + username);
+        DAOBank bankDetailsOfUser = bankService.getBankDetailsByIUserId(USER_ID);
         JSONObject userBankDetails = new JSONObject();
         Utils utils = Utils.getInstance();
 
@@ -47,8 +66,8 @@ public class UserDetailsController {
         }
 
 
-        DAOTransaction [] userTrDetails =   trService.getTransactionsByUserId(userDetails.getUserid());
-        String [] tempAgentDetails = userDetailService.getAgentDetailsByUserId(userDetails.getUserid());
+        DAOTransaction [] userTrDetails =   trService.getTransactionsByUserId(USER_ID);
+        String [] tempAgentDetails = userDetailService.getAgentDetailsByUserId(USER_ID);
 
         JSONObject jsonAgentDetalils = new JSONObject();
 
