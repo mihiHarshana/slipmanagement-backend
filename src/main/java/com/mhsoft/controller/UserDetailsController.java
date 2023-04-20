@@ -13,6 +13,9 @@ import com.mhsoft.service.UserDetailService;
 import com.mhsoft.utils.Utils;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -28,10 +31,14 @@ public class UserDetailsController {
     @Autowired
     UserDetailService userDetailService;
     @Autowired
-    private JwtTokenUtil jwtTokenUtil;
+     JwtTokenUtil jwtTokenUtil;
 
     @Autowired
     private UserRepo userRepo;
+
+
+
+
 
 
     @RequestMapping(value = "/api/customer-details", method = RequestMethod.GET)
@@ -43,6 +50,9 @@ public class UserDetailsController {
         System.out.println("Tokent ============ : " + token);
 
         String username = jwtTokenUtil.getUsernameFromToken(token);
+       // System.out.println(jwtTokenUtil.isTokenExpired(token));
+
+
         DAOUser DAOUser = userRepo.getUserByUserName(username);
         USER_ID = DAOUser.getUserid();
 
