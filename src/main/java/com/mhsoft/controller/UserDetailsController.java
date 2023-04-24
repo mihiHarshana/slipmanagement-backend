@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 
 @RestController
+@CrossOrigin
 public class UserDetailsController {
     @Autowired
     BankDao bankDao;
@@ -100,4 +101,15 @@ public class UserDetailsController {
         allDetails.put("userAgentDetails", jsonAgentDetalils);
         return allDetails.toString();
     }
+
+
+    @RequestMapping(value = "/api/callcenter-agent-details", method = RequestMethod.GET)
+    public String getCallCenterAgentBankTransactionDetails(@RequestHeader String Authorization) {
+
+
+
+        return "CallcenterAgentDetails";
+    }
+
+
 }
