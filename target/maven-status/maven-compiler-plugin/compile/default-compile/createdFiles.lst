@@ -1,4 +1,5 @@
 com\mhsoft\config\JwtTokenUtil.class
+com\mhsoft\model\IDAOTransaction.class
 com\mhsoft\repo\UserDetailsRepo.class
 com\mhsoft\repo\AgentCodeRepo.class
 com\mhsoft\repo\BankRepo.class

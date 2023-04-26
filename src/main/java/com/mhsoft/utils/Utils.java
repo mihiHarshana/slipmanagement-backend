@@ -23,6 +23,9 @@ public class Utils {
 
 	public static final String AGENT="agent";
 
+	public static final String TRTYPEWIDTHDRAW = "Withdraw";
+	public static final String TRTRYOEDEPOSIT = "Deposit";
+
 	
 	private static Utils utils = null;
 
