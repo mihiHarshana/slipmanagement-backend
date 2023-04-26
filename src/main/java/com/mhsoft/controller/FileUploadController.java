@@ -2,6 +2,11 @@ package com.mhsoft.controller;
 
 import java.io.IOException;
 
+import com.mhsoft.config.JwtTokenUtil;
+import com.mhsoft.model.DAOUser;
+import com.mhsoft.repo.UserRepo;
+import jdk.vm.ci.meta.Local;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -11,10 +16,18 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @RestController
 @CrossOrigin
 public class FileUploadController {
+
+    @Autowired
+    JwtTokenUtil jwtTokenUtil;
+
+    @Autowired
+    private UserRepo userRepo;
 
     private static String UPLOADED_FOLDER = "E:\\projects\\fileuploads\\";
 
@@ -25,7 +38,13 @@ public class FileUploadController {
 
     @RequestMapping(value = "/upload", method = RequestMethod.POST)// //new annotation since 4.3
     public String singleFileUpload(@RequestParam("file") MultipartFile file,
-                                   RedirectAttributes redirectAttributes) {
+                                   RedirectAttributes redirectAttributes , @RequestHeader String Authorization) {
+
+        int USER_ID = 0;
+        String token = Authorization.substring(7);
+        String username = jwtTokenUtil.getUsernameFromToken(token);
+        DAOUser DAOUser = userRepo.getUserByUserName(username);
+        USER_ID = DAOUser.getUserid();
 
         if (file.isEmpty()) {
             redirectAttributes.addFlashAttribute("message", "Please select a file to upload");
@@ -36,7 +55,9 @@ public class FileUploadController {
 
             // Get the file and save it somewhere
             byte[] bytes = file.getBytes();
-            Path path = Paths.get(UPLOADED_FOLDER + file.getOriginalFilename());
+            Path temp_path = Paths.get(UPLOADED_FOLDER+  LocalDate.now() + "\\" + USER_ID + "\\" );
+            Files.createDirectories(temp_path);
+            Path path = Paths.get(temp_path + "\\"+ file.getOriginalFilename());
             Files.write(path, bytes);
 
             redirectAttributes.addFlashAttribute("message",
