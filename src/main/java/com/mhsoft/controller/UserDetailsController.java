@@ -101,6 +101,37 @@ public class UserDetailsController {
 
     @RequestMapping(value = "/api/callcenter-agent-details", method = RequestMethod.GET)
     public String getCallCenterAgentBankTransactionDetails(@RequestHeader String Authorization) throws SQLException {
+        int USER_ID = 0;
+        String token = Authorization.substring(7);
+
+        System.out.println("Tokent ============ : " + token);
+
+        String username = jwtTokenUtil.getUsernameFromToken(token);
+        // System.out.println(jwtTokenUtil.isTokenExpired(token));
+
+
+        DAOUser DAOUser = userRepo.getUserByUserName(username);
+        USER_ID = DAOUser.getUserid();
+
+        // System.out.println("user name ============ : " + username);
+        DAOBank bankDetailsOfUser = bankService.getBankDetailsByIUserId(USER_ID);
+        JSONObject userBankDetails = new JSONObject();
+        Utils utils = Utils.getInstance();
+
+        if (bankDetailsOfUser == null) {
+            userBankDetails.put(Utils.BANK_NAME, "null");
+            userBankDetails.put(Utils.BANK_CODE, "null");
+            userBankDetails.put(Utils.BANK_BRANCH, "null");
+            userBankDetails.put(Utils.BANK_INS, "null");
+            userBankDetails.put(Utils.BANK_ACC_NO, "null");
+        } else {
+            userBankDetails.put(Utils.BANK_NAME, bankDetailsOfUser.getBankname());
+            userBankDetails.put(Utils.BANK_CODE, bankDetailsOfUser.getBankcode());
+            userBankDetails.put(Utils.BANK_BRANCH, bankDetailsOfUser.getBranchname());
+            userBankDetails.put(Utils.BANK_INS, bankDetailsOfUser.getBankinst());
+            userBankDetails.put(Utils.BANK_ACC_NO, bankDetailsOfUser.getBankaccno());
+        }
+
         String[] deposits = trService.getTransactionsByType(Utils.TRTRYOEDEPOSIT);
         String  [] withdrawals = trService.getTransactionsByType(Utils.TRTYPEWIDTHDRAW);
         JSONArray array = new JSONArray();
@@ -134,7 +165,7 @@ public class UserDetailsController {
         }
 
         JSONObject jo = new JSONObject();
-            jo.put("callcentterAgentBanKDetails", new JSONObject());
+            jo.put("callcentterAgentBanKDetails", userBankDetails);
             jo.put("depositData", array);
             jo.put("withdrawalData", array_withdrawal);
 
