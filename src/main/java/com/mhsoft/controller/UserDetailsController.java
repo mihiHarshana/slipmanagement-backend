@@ -100,21 +100,12 @@ public class UserDetailsController {
     public String getCallCenterAgentBankTransactionDetails(@RequestHeader String Authorization) throws SQLException {
         int USER_ID = 0;
         String token = Authorization.substring(7);
-
-        System.out.println("Tokent ============ : " + token);
-
         String username = jwtTokenUtil.getUsernameFromToken(token);
-        // System.out.println(jwtTokenUtil.isTokenExpired(token));
-
-
         DAOUser DAOUser = userRepo.getUserByUserName(username);
         USER_ID = DAOUser.getUserid();
 
-        // System.out.println("user name ============ : " + username);
         DAOBank bankDetailsOfUser = bankService.getBankDetailsByIUserId(USER_ID);
         JSONObject userBankDetails = new JSONObject();
-        Utils utils = Utils.getInstance();
-
         if (bankDetailsOfUser == null) {
             userBankDetails.put(Utils.BANK_NAME, "null");
             userBankDetails.put(Utils.BANK_CODE, "null");
@@ -162,7 +153,7 @@ public class UserDetailsController {
         }
 
         JSONObject jo = new JSONObject();
-            jo.put("callcentterAgentBanKDetails", userBankDetails);
+            jo.put("callCenterAgentBanKDetails", userBankDetails);
             jo.put("depositData", array);
             jo.put("withdrawalData", array_withdrawal);
 
