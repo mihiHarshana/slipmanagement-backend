@@ -9,6 +9,7 @@ E:\projects\slipmanagement-backend\src\main\java\com\mhsoft\dao\BankDao.java
 E:\projects\slipmanagement-backend\src\main\java\com\mhsoft\service\StorageService.java
 E:\projects\slipmanagement-backend\src\main\java\com\mhsoft\repo\BankRepo.java
 E:\projects\slipmanagement-backend\src\main\java\com\mhsoft\utils\Utils.java
+E:\projects\slipmanagement-backend\src\main\java\com\mhsoft\model\IDAOTransaction.java
 E:\projects\slipmanagement-backend\src\main\java\com\mhsoft\controller\AgentController.java
 E:\projects\slipmanagement-backend\src\main\java\com\mhsoft\repo\TransactionRepo.java
 E:\projects\slipmanagement-backend\src\main\java\com\mhsoft\model\DAOAgentCode.java

@@ -13,6 +13,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 
 @RestController
+@CrossOrigin
 public class FileUploadController {
 
     private static String UPLOADED_FOLDER = "E:\\projects\\fileuploads\\";
