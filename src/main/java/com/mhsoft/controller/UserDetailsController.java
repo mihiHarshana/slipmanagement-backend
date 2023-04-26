@@ -159,4 +159,70 @@ public class UserDetailsController {
 
         return jo.toString();
     }
+
+    @RequestMapping(value = "/api/agent-details-per-customer", method = RequestMethod.GET)
+    public String getAgentBankTransactionDetails(@RequestHeader String Authorization)  {
+        int USER_ID = 0;
+        String token = Authorization.substring(7);
+        String username = jwtTokenUtil.getUsernameFromToken(token);
+        DAOUser DAOUser = userRepo.getUserByUserName(username);
+        USER_ID = DAOUser.getUserid();
+
+        DAOBank bankDetailsOfUser = bankService.getBankDetailsByIUserId(USER_ID);
+        JSONObject userBankDetails = new JSONObject();
+        if (bankDetailsOfUser == null) {
+            userBankDetails.put(Utils.BANK_NAME, "null");
+            userBankDetails.put(Utils.BANK_CODE, "null");
+            userBankDetails.put(Utils.BANK_BRANCH, "null");
+            userBankDetails.put(Utils.BANK_INS, "null");
+            userBankDetails.put(Utils.BANK_ACC_NO, "null");
+        } else {
+            userBankDetails.put(Utils.BANK_NAME, bankDetailsOfUser.getBankname());
+            userBankDetails.put(Utils.BANK_CODE, bankDetailsOfUser.getBankcode());
+            userBankDetails.put(Utils.BANK_BRANCH, bankDetailsOfUser.getBranchname());
+            userBankDetails.put(Utils.BANK_INS, bankDetailsOfUser.getBankinst());
+            userBankDetails.put(Utils.BANK_ACC_NO, bankDetailsOfUser.getBankaccno());
+        }
+
+        String[] deposits = trService.getTransactionsByAgentId(USER_ID);
+        String  [] withdrawals = trService.getTransactionsByAgentId(USER_ID);
+
+        JSONArray array = new JSONArray();
+        for (int i = 0; i < deposits.length; i++) {
+            System.out.println("Deposit --- length :" + i);
+            String[] temp_deposit = deposits[i].split(",");
+            JSONObject jo_deposit = new JSONObject();
+            jo_deposit.put("userId", temp_deposit[0]);
+            jo_deposit.put("trId", temp_deposit[1]);
+            jo_deposit.put("trAmount", temp_deposit[2]);
+            jo_deposit.put("trDateTime", temp_deposit[3]);
+            jo_deposit.put("trStatus", temp_deposit[4]);
+            jo_deposit.put("trType", temp_deposit[5]);
+            jo_deposit.put("userName", temp_deposit[6]);
+            array.put(i, jo_deposit);
+        }
+
+        JSONArray array_withdrawal = new JSONArray();
+        for (int i = 0; i < withdrawals.length; i++) {
+            System.out.println("withdrawals --- length :" + i);
+            String[] temp_withdrawal = deposits[i].split(",");
+            JSONObject jo_withdrawal = new JSONObject();
+            jo_withdrawal.put("userId", temp_withdrawal[0]);
+            jo_withdrawal.put("trId", temp_withdrawal[1]);
+            jo_withdrawal.put("trAmount", temp_withdrawal[2]);
+            jo_withdrawal.put("trDateTime", temp_withdrawal[3]);
+            jo_withdrawal.put("trStatus", temp_withdrawal[4]);
+            jo_withdrawal.put("trType", temp_withdrawal[5]);
+            jo_withdrawal.put("userName", temp_withdrawal[6]);
+            array_withdrawal.put(i, jo_withdrawal);
+        }
+
+        JSONObject jo = new JSONObject();
+        jo.put("agentBanKDetails", userBankDetails);
+        jo.put("depositData", array);
+        jo.put("withdrawalData", array_withdrawal);
+        return jo.toString();
+    }
+
+
 }

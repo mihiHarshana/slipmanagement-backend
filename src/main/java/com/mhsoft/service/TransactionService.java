@@ -31,4 +31,12 @@ public class TransactionService {
         }
         return transactions;
     }
+
+    public String [] getTransactionsByAgentId(int userId) {
+        String [] transactions = transactionRepo.getTransactionsByUserAgentId(userId);
+        if (transactions == null) {
+            return null;
+        }
+        return transactions;
+    }
 }
