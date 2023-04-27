@@ -35,7 +35,7 @@ public class UserDetailsController {
     private UserRepo userRepo;
 
 
-    @RequestMapping(value = "/api/customer-details", method = RequestMethod.GET)
+    @RequestMapping(value = "/api/customer-details", method = RequestMethod.POST)
     public String getUserBankTransactionDetails(@RequestHeader String Authorization) {
         // JwtTokenUtil jwtTokenUtil = new JwtTokenUtil();
         int USER_ID = 0;

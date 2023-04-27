@@ -1,13 +1,9 @@
 package com.mhsoft.controller;
 
-import java.io.IOException;
-
 import com.mhsoft.config.JwtTokenUtil;
 import com.mhsoft.model.DAOUser;
 import com.mhsoft.repo.UserRepo;
-import jdk.vm.ci.meta.Local;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
@@ -17,7 +13,6 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 
 @RestController
 @CrossOrigin
