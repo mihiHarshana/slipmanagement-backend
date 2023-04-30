@@ -14,7 +14,7 @@ import java.util.Random;
 
 
 @RestController
-@CrossOrigin
+@CrossOrigin(origins = "*", allowedHeaders = "*")
 public class AgentController {
     @Autowired
     AgentCodeService agentCodeService;

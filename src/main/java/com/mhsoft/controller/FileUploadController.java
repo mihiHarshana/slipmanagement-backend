@@ -15,7 +15,7 @@ import java.nio.file.Paths;
 import java.time.LocalDate;
 
 @RestController
-@CrossOrigin
+@CrossOrigin(origins = "*", allowedHeaders = "*")
 public class FileUploadController {
 
     @Autowired
