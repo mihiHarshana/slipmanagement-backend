@@ -98,7 +98,7 @@ public class UserDetailsController {
     }
 
 
-    @RequestMapping(value = "/api/callcenter-agent-details", method = RequestMethod.GET)
+    @RequestMapping(value = "/api/callcenter-agent-details", method = RequestMethod.POST)
     public String getCallCenterAgentBankTransactionDetails(@RequestHeader String Authorization) throws SQLException {
         int USER_ID = 0;
         String token = Authorization.substring(7);
@@ -162,7 +162,7 @@ public class UserDetailsController {
         return jo.toString();
     }
 
-    @RequestMapping(value = "/api/agent-details-per-customer", method = RequestMethod.GET)
+    @RequestMapping(value = "/api/agent-details-per-customer", method = RequestMethod.POST)
     public String getAgentBankTransactionDetails(@RequestHeader String Authorization)  {
         int USER_ID = 0;
         String token = Authorization.substring(7);
