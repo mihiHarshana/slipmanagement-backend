@@ -37,12 +37,11 @@ public class UserDetailsController {
 
 
     @RequestMapping(value = "/api/customer-details", method = RequestMethod.POST)
-    public String getUserBankTransactionDetails(@RequestHeader String Authorization, @RequestHeader String ContentType ) {
+    public String getUserBankTransactionDetails(@RequestHeader String Authorization ) {
         // JwtTokenUtil jwtTokenUtil = new JwtTokenUtil();
         int USER_ID = 0;
         String token = Authorization.substring(7);
 
-        System.out.println("STRING ======" +ContentType );
 
         System.out.println("Tokent ============ : " + token);
 
