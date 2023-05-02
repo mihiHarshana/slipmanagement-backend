@@ -37,6 +37,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 	private JwtRequestFilter jwtRequestFilter;
 
 	@Autowired
+	private CorsConfig config;
+
+	@Autowired
 	public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
 		// configure AuthenticationManager so that it knows from where to load
 		// user for matching credentials
@@ -55,13 +58,14 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 		return super.authenticationManagerBean();
 	}
 
-/*	@Override
+	@Override
 	protected void configure(HttpSecurity httpSecurity) throws Exception {
 		//httpSecurity.cors().disable().authorizeRequests();
 		// We don't need CSRF for this example
+		config.corsConfigurer();
 		httpSecurity.csrf().disable()
 				// dont authenticate this particular request
-				.cors().and()
+
 				.authorizeRequests().antMatchers("/login", "/register" , "/uploadStatus").permitAll().
 				// all other requests need to be authenticated
 				anyRequest().authenticated().and().
@@ -72,13 +76,13 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
 		// Add a filter to validate the tokens with every request
 		httpSecurity.addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
-	}*/
+	}
 
 
-	@Override
+/*	@Override
 	protected void configure(HttpSecurity httpSecurity) throws Exception {
 		//httpSecurity.cors().disable().authorizeRequests();
-
+*//*
 		// We don't need CSRF for this example
 		httpSecurity.csrf().disable()
 				// dont authenticate this particular request
@@ -95,8 +99,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 				.sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 
 		// Add a filter to validate the tokens with every request
-		httpSecurity.addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
-	}
+		httpSecurity.addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class); *//*
+	}*/
 	@Bean
 	CorsConfigurationSource corsConfigurationSource()
 	{
