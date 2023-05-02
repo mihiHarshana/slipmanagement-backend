@@ -5,7 +5,6 @@ import com.mhsoft.dao.BankDao;
 import com.mhsoft.model.DAOBank;
 import com.mhsoft.model.DAOTransaction;
 import com.mhsoft.model.DAOUser;
-import com.mhsoft.model.IDAOTransaction;
 import com.mhsoft.repo.UserRepo;
 import com.mhsoft.service.BankService;
 import com.mhsoft.service.TransactionService;
@@ -15,6 +14,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+
 import java.sql.SQLException;
 
 @CrossOrigin(origins = "*", allowedHeaders = "*")
@@ -35,7 +35,7 @@ public class UserDetailsController {
     @Autowired
     private UserRepo userRepo;
 
-
+    @CrossOrigin
     @RequestMapping(value = "/api/customer-details", method = RequestMethod.POST)
     public String getUserBankTransactionDetails(@RequestHeader String Authorization ) {
         // JwtTokenUtil jwtTokenUtil = new JwtTokenUtil();
@@ -97,8 +97,8 @@ public class UserDetailsController {
         return allDetails.toString();
     }
 
-
-    @RequestMapping(value = "/api/callcenter-agent-details", method = RequestMethod.POST)
+    @CrossOrigin
+    @RequestMapping(value = "/api/callcenter-agent-details", method = RequestMethod.GET)
     public String getCallCenterAgentBankTransactionDetails(@RequestHeader String Authorization) throws SQLException {
         int USER_ID = 0;
         String token = Authorization.substring(7);
@@ -161,7 +161,7 @@ public class UserDetailsController {
 
         return jo.toString();
     }
-
+    @CrossOrigin
     @RequestMapping(value = "/api/agent-details-per-customer", method = RequestMethod.POST)
     public String getAgentBankTransactionDetails(@RequestHeader String Authorization)  {
         int USER_ID = 0;
