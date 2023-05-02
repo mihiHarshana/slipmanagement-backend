@@ -98,7 +98,7 @@ public class UserDetailsController {
     }
 
     @CrossOrigin
-    @RequestMapping(value = "/api/callcenter-agent-details", method = RequestMethod.GET)
+    @RequestMapping(value = "/api/call-center-agent-details", method = RequestMethod.GET)
     public String getCallCenterAgentBankTransactionDetails(@RequestHeader String Authorization) throws SQLException {
         int USER_ID = 0;
         String token = Authorization.substring(7);
