@@ -17,9 +17,9 @@ import org.springframework.web.bind.annotation.*;
 
 import java.sql.SQLException;
 
-@CrossOrigin(origins = "*", allowedHeaders = "*")
+@CrossOrigin(origins = "http://localhost:3000", allowedHeaders = "*")
 @RestController
-
+@RequestMapping("/api")
 public class UserDetailsController {
     @Autowired
     BankDao bankDao;
@@ -35,8 +35,8 @@ public class UserDetailsController {
     @Autowired
     private UserRepo userRepo;
 
-    @CrossOrigin
-    @RequestMapping(value = "/api/customer-details", method = RequestMethod.POST)
+    @PostMapping("/customer-details")
+   // @RequestMapping(value = "/api/customer-details", method = RequestMethod.POST)
     public String getUserBankTransactionDetails(@RequestHeader String Authorization ) {
         // JwtTokenUtil jwtTokenUtil = new JwtTokenUtil();
         int USER_ID = 0;
@@ -97,8 +97,7 @@ public class UserDetailsController {
         return allDetails.toString();
     }
 
-    @CrossOrigin
-    @RequestMapping(value = "/api/call-center-agent-details", method = RequestMethod.GET)
+    @PostMapping("/call-center-agent-details")
     public String getCallCenterAgentBankTransactionDetails(@RequestHeader String Authorization) throws SQLException {
         int USER_ID = 0;
         String token = Authorization.substring(7);
@@ -161,8 +160,7 @@ public class UserDetailsController {
 
         return jo.toString();
     }
-    @CrossOrigin
-    @RequestMapping(value = "/api/agent-details-per-customer", method = RequestMethod.POST)
+    @PostMapping( "/agent-details-per-customer")
     public String getAgentBankTransactionDetails(@RequestHeader String Authorization)  {
         int USER_ID = 0;
         String token = Authorization.substring(7);

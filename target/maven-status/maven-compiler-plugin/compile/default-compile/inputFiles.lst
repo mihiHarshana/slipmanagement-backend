@@ -16,6 +16,7 @@ E:\projects\slipmanagement-backend\src\main\java\com\mhsoft\model\DAOAgentCode.j
 E:\projects\slipmanagement-backend\src\main\java\com\mhsoft\model\DAOUser.java
 E:\projects\slipmanagement-backend\src\main\java\com\mhsoft\service\JwtUserDetailsService.java
 E:\projects\slipmanagement-backend\src\main\java\com\mhsoft\dao\AgentCodeDao.java
+E:\projects\slipmanagement-backend\src\main\java\com\mhsoft\config\CorsConfig.java
 E:\projects\slipmanagement-backend\src\main\java\com\mhsoft\controller\HelloWorldController.java
 E:\projects\slipmanagement-backend\src\main\java\com\mhsoft\model\DAOTransaction.java
 E:\projects\slipmanagement-backend\src\main\java\com\mhsoft\repo\UserDetailsRepo.java

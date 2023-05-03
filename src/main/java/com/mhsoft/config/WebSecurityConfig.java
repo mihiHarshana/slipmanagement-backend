@@ -59,11 +59,52 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 	}
 
 	@Override
+	protected void configure(HttpSecurity http) throws Exception {
+//httpSecurity.cors().disable().authorizeRequests();
+		// We don't need CSRF for this example*//*
+		http.csrf().disable()
+				// dont authenticate this particular request
+				.authorizeRequests().antMatchers(
+						"/login",
+						"/register" ,
+						"/uploadStatus",
+				"/api/customer-details",
+				"/api/call-center-agent-details",
+				"/api/agent-details-per-customer"
+
+
+				).permitAll().
+				// all other requests need to be authenticated
+				anyRequest().authenticated().and().
+				// make sure we use stateless session; session won't be used to
+				// store user's state.
+				exceptionHandling().authenticationEntryPoint(jwtAuthenticationEntryPoint).and().sessionManagement()
+				.sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+
+		// Add a filter to validate the tokens with every request
+		http.addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
+
+/*		http.cors().and().csrf().disable().
+				authorizeRequests()
+				.antMatchers("/login", "/register" , "/uploadStatus").permitAll()
+				.anyRequest().authenticated()
+				.and()
+				.exceptionHandling().authenticationEntryPoint(jwtAuthenticationEntryPoint).and().sessionManagement()
+				.sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+		http.addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);*/
+	}
+
+	/*	@Override
 	protected void configure(HttpSecurity httpSecurity) throws Exception {
+
+
+
+
+
+*//*
 		//httpSecurity.cors().disable().authorizeRequests();
-		// We don't need CSRF for this example
-		config.corsConfigurer();
-		httpSecurity.csrf().disable()
+		// We don't need CSRF for this example*//*
+		httpSecurity.cors().and().csrf().disable()
 				// dont authenticate this particular request
 
 				.authorizeRequests().antMatchers("/login", "/register" , "/uploadStatus").permitAll().
@@ -76,7 +117,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
 		// Add a filter to validate the tokens with every request
 		httpSecurity.addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
-	}
+	}*/
 
 
 /*	@Override
@@ -105,7 +146,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 	CorsConfigurationSource corsConfigurationSource()
 	{
 		CorsConfiguration configuration = new CorsConfiguration();
-		configuration.setAllowedOrigins(Arrays.asList("http://localhost:3000/"));
+		configuration.setAllowedOrigins(Arrays.asList("http://localhost:3000"));
 		configuration.setAllowedMethods(Arrays.asList("GET","POST"));
 		UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
 		source.registerCorsConfiguration("/**", configuration);
