@@ -52,6 +52,7 @@ public class UserDetailsController {
         DAOUser DAOUser = userRepo.getUserByUserName(username);
         USER_ID = DAOUser.getUserid();
 
+
         // System.out.println("user name ============ : " + username);
         DAOBank bankDetailsOfUser = bankService.getBankDetailsByIUserId(USER_ID);
         JSONObject userBankDetails = new JSONObject();
@@ -90,7 +91,13 @@ public class UserDetailsController {
             jsonAgentDetalils.put(utils.concatinateAgent(Utils.BANK_NAME), tempAgentDetails[3]);
             jsonAgentDetalils.put(utils.concatinateAgent(Utils.BANK_BRANCH), tempAgentDetails[4]);
         }
+
+        JSONObject jo_userDetails = new JSONObject();
+        jo_userDetails.put("name",username );
+        jo_userDetails.put("userId",USER_ID);
+
         JSONObject allDetails = new JSONObject();
+        allDetails.put("customerDetails", jo_userDetails);
         allDetails.put("userBankDetails", userBankDetails);
         allDetails.put("userTransDetails", userTrDetails);
         allDetails.put("userAgentDetails", jsonAgentDetalils);
@@ -156,7 +163,7 @@ public class UserDetailsController {
         }
 
         JSONObject jo = new JSONObject();
-            jo.put("callCenterAgentBanKDetails", userBankDetails);
+          //  jo.put("callCenterAgentBanKDetails", userBankDetails);
             jo.put("depositData", array);
             jo.put("withdrawalData", array_withdrawal);
 
