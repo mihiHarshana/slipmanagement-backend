@@ -72,7 +72,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 				"/api/call-center-agent-details",
 				"/api/agent-details-per-customer"
 
-
 				).permitAll().
 				// all other requests need to be authenticated
 				anyRequest().authenticated().and().
