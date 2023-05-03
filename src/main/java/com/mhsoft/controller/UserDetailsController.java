@@ -128,27 +128,27 @@ public class UserDetailsController {
             System.out.println("Deposit --- length :" + i);
             String[] temp_deposit = deposits[i].split(",");
             JSONObject jo_deposit = new JSONObject();
-            jo_deposit.put("userId", temp_deposit[0]);
-            jo_deposit.put("trId", temp_deposit[1]);
-            jo_deposit.put("trAmount", temp_deposit[2]);
-            jo_deposit.put("trDateTime", temp_deposit[3]);
-            jo_deposit.put("trStatus", temp_deposit[4]);
-            jo_deposit.put("trType", temp_deposit[5]);
-            jo_deposit.put("userName", temp_deposit[6]);
+            jo_deposit.put(Utils.TR_USERID, temp_deposit[0]);
+            jo_deposit.put(Utils.TR_ID, temp_deposit[1]);
+            jo_deposit.put(Utils.TR_AMOUNT, temp_deposit[2]);
+            jo_deposit.put(Utils.TR_DATE, temp_deposit[3]); // Date to Be Fixed
+            jo_deposit.put(Utils.TR_STATUS, temp_deposit[4]);
+            jo_deposit.put(Utils.TR_TYPE, temp_deposit[5]);
+           // jo_deposit.put("userName", temp_deposit[6]);
             array.put(i, jo_deposit);
         }
 
         JSONArray array_withdrawal = new JSONArray();
         for (int i = 0; i < withdrawals.length; i++) {
             System.out.println("withdrawals --- length :" + i);
-            String[] temp_withdrawal = deposits[i].split(",");
+            String[] temp_withdrawal = withdrawals[i].split(",");
             JSONObject jo_withdrawal = new JSONObject();
-            jo_withdrawal.put("userId", temp_withdrawal[0]);
-            jo_withdrawal.put("trId", temp_withdrawal[1]);
-            jo_withdrawal.put("trAmount", temp_withdrawal[2]);
-            jo_withdrawal.put("trDateTime", temp_withdrawal[3]);
-            jo_withdrawal.put("trStatus", temp_withdrawal[4]);
-            jo_withdrawal.put("trType", temp_withdrawal[5]);
+            jo_withdrawal.put(Utils.TR_USERID, temp_withdrawal[0]);
+            jo_withdrawal.put(Utils.TR_ID, temp_withdrawal[1]);
+            jo_withdrawal.put(Utils.TR_AMOUNT, temp_withdrawal[2]);
+            jo_withdrawal.put(Utils.TR_DATE, temp_withdrawal[3]);
+            jo_withdrawal.put(Utils.TR_STATUS, temp_withdrawal[4]);
+            jo_withdrawal.put(Utils.TR_TYPE, temp_withdrawal[5]);
             jo_withdrawal.put("userName", temp_withdrawal[6]);
             array_withdrawal.put(i, jo_withdrawal);
         }
@@ -192,12 +192,12 @@ public class UserDetailsController {
             System.out.println("Deposit --- length :" + i);
             String[] temp_deposit = deposits[i].split(",");
             JSONObject jo_deposit = new JSONObject();
-            jo_deposit.put("userId", temp_deposit[0]);
-            jo_deposit.put("trId", temp_deposit[1]);
-            jo_deposit.put("trAmount", temp_deposit[2]);
-            jo_deposit.put("trDateTime", temp_deposit[3]);
-            jo_deposit.put("trStatus", temp_deposit[4]);
-            jo_deposit.put("trType", temp_deposit[5]);
+            jo_deposit.put(Utils.TR_USERID, temp_deposit[0]);
+            jo_deposit.put(Utils.TR_ID, temp_deposit[1]);
+            jo_deposit.put(Utils.TR_AMOUNT, temp_deposit[2]);
+            jo_deposit.put(Utils.TR_DATE, temp_deposit[3]); // Date to Be Fixed
+            jo_deposit.put(Utils.TR_STATUS, temp_deposit[4]);
+            jo_deposit.put(Utils.TR_TYPE, temp_deposit[5]);
             jo_deposit.put("userName", temp_deposit[6]);
             array.put(i, jo_deposit);
         }
@@ -205,14 +205,14 @@ public class UserDetailsController {
         JSONArray array_withdrawal = new JSONArray();
         for (int i = 0; i < withdrawals.length; i++) {
             System.out.println("withdrawals --- length :" + i);
-            String[] temp_withdrawal = deposits[i].split(",");
+            String[] temp_withdrawal = withdrawals[i].split(",");
             JSONObject jo_withdrawal = new JSONObject();
-            jo_withdrawal.put("userId", temp_withdrawal[0]);
-            jo_withdrawal.put("trId", temp_withdrawal[1]);
-            jo_withdrawal.put("trAmount", temp_withdrawal[2]);
-            jo_withdrawal.put("trDateTime", temp_withdrawal[3]);
-            jo_withdrawal.put("trStatus", temp_withdrawal[4]);
-            jo_withdrawal.put("trType", temp_withdrawal[5]);
+            jo_withdrawal.put(Utils.TR_USERID, temp_withdrawal[0]);
+            jo_withdrawal.put(Utils.TR_ID, temp_withdrawal[1]);
+            jo_withdrawal.put(Utils.TR_AMOUNT, temp_withdrawal[2]);
+            jo_withdrawal.put(Utils.TR_DATE, temp_withdrawal[3]);
+            jo_withdrawal.put(Utils.TR_STATUS, temp_withdrawal[4]);
+            jo_withdrawal.put(Utils.TR_TYPE, temp_withdrawal[5]);
             jo_withdrawal.put("userName", temp_withdrawal[6]);
             array_withdrawal.put(i, jo_withdrawal);
         }

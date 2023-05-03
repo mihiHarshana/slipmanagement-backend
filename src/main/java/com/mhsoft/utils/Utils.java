@@ -26,7 +26,12 @@ public class Utils {
 	public static final String TRTYPEWIDTHDRAW = "Withdraw";
 	public static final String TRTRYOEDEPOSIT = "Deposit";
 
-	
+	public static final String TR_AMOUNT = "amount";
+	public static final String TR_DATE = "date";
+	public static final String TR_STATUS = "status";
+	public static final String TR_TYPE = "type";
+	public static final String TR_ID = "trId";
+	public static final String TR_USERID = "userId";
 	private static Utils utils = null;
 
 	private Utils () {}
