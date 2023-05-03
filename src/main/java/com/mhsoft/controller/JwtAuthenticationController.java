@@ -46,7 +46,7 @@ public class JwtAuthenticationController {
                 if (daoUser.getUserStatus().equals("APPROVED")) {
                     JSONObject jo = new JSONObject();
                     JSONObject userobj = new JSONObject();
-                    userobj.put("mobile", daoUser.getUsername());
+                   // userobj.put("mobile", daoUser.getUsername());
                     userobj.put("usertype", daoUser.getUsertype());
                     userobj.put("userstatus", daoUser.getUserStatus());
                     jo.put("token", token);
