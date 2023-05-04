@@ -37,6 +37,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 	private JwtRequestFilter jwtRequestFilter;
 
 	@Autowired
+	private CorsConfig config;
+
+	@Autowired
 	public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
 		// configure AuthenticationManager so that it knows from where to load
 		// user for matching credentials
@@ -55,13 +58,55 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 		return super.authenticationManagerBean();
 	}
 
-/*	@Override
-	protected void configure(HttpSecurity httpSecurity) throws Exception {
-		//httpSecurity.cors().disable().authorizeRequests();
-		// We don't need CSRF for this example
-		httpSecurity.csrf().disable()
+	@Override
+	protected void configure(HttpSecurity http) throws Exception {
+//httpSecurity.cors().disable().authorizeRequests();
+		// We don't need CSRF for this example*//*
+		http.csrf().disable()
 				// dont authenticate this particular request
-				.cors().and()
+				.authorizeRequests().antMatchers(
+						"/login",
+						"/register" ,
+						"/uploadStatus",
+				"/api/customer-details",
+				"/api/call-center-agent-details",
+				"/api/agent-details-per-customer",
+				"/api/agent-details"
+
+				).permitAll().
+				// all other requests need to be authenticated
+				anyRequest().authenticated().and().
+				// make sure we use stateless session; session won't be used to
+				// store user's state.
+				exceptionHandling().authenticationEntryPoint(jwtAuthenticationEntryPoint).and().sessionManagement()
+				.sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+
+		// Add a filter to validate the tokens with every request
+		http.addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
+
+/*		http.cors().and().csrf().disable().
+				authorizeRequests()
+				.antMatchers("/login", "/register" , "/uploadStatus").permitAll()
+				.anyRequest().authenticated()
+				.and()
+				.exceptionHandling().authenticationEntryPoint(jwtAuthenticationEntryPoint).and().sessionManagement()
+				.sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+		http.addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);*/
+	}
+
+	/*	@Override
+	protected void configure(HttpSecurity httpSecurity) throws Exception {
+
+
+
+
+
+*//*
+		//httpSecurity.cors().disable().authorizeRequests();
+		// We don't need CSRF for this example*//*
+		httpSecurity.cors().and().csrf().disable()
+				// dont authenticate this particular request
+
 				.authorizeRequests().antMatchers("/login", "/register" , "/uploadStatus").permitAll().
 				// all other requests need to be authenticated
 				anyRequest().authenticated().and().
@@ -75,15 +120,15 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 	}*/
 
 
-	@Override
+/*	@Override
 	protected void configure(HttpSecurity httpSecurity) throws Exception {
 		//httpSecurity.cors().disable().authorizeRequests();
-
+*//*
 		// We don't need CSRF for this example
 		httpSecurity.csrf().disable()
 				// dont authenticate this particular request
 				.authorizeRequests().antMatchers("/login", "/register", "/api/customer-details",
-				"/api/callcenter-agent-details", "/api/agent-details-per-customer"
+				"/api/call-center-agent-details", "/api/agent-details-per-customer"
 
 						).permitAll().
 				// all other requests need to be authenticated
@@ -95,13 +140,13 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 				.sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 
 		// Add a filter to validate the tokens with every request
-		httpSecurity.addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
-	}
+		httpSecurity.addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class); *//*
+	}*/
 	@Bean
 	CorsConfigurationSource corsConfigurationSource()
 	{
 		CorsConfiguration configuration = new CorsConfiguration();
-		configuration.setAllowedOrigins(Arrays.asList("http://localhost:3000/"));
+		configuration.setAllowedOrigins(Arrays.asList("http://localhost:3000"));
 		configuration.setAllowedMethods(Arrays.asList("GET","POST"));
 		UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
 		source.registerCorsConfiguration("/**", configuration);

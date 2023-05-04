@@ -8,7 +8,7 @@ import org.springframework.data.jpa.repository.Query;
 
 public interface AgentUserRepo extends JpaRepository<DAOAgentUser, Integer> {
     @Query(value = "SELECT * from agentuser WHERE userid = ?1 " , nativeQuery = true)
-    DAOBank getAgentIdForUser(int userId);
+    DAOAgentUser getAgentIdForUser(int userId);
 
 
 

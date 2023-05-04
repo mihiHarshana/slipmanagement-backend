@@ -25,10 +25,16 @@ public interface TransactionRepo extends JpaRepository<DAOTransaction, Integer> 
 
     @Query(value = "SELECT tr.userid, tr.trid, tr.tramount, tr.trdatetime, tr.trstatus, tr.trtype, c.username " +
             "FROM transaction tr " +
-            "INNER JOIN agentuser us ON tr.trid = us.userid " +
+            "INNER JOIN agentuser us ON tr.userid = us.userid " +
             "INNER JOIN user c ON us.userid = c.id " +
-            "WHERE us.agentid=2" , nativeQuery = true)
-    String [] getTransactionsByUserAgentId(int agentId);
+            "WHERE us.agentid=?1" , nativeQuery = true)
+    DAOTransaction [] getTransactionsByUserAgentId(int agentId);
+
+    @Query(value = "SELECT tr.userid, tr.trid, tr.tramount, tr.trdatetime, tr.trstatus, tr.trtype, c.username " +
+            "FROM transaction tr " +
+            "INNER JOIN user c ON c.id = tr.userid " +
+            "WHERE c.id=?1" , nativeQuery = true)
+    DAOTransaction [] getTransactionsByUserId(int agentId);
 
 /*    @Query(value = "SELECT tr.trid, tr.tramount, tr.trdatetime, tr.trstatus, tr.trtype, tr.userid FROM transaction AS tr ")
     String [] getTransactionsByUserAgentId(int agentId);*/

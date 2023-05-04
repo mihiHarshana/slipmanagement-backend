@@ -8,6 +8,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 
 @RestController
 @CrossOrigin(origins = "*", allowedHeaders = "*")
@@ -41,7 +42,8 @@ public class TransactionController {
 
     private DAOTransaction saveTrData(DAOTransaction daoTrans) {
         DAOTransaction tempTr= new DAOTransaction();
-        tempTr.setTrdatetime(LocalDateTime.now());
+        System.out.println("==== Time Stamp " + LocalDateTime.now().toEpochSecond(ZoneOffset.MIN));
+        tempTr.setTrdatetime(LocalDateTime.now().toEpochSecond(ZoneOffset.UTC));
         tempTr.setTramount(daoTrans.getTramount());
         tempTr.setTrstatus(daoTrans.getTrstatus());
         tempTr.setTrtype(daoTrans.getTrtype());

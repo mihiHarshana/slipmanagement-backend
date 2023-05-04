@@ -15,6 +15,7 @@ com\mhsoft\service\StorageService.class
 com\mhsoft\controller\UserDetailsController.class
 com\mhsoft\dao\UserDao.class
 com\mhsoft\model\DAOBank.class
+com\mhsoft\config\CorsConfig.class
 com\mhsoft\model\DAOUser.class
 com\mhsoft\service\AgentCodeService.class
 com\mhsoft\config\WebSecurityConfig.class
