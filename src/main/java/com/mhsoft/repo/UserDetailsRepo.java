@@ -14,4 +14,7 @@ public interface UserDetailsRepo   extends JpaRepository<DAOAgentUser, Integer> 
             " agentuser.userid =?1  " , nativeQuery = true)
     String  getBankDetialsOfAgentByuserId(int userId);
 
+
+  //  String getBankDetailsOfAgentByAgentId(int agentId);
+
 }

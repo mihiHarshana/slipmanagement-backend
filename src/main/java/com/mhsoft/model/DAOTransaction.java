@@ -11,7 +11,7 @@ public class DAOTransaction {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int trid;
 
-    private LocalDateTime trdatetime;
+    private Long trdatetime;
     private String trtype;
     private double tramount;
     private String trstatus;
@@ -25,11 +25,11 @@ public class DAOTransaction {
         this.trid = trid;
     }
 
-    public LocalDateTime getTrdatetime() {
+    public Long getTrdatetime() {
         return trdatetime;
     }
 
-    public void setTrdatetime(LocalDateTime trdatetime) {
+    public void setTrdatetime(Long trdatetime) {
         this.trdatetime = trdatetime;
     }
 

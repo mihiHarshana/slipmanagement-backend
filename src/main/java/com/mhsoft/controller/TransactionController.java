@@ -41,7 +41,7 @@ public class TransactionController {
 
     private DAOTransaction saveTrData(DAOTransaction daoTrans) {
         DAOTransaction tempTr= new DAOTransaction();
-        tempTr.setTrdatetime(LocalDateTime.now());
+        tempTr.setTrdatetime(System.currentTimeMillis());
         tempTr.setTramount(daoTrans.getTramount());
         tempTr.setTrstatus(daoTrans.getTrstatus());
         tempTr.setTrtype(daoTrans.getTrtype());

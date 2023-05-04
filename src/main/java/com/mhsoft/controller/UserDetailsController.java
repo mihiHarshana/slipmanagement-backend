@@ -2,10 +2,12 @@ package com.mhsoft.controller;
 
 import com.mhsoft.config.JwtTokenUtil;
 import com.mhsoft.dao.BankDao;
+import com.mhsoft.model.DAOAgentUser;
 import com.mhsoft.model.DAOBank;
 import com.mhsoft.model.DAOTransaction;
 import com.mhsoft.model.DAOUser;
 import com.mhsoft.repo.UserRepo;
+import com.mhsoft.service.AgentUserService;
 import com.mhsoft.service.BankService;
 import com.mhsoft.service.TransactionService;
 import com.mhsoft.service.UserDetailService;
@@ -34,6 +36,9 @@ public class UserDetailsController {
 
     @Autowired
     private UserRepo userRepo;
+
+    @Autowired
+    AgentUserService agentUserService;
 
     @PostMapping("/customer-details")
    // @RequestMapping(value = "/api/customer-details", method = RequestMethod.POST)
@@ -73,23 +78,40 @@ public class UserDetailsController {
         }
 
 
-        DAOTransaction[] userTrDetails = trService.getTransactionsByUserId(USER_ID);
-        String[] tempAgentDetails = userDetailService.getAgentDetailsByUserId(USER_ID);
+    //    DAOTransaction[] userTrDetails = trService.getTransactionsByUserId(USER_ID);
+
+        DAOTransaction [] userTrDetails = trService.getTransactionsByUserId(USER_ID);
+
+        JSONArray tr_array = new JSONArray();
+
+        for (int i =0; i<userTrDetails.length; i++) {
+            JSONObject tr_json = new JSONObject();
+            tr_json.put(Utils.TR_AMOUNT,userTrDetails[i].getTramount());
+            tr_json.put(Utils.TR_TYPE,userTrDetails[i].getTrtype());
+            tr_json.put(Utils.TR_DATE,userTrDetails[i].getTrdatetime());
+            tr_json.put(Utils.TR_USERID,userTrDetails[i].getUserid());
+            tr_json.put(Utils.TR_ID,userTrDetails[i].getTrid());
+            tr_array.put(i,tr_json);
+        }
+
+        DAOAgentUser agentdetails = agentUserService.getAgentIdByUserID(USER_ID);
+
+        DAOBank  tempAgentDetails = bankService.getBankDetailsByIUserId(agentdetails.getAgentid());
 
         JSONObject jsonAgentDetalils = new JSONObject();
 
         if (tempAgentDetails == null) {
-            jsonAgentDetalils.put(utils.concatinateAgent(Utils.BANK_ACC_NO), "null");
-            jsonAgentDetalils.put(utils.concatinateAgent(Utils.BANK_CODE), "null");
-            jsonAgentDetalils.put(utils.concatinateAgent(Utils.BANK_INS), "null");
-            jsonAgentDetalils.put(utils.concatinateAgent(Utils.BANK_NAME), "null");
-            jsonAgentDetalils.put(utils.concatinateAgent(Utils.BANK_BRANCH), "null");
+            jsonAgentDetalils.put(Utils.BANK_ACC_NO, "null");
+            jsonAgentDetalils.put(Utils.BANK_CODE, "null");
+            jsonAgentDetalils.put(Utils.BANK_INS, "null");
+            jsonAgentDetalils.put(Utils.BANK_NAME, "null");
+            jsonAgentDetalils.put(Utils.BANK_BRANCH, "null");
         } else {
-            jsonAgentDetalils.put(utils.concatinateAgent(Utils.BANK_ACC_NO), tempAgentDetails[0]);
-            jsonAgentDetalils.put(utils.concatinateAgent(Utils.BANK_CODE), tempAgentDetails[1]);
-            jsonAgentDetalils.put(utils.concatinateAgent(Utils.BANK_INS), tempAgentDetails[2]);
-            jsonAgentDetalils.put(utils.concatinateAgent(Utils.BANK_NAME), tempAgentDetails[3]);
-            jsonAgentDetalils.put(utils.concatinateAgent(Utils.BANK_BRANCH), tempAgentDetails[4]);
+            jsonAgentDetalils.put(Utils.BANK_ACC_NO, tempAgentDetails.getBankaccno());
+            jsonAgentDetalils.put(Utils.BANK_CODE, tempAgentDetails.getBankcode());
+            jsonAgentDetalils.put(Utils.BANK_INS, tempAgentDetails.getBankinst());
+            jsonAgentDetalils.put(Utils.BANK_NAME, tempAgentDetails.getBankname());
+            jsonAgentDetalils.put(Utils.BANK_BRANCH, tempAgentDetails.getBranchname());
         }
 
         JSONObject jo_userDetails = new JSONObject();
@@ -99,7 +121,7 @@ public class UserDetailsController {
         JSONObject allDetails = new JSONObject();
         allDetails.put("customerDetails", jo_userDetails);
         allDetails.put("userBankDetails", userBankDetails);
-        allDetails.put("userTransDetails", userTrDetails);
+        allDetails.put("userTransDetails", tr_array);
         allDetails.put("userAgentDetails", jsonAgentDetalils);
         return allDetails.toString();
     }

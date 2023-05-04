@@ -17,7 +17,7 @@ public class TransactionService {
     private TransactionRepo transactionRepo;
 
     public DAOTransaction [] getTransactionsByUserId(int userid) {
-        DAOTransaction [] transaction = transactionRepo.getBankDetailsByUserId(userid);
+        DAOTransaction [] transaction = transactionRepo.getTransactionsByUserId(userid);
         if (transaction == null) {
             return null;
         }
