@@ -28,7 +28,6 @@ public class DAOTransaction {
     private LocalDate slipdate;
     private double trdisputeamount;
 
-    private File slip;
 
     public String getAgentremarks() {
         return agentremarks;
