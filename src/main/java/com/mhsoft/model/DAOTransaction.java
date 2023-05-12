@@ -1,7 +1,10 @@
 package com.mhsoft.model;
 
+import org.springframework.web.multipart.MultipartFile;
+
 import javax.persistence.*;
-import java.sql.Date;
+import java.io.File;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Entity
@@ -16,6 +19,65 @@ public class DAOTransaction {
     private double tramount;
     private String trstatus;
     private int userid;
+  //  private double trdisputeamount;
+    private String utrnumber;
+    private String filename;
+    private String customerremarks;
+    private String agentremarks;
+    private String ccagentremarks;
+    private LocalDate slipdate;
+    private double trdisputeamount;
+
+    private File slip;
+
+    public String getAgentremarks() {
+        return agentremarks;
+    }
+
+    public void setAgentremarks(String agentremarks) {
+        this.agentremarks = agentremarks;
+    }
+
+    public String getCcagentremarks() {
+        return ccagentremarks;
+    }
+
+    public void setCcagentremarks(String ccagentremarks) {
+        this.ccagentremarks = ccagentremarks;
+    }
+
+
+    public String getFilename() {
+        return filename;
+    }
+
+    public void setFilename(String fileName) {
+        this.filename = fileName;
+    }
+
+    public double getTrdisputeamount() {
+        return trdisputeamount;
+    }
+
+    public void setTrdisputeamount(double trDisputeAmount) {
+        this.trdisputeamount = trDisputeAmount;
+    }
+
+    public String getUtrnumber() {
+        return utrnumber;
+    }
+
+    public void setUtrnumber(String utrNumber) {
+        this.utrnumber = utrNumber;
+    }
+
+   public String getCustomerremarks() {
+       return customerremarks;
+   }
+
+   public void setCustomerremarks(String customerRemarks) {
+       this.customerremarks = customerRemarks;
+    }
 
     public int getTrid() {
         return trid;
@@ -63,6 +125,14 @@ public class DAOTransaction {
 
     public void setUserid(int userid) {
         this.userid = userid;
+    }
+
+    public LocalDate getSlipdate() {
+        return slipdate;
+    }
+
+    public void setSlipdate(LocalDate slipdate) {
+        this.slipdate = slipdate;
     }
 }
 

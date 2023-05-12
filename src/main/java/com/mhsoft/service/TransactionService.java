@@ -39,4 +39,14 @@ public class TransactionService {
         }
         return transactions;
     }
+
+    public boolean isUtrNumberValid(String utrNumber) {
+
+        DAOTransaction  transactions = transactionRepo.isUtrNumberValid(utrNumber);
+        if (transactions == null) {
+            return false;
+        } else {
+            return true;
+        }
+    }
 }
