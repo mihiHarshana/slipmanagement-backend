@@ -71,7 +71,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 				"/api/customer-details",
 				"/api/call-center-agent-details",
 				"/api/agent-details-per-customer",
-				"/api/agent-details"
+				"/api/agent-details",
+				"/api/new-deposit"
 
 				).permitAll().
 				// all other requests need to be authenticated

@@ -17,6 +17,7 @@ import java.time.LocalDate;
 @RestController
 @CrossOrigin(origins = "*", allowedHeaders = "*")
 public class FileUploadController {
+    private static String UPLOADED_FOLDER = "E:\\projects\\fileuploads\\";
 
     @Autowired
     JwtTokenUtil jwtTokenUtil;
@@ -24,7 +25,6 @@ public class FileUploadController {
     @Autowired
     private UserRepo userRepo;
 
-    private static String UPLOADED_FOLDER = "E:\\projects\\fileuploads\\";
 
 /*    @RequestMapping(value="/", method = RequestMethod.GET)
     public String index() {
