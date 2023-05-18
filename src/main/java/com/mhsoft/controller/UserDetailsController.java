@@ -2,15 +2,10 @@ package com.mhsoft.controller;
 
 import com.mhsoft.config.JwtTokenUtil;
 import com.mhsoft.dao.BankDao;
-import com.mhsoft.model.DAOAgentUser;
-import com.mhsoft.model.DAOBank;
-import com.mhsoft.model.DAOTransaction;
-import com.mhsoft.model.DAOUser;
+import com.mhsoft.model.*;
+import com.mhsoft.repo.TransactionRepo;
 import com.mhsoft.repo.UserRepo;
-import com.mhsoft.service.AgentUserService;
-import com.mhsoft.service.BankService;
-import com.mhsoft.service.TransactionService;
-import com.mhsoft.service.UserDetailService;
+import com.mhsoft.service.*;
 import com.mhsoft.utils.Utils;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -40,14 +35,18 @@ public class UserDetailsController {
     @Autowired
     AgentUserService agentUserService;
 
+    @Autowired
+    CurrencyService currencyService;
+
+    @Autowired
+    AgentSystemService agentSystemService;
+
     @PostMapping("/customer-details")
-   // @RequestMapping(value = "/api/customer-details", method = RequestMethod.POST)
-    public String getUserBankTransactionDetails(@RequestHeader String Authorization ) {
+    // @RequestMapping(value = "/api/customer-details", method = RequestMethod.POST)
+    public String getUserBankTransactionDetails(@RequestHeader String Authorization) {
         // JwtTokenUtil jwtTokenUtil = new JwtTokenUtil();
         int USER_ID = 0;
         String token = Authorization.substring(7);
-
-
         System.out.println("Tokent ============ : " + token);
 
         String username = jwtTokenUtil.getUsernameFromToken(token);
@@ -59,10 +58,37 @@ public class UserDetailsController {
 
 
         // System.out.println("user name ============ : " + username);
-        DAOBank bankDetailsOfUser = bankService.getBankDetailsByIUserId(USER_ID);
+        DAOBank bankDetailsOfUser[] = bankService.getBankDetailsByIUserId(USER_ID);
         JSONObject userBankDetails = new JSONObject();
-        Utils utils = Utils.getInstance();
 
+        if (bankDetailsOfUser == null) {
+            userBankDetails.put(Utils.BANK_NAME, "null");
+            userBankDetails.put(Utils.BANK_CODE, "null");
+            userBankDetails.put(Utils.BANK_BRANCH, "null");
+            userBankDetails.put(Utils.BANK_INS, "null");
+            userBankDetails.put(Utils.BANK_ACC_NO, "null");
+        } else {
+            String[] bankacounts = new String[bankDetailsOfUser.length];
+
+            for (int i = 0; i < bankacounts.length; i++) {
+                bankacounts[i] = bankDetailsOfUser[i].getBankaccno();
+            }
+
+            for (int i = 0; i < bankacounts.length; i++) {
+                if (bankDetailsOfUser[i].isDefaultacc()) {
+                    userBankDetails.put(Utils.BANK_NAME, bankDetailsOfUser[i].getBankname());
+                    userBankDetails.put(Utils.BANK_CODE, bankDetailsOfUser[i].getBankcode());
+                    userBankDetails.put(Utils.BANK_BRANCH, bankDetailsOfUser[i].getBranchname());
+                    userBankDetails.put(Utils.BANK_INS, bankDetailsOfUser[i].getBankinst());
+                    userBankDetails.put(Utils.BANK_ACC_NO, bankDetailsOfUser[i].getBankaccno());
+                }
+            }
+        }
+
+
+
+
+/*
         if (bankDetailsOfUser == null) {
             userBankDetails.put(Utils.BANK_NAME, "null");
             userBankDetails.put(Utils.BANK_CODE, "null");
@@ -76,57 +102,68 @@ public class UserDetailsController {
             userBankDetails.put(Utils.BANK_INS, bankDetailsOfUser.getBankinst());
             userBankDetails.put(Utils.BANK_ACC_NO, bankDetailsOfUser.getBankaccno());
         }
+*/
 
 
-    //    DAOTransaction[] userTrDetails = trService.getTransactionsByUserId(USER_ID);
+        //    DAOTransaction[] userTrDetails = trService.getTransactionsByUserId(USER_ID);
 
-        DAOTransaction [] userTrDetails = trService.getTransactionsByUserId(USER_ID);
+        DAOTransaction[] userTrDetails = trService.getTransactionsByUserId(USER_ID);
 
-        JSONArray tr_array = new JSONArray();
+        JSONArray tr_array = setTrData(userTrDetails);
 
-        for (int i =0; i<userTrDetails.length; i++) {
-            JSONObject tr_json = new JSONObject();
-            tr_json.put(Utils.TR_AMOUNT,userTrDetails[i].getTramount());
-            tr_json.put(Utils.TR_TYPE,userTrDetails[i].getTrtype());
-            tr_json.put(Utils.TR_DATE,userTrDetails[i].getTrdatetime());
-            tr_json.put(Utils.TR_USERID,userTrDetails[i].getUserid());
-            tr_json.put(Utils.TR_ID,userTrDetails[i].getTrid());
-            tr_array.put(i,tr_json);
-        }
 
         DAOAgentUser agentdetails = agentUserService.getAgentIdByUserID(USER_ID);
 
-        DAOBank  tempAgentDetails = bankService.getBankDetailsByIUserId(agentdetails.getAgentid());
-
+        DAOBank[] tempAgentDetails = bankService.getBankDetailsByIUserId(agentdetails.getAgentid());
+        String[] bankacounts = null;
         JSONObject jsonAgentDetalils = new JSONObject();
 
         if (tempAgentDetails == null) {
-            jsonAgentDetalils.put(Utils.BANK_ACC_NO, "null");
-            jsonAgentDetalils.put(Utils.BANK_CODE, "null");
-            jsonAgentDetalils.put(Utils.BANK_INS, "null");
             jsonAgentDetalils.put(Utils.BANK_NAME, "null");
+            jsonAgentDetalils.put(Utils.BANK_CODE, "null");
             jsonAgentDetalils.put(Utils.BANK_BRANCH, "null");
+            jsonAgentDetalils.put(Utils.BANK_INS, "null");
+            jsonAgentDetalils.put(Utils.BANK_ACC_NO, "null");
         } else {
-            jsonAgentDetalils.put(Utils.BANK_ACC_NO, tempAgentDetails.getBankaccno());
-            jsonAgentDetalils.put(Utils.BANK_CODE, tempAgentDetails.getBankcode());
-            jsonAgentDetalils.put(Utils.BANK_INS, tempAgentDetails.getBankinst());
-            jsonAgentDetalils.put(Utils.BANK_NAME, tempAgentDetails.getBankname());
-            jsonAgentDetalils.put(Utils.BANK_BRANCH, tempAgentDetails.getBranchname());
+            bankacounts = new String[tempAgentDetails.length];
+
+            for (int i = 0; i < bankacounts.length; i++) {
+                bankacounts[i] = tempAgentDetails[i].getBankaccno();
+            }
+
+            for (int i = 0; i < bankacounts.length; i++) {
+                if (tempAgentDetails[i].isDefaultacc()) {
+                    jsonAgentDetalils.put(Utils.BANK_NAME, tempAgentDetails[i].getBankname());
+                    jsonAgentDetalils.put(Utils.BANK_CODE, tempAgentDetails[i].getBankcode());
+                    jsonAgentDetalils.put(Utils.BANK_BRANCH, tempAgentDetails[i].getBranchname());
+                    jsonAgentDetalils.put(Utils.BANK_INS, tempAgentDetails[i].getBankinst());
+                    jsonAgentDetalils.put(Utils.BANK_ACC_NO, tempAgentDetails[i].getBankaccno());
+                }
+            }
         }
 
+        //Load Currencies
+        DAOCurrency ar_currency[] = currencyService.getAllCurrency();
+        DAOAgentSystem ar_agentSystem[] = agentSystemService.getAgentSystemByAgentId(agentdetails.getAgentid());
+
         JSONObject jo_userDetails = new JSONObject();
-        jo_userDetails.put("name",username );
-        jo_userDetails.put("userId",USER_ID);
+        jo_userDetails.put("name", username);
+        // jo_userDetails.put("userId",USER_ID);
+        jo_userDetails.put("playerUser", "not required");
 
         JSONObject allDetails = new JSONObject();
-        allDetails.put("customerDetails", jo_userDetails);
+        allDetails.put("user", jo_userDetails);
+        allDetails.put("customerBankAccounts", bankacounts);
         allDetails.put("userBankDetails", userBankDetails);
-        allDetails.put("userTransDetails", tr_array);
-        allDetails.put("userAgentDetails", jsonAgentDetalils);
+        allDetails.put("customerTransactionDataOther", tr_array); // this may need to change
+        allDetails.put("customerTransactionDataMajorStatus", tr_array); // this may need to change
+        allDetails.put("agentBankDetails", jsonAgentDetalils);
+        allDetails.put("currencies", ar_currency);
+        allDetails.put("agentSystems", ar_agentSystem);
         return allDetails.toString();
     }
 
-    @PostMapping("/call-center-agent-details")
+  /*  @PostMapping("/call-center-agent-details")
     public String getCallCenterAgentBankTransactionDetails(@RequestHeader String Authorization) throws SQLException {
         int USER_ID = 0;
         String token = Authorization.substring(7);
@@ -134,7 +171,7 @@ public class UserDetailsController {
         DAOUser DAOUser = userRepo.getUserByUserName(username);
         USER_ID = DAOUser.getUserid();
 
-        DAOBank bankDetailsOfUser = bankService.getBankDetailsByIUserId(USER_ID);
+        DAOBank [] bankDetailsOfUser = bankService.getBankDetailsByIUserId(USER_ID);
         JSONObject userBankDetails = new JSONObject();
         if (bankDetailsOfUser == null) {
             userBankDetails.put(Utils.BANK_NAME, "null");
@@ -190,8 +227,8 @@ public class UserDetailsController {
             jo.put("withdrawalData", array_withdrawal);
 
         return jo.toString();
-    }
-    @PostMapping( "/agent-details")
+    }*/
+    /*@PostMapping( "/agent-details")
     public String getAgentBankTransactionDetails(@RequestHeader String Authorization)  {
         int USER_ID = 0;
         String token = Authorization.substring(7);
@@ -226,7 +263,7 @@ public class UserDetailsController {
             tr_json.put(Utils.TR_USERID,transactions[i].getUserid());
             tr_json.put(Utils.TR_ID,transactions[i].getTrid());
             tr_array.put(i,tr_json);
-        }
+        }*/
 
 
 /*        String[] deposits = trService.getTransactionsByAgentId(USER_ID);
@@ -260,12 +297,30 @@ public class UserDetailsController {
             jo_withdrawal.put(Utils.TR_TYPE, temp_withdrawal[5]);
             jo_withdrawal.put("userName", temp_withdrawal[6]);
             array_withdrawal.put(i, jo_withdrawal);
-        }*/
+        }
 
         JSONObject jo = new JSONObject();
         jo.put("agentBanKDetails", userBankDetails);
         jo.put("userTransDetails", tr_array);
         //jo.put("withdrawalData", array_withdrawal);
         return jo.toString();
+    }*/
+
+    private JSONArray setTrData(DAOTransaction[] userTrDetails) {
+        JSONArray tr_array = new JSONArray();
+        JSONObject tr_json = new JSONObject();
+        for (int i = 0; i < userTrDetails.length; i++) {
+            tr_json.put(Utils.TR_AMOUNT, userTrDetails[i].getTramount());
+            tr_json.put(Utils.TR_TYPE, userTrDetails[i].getTrtype());
+            tr_json.put(Utils.TR_DATE, userTrDetails[i].getTrdatetime());
+            tr_json.put(Utils.TR_USERID, userTrDetails[i].getUserid());
+            tr_json.put(Utils.TR_ID, userTrDetails[i].getTrid());
+            tr_json.put(Utils.TR_STATUS, userTrDetails[i].getTrstatus());
+            tr_json.put(Utils.TR_AMOUNT, userTrDetails[i].getTramount());
+            tr_json.put(Utils.TR_SLIP, userTrDetails[i].getSlip());
+            tr_json.put(Utils.TR_REMARKS, userTrDetails[i].getRemarks());
+            tr_array.put(i, tr_json);
+        }
+        return tr_array;
     }
 }

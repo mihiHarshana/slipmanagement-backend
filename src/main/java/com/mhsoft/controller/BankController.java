@@ -20,7 +20,7 @@ public class BankController {
     BankService bankService;
 
 
-    @RequestMapping(value = "/api/bankdetails", method = RequestMethod.POST)
+/*    @RequestMapping(value = "/api/bankdetails", method = RequestMethod.POST)
     public String getBankDetailsByUserID(@RequestBody DAOBank userDetails) {
         //int int_userId = Integer.parseInt(userid);
         DAOBank bankDetailsOfUser = bankService.getBankDetailsByIUserId(userDetails.getUserid());
@@ -36,7 +36,7 @@ public class BankController {
         jo.put("bandinstructions", bankDetailsOfUser.getBankinst());
         jo.put("bankaccno", bankDetailsOfUser.getBankaccno());
         return jo.toString();
-    }
+    }*/
 
 /*
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {

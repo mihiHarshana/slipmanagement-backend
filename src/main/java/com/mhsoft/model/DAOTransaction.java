@@ -28,6 +28,25 @@ public class DAOTransaction {
     private LocalDate slipdate;
     private double trdisputeamount;
 
+    private String remarks;
+
+    private String slip;
+
+    public String getRemarks() {
+        return remarks;
+    }
+
+    public void setRemarks(String remarks) {
+        this.remarks = remarks;
+    }
+
+    public String getSlip() {
+        return slip;
+    }
+
+    public void setSlip(String slip) {
+        this.slip = slip;
+    }
 
     public String getAgentremarks() {
         return agentremarks;

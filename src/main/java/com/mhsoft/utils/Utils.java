@@ -15,9 +15,9 @@ public class Utils {
 	public static final  String BANK_CODE="bankCode";
 	public static final  String BANK_BRANCH="branchName";
 
-	public static final String BANK_INS="bankInstruction";
+	public static final String BANK_INS="instruction";
 
-	public static final String BANK_ACC_NO="bankAccNo";
+	public static final String BANK_ACC_NO="accountNo";
 
 	public static final String BANK_NAME="bankName";
 
@@ -30,8 +30,14 @@ public class Utils {
 	public static final String TR_DATE = "date";
 	public static final String TR_STATUS = "status";
 	public static final String TR_TYPE = "type";
-	public static final String TR_ID = "trId";
+	public static final String TR_ID = "transactionId";
 	public static final String TR_USERID = "userId";
+
+	public static final String TR_SLIPDATE = "slipDate";
+
+	public static final String TR_REMARKS = "remarks";
+
+	public static final String TR_SLIP = "slip";
 	private static Utils utils = null;
 
 	private Utils () {}

@@ -15,8 +15,8 @@ public class BankService {
     @Autowired
     private BankRepo bankRepo;
 
-    public DAOBank getBankDetailsByIUserId(int userid) {
-        DAOBank bankdetails = bankRepo.getBankDetailsByUserId(userid);
+    public DAOBank [] getBankDetailsByIUserId(int userid) {
+        DAOBank bankdetails [] = bankRepo.getBankDetailsByUserId(userid);
         if (bankdetails == null) {
             return null;
         }
