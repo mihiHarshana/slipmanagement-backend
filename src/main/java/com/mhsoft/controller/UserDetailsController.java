@@ -3,7 +3,6 @@ package com.mhsoft.controller;
 import com.mhsoft.config.JwtTokenUtil;
 import com.mhsoft.dao.BankDao;
 import com.mhsoft.model.*;
-import com.mhsoft.repo.TransactionRepo;
 import com.mhsoft.repo.UserRepo;
 import com.mhsoft.service.*;
 import com.mhsoft.utils.Utils;
@@ -11,8 +10,6 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-
-import java.sql.SQLException;
 
 @CrossOrigin(origins = "http://localhost:3000", allowedHeaders = "*")
 @RestController
@@ -306,7 +303,41 @@ public class UserDetailsController {
         return jo.toString();
     }*/
 
-    private JSONArray setTrData(DAOTransaction[] userTrDetails) {
+
+    @PostMapping("/change-status")
+    public String changeStatus(@RequestHeader String Authorization, @RequestBody String obj ) {
+        // JwtTokenUtil jwtTokenUtil = new JwtTokenUtil();
+        int USER_ID = 0;
+        String token = Authorization.substring(7);
+        System.out.println("Tokent ============ : " + token);
+
+        String username = jwtTokenUtil.getUsernameFromToken(token);
+
+        DAOUser DAOUser = userRepo.getUserByUserName(username);
+        USER_ID = DAOUser.getUserid();
+        System.out.println(obj);
+
+        return "done";
+
+    }
+
+    @PostMapping("/change-remarks")
+    public String changeRemarks(@RequestHeader String Authorization, @RequestBody String obj ) {
+        // JwtTokenUtil jwtTokenUtil = new JwtTokenUtil();
+        int USER_ID = 0;
+        String token = Authorization.substring(7);
+        System.out.println("Tokent ============ : " + token);
+
+        String username = jwtTokenUtil.getUsernameFromToken(token);
+
+        DAOUser DAOUser = userRepo.getUserByUserName(username);
+        USER_ID = DAOUser.getUserid();
+        System.out.println(obj);
+
+        return "done";
+
+    }
+        private JSONArray setTrData(DAOTransaction[] userTrDetails) {
         JSONArray tr_array = new JSONArray();
         JSONObject tr_json = new JSONObject();
         for (int i = 0; i < userTrDetails.length; i++) {
@@ -324,4 +355,5 @@ public class UserDetailsController {
         }
         return tr_array;
     }
+
 }
