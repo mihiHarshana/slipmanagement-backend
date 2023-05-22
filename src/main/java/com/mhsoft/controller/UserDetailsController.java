@@ -154,7 +154,7 @@ public class UserDetailsController {
         JSONObject allDetails = new JSONObject();
         allDetails.put("user", jo_userDetails);
         allDetails.put("customerBankAccounts", bankacounts);
-        allDetails.put("userBankDetails", userBankDetails);
+        allDetails.put("customerBankDetails", userBankDetails);
         allDetails.put("customerTransactionDataOther", tr_array); // this may need to change
         allDetails.put("customerTransactionDataMajorStatus", tr_array); // this may need to change
         allDetails.put("agentBankDetails", jsonAgentDetalils);
