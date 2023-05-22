@@ -38,6 +38,8 @@ public class Utils {
 	public static final String TR_REMARKS = "remarks";
 
 	public static final String TR_SLIP = "slip";
+
+	public static final String TR_SLIP_DATe = "slipDate";
 	private static Utils utils = null;
 
 	private Utils () {}

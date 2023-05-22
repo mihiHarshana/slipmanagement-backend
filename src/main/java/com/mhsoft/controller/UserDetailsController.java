@@ -318,6 +318,7 @@ public class UserDetailsController {
             tr_json.put(Utils.TR_STATUS, userTrDetails[i].getTrstatus());
             tr_json.put(Utils.TR_AMOUNT, userTrDetails[i].getTramount());
             tr_json.put(Utils.TR_SLIP, userTrDetails[i].getSlip());
+            tr_json.put(Utils.TR_SLIP_DATe, userTrDetails[i].getSlipdate());
             tr_json.put(Utils.TR_REMARKS, userTrDetails[i].getRemarks());
             tr_array.put(i, tr_json);
         }

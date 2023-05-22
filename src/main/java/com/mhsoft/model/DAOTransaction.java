@@ -1,11 +1,6 @@
 package com.mhsoft.model;
 
-import org.springframework.web.multipart.MultipartFile;
-
 import javax.persistence.*;
-import java.io.File;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "transaction")
@@ -25,7 +20,7 @@ public class DAOTransaction {
     private String customerremarks;
     private String agentremarks;
     private String ccagentremarks;
-    private LocalDate slipdate;
+    private Long slipdate;
     private double trdisputeamount;
 
     private String remarks;
@@ -145,11 +140,11 @@ public class DAOTransaction {
         this.userid = userid;
     }
 
-    public LocalDate getSlipdate() {
+    public Long getSlipdate() {
         return slipdate;
     }
 
-    public void setSlipdate(LocalDate slipdate) {
+    public void setSlipdate(Long slipdate) {
         this.slipdate = slipdate;
     }
 }
