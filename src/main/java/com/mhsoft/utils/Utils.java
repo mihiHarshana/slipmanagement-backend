@@ -70,7 +70,10 @@ public class Utils {
 		String str2 = str.substring(1);
 
 		return "agent".concat(str1).concat(str2);
+	}
 
+	public String getTokenFromAuthKey(String Authorization) {
+		return Authorization.substring(7);
 
 	}
 }

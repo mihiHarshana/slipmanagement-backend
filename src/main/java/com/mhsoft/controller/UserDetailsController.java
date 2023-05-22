@@ -43,8 +43,7 @@ public class UserDetailsController {
     public String getUserBankTransactionDetails(@RequestHeader String Authorization) {
         // JwtTokenUtil jwtTokenUtil = new JwtTokenUtil();
         int USER_ID = 0;
-        String token = Authorization.substring(7);
-        System.out.println("Tokent ============ : " + token);
+        String token = Utils.getInstance().getTokenFromAuthKey(Authorization);
 
         String username = jwtTokenUtil.getUsernameFromToken(token);
         // System.out.println(jwtTokenUtil.isTokenExpired(token));
@@ -308,8 +307,7 @@ public class UserDetailsController {
     public String changeStatus(@RequestHeader String Authorization, @RequestBody String obj ) {
         // JwtTokenUtil jwtTokenUtil = new JwtTokenUtil();
         int USER_ID = 0;
-        String token = Authorization.substring(7);
-        System.out.println("Tokent ============ : " + token);
+        String token = Utils.getInstance().getTokenFromAuthKey(Authorization);
 
         String username = jwtTokenUtil.getUsernameFromToken(token);
 
@@ -325,9 +323,7 @@ public class UserDetailsController {
     public String changeRemarks(@RequestHeader String Authorization, @RequestBody String obj ) {
         // JwtTokenUtil jwtTokenUtil = new JwtTokenUtil();
         int USER_ID = 0;
-        String token = Authorization.substring(7);
-        System.out.println("Tokent ============ : " + token);
-
+        String token = Utils.getInstance().getTokenFromAuthKey(Authorization);
         String username = jwtTokenUtil.getUsernameFromToken(token);
 
         DAOUser DAOUser = userRepo.getUserByUserName(username);
