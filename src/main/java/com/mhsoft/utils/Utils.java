@@ -35,7 +35,13 @@ public class Utils {
 
 	public static final String TR_SLIPDATE = "slipDate";
 
-	public static final String TR_REMARKS = "remarks";
+//	public static final String TR_REMARKS = "remarks";
+
+	public static final String TR_CUS_REMARKS = "customerRemarks";
+
+	public static final String TR_CCAGENT_REMARKS = "ccAgentRemarks";
+
+	public static final String TR_AGENT_REMARKS = "agentRemarks";
 
 	public static final String TR_SLIP = "slip";
 

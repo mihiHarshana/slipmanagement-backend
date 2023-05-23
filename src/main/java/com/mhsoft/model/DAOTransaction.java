@@ -23,17 +23,17 @@ public class DAOTransaction {
     private Long slipdate;
     private double trdisputeamount;
 
-    private String remarks;
+   // private String remarks;
 
     private String slip;
 
-    public String getRemarks() {
+/*    public String getRemarks() {
         return remarks;
     }
 
     public void setRemarks(String remarks) {
         this.remarks = remarks;
-    }
+    }*/
 
     public String getSlip() {
         return slip;

@@ -347,7 +347,9 @@ public class UserDetailsController {
             tr_json.put(Utils.TR_AMOUNT, userTrDetails[i].getTramount());
             tr_json.put(Utils.TR_SLIP, userTrDetails[i].getSlip());
             tr_json.put(Utils.TR_SLIP_DATe, userTrDetails[i].getSlipdate());
-            tr_json.put(Utils.TR_REMARKS, userTrDetails[i].getRemarks());
+            tr_json.put(Utils.TR_CUS_REMARKS, userTrDetails[i].getCustomerremarks());
+            tr_json.put(Utils.TR_CCAGENT_REMARKS, userTrDetails[i].getCcagentremarks());
+            tr_json.put(Utils.TR_AGENT_REMARKS, userTrDetails[i].getAgentremarks());
             tr_array.put(i, tr_json);
         }
         return tr_array;
