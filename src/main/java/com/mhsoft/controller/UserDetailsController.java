@@ -44,6 +44,7 @@ public class UserDetailsController {
         // JwtTokenUtil jwtTokenUtil = new JwtTokenUtil();
         int USER_ID = 0;
         String token = Utils.getInstance().getTokenFromAuthKey(Authorization);
+        String[] bankacounts = null;
 
         String username = jwtTokenUtil.getUsernameFromToken(token);
         // System.out.println(jwtTokenUtil.isTokenExpired(token));
@@ -64,7 +65,7 @@ public class UserDetailsController {
             userBankDetails.put(Utils.BANK_INS, "null");
             userBankDetails.put(Utils.BANK_ACC_NO, "null");
         } else {
-            String[] bankacounts = new String[bankDetailsOfUser.length];
+            bankacounts = new String[bankDetailsOfUser.length];
 
             for (int i = 0; i < bankacounts.length; i++) {
                 bankacounts[i] = bankDetailsOfUser[i].getBankaccno();
@@ -111,7 +112,7 @@ public class UserDetailsController {
         DAOAgentUser agentdetails = agentUserService.getAgentIdByUserID(USER_ID);
 
         DAOBank[] tempAgentDetails = bankService.getBankDetailsByIUserId(agentdetails.getAgentid());
-        String[] bankacounts = null;
+        String[] bankacountsagent = null;
         JSONObject jsonAgentDetalils = new JSONObject();
 
         if (tempAgentDetails == null) {
@@ -121,13 +122,13 @@ public class UserDetailsController {
             jsonAgentDetalils.put(Utils.BANK_INS, "null");
             jsonAgentDetalils.put(Utils.BANK_ACC_NO, "null");
         } else {
-            bankacounts = new String[tempAgentDetails.length];
+            bankacountsagent = new String[tempAgentDetails.length];
 
-            for (int i = 0; i < bankacounts.length; i++) {
-                bankacounts[i] = tempAgentDetails[i].getBankaccno();
+            for (int i = 0; i < bankacountsagent.length; i++) {
+                bankacountsagent[i] = tempAgentDetails[i].getBankaccno();
             }
 
-            for (int i = 0; i < bankacounts.length; i++) {
+            for (int i = 0; i < bankacountsagent.length; i++) {
                 if (tempAgentDetails[i].isDefaultacc()) {
                     jsonAgentDetalils.put(Utils.BANK_NAME, tempAgentDetails[i].getBankname());
                     jsonAgentDetalils.put(Utils.BANK_CODE, tempAgentDetails[i].getBankcode());
