@@ -11,6 +11,8 @@ import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
+
 @CrossOrigin(origins = "http://localhost:3000", allowedHeaders = "*")
 @RestController
 @RequestMapping("/api")
@@ -65,7 +67,7 @@ public class UserDetailsController {
             userBankDetails.put(Utils.BANK_INS, "null");
             userBankDetails.put(Utils.BANK_ACC_NO, "null");
         } else {
-            bankacounts = new String[bankDetailsOfUser.length];
+            bankacounts = new String[bankDetailsOfUser.length ];
 
             for (int i = 0; i < bankacounts.length; i++) {
                 bankacounts[i] = bankDetailsOfUser[i].getBankaccno();
@@ -106,7 +108,24 @@ public class UserDetailsController {
 
         DAOTransaction[] userTrDetails = trService.getTransactionsByUserId(USER_ID);
 
-        JSONArray tr_array = setTrData(userTrDetails);
+       // JSONArray tr_can_com = new JSONArray();
+        ArrayList<DAOTransaction> arralList_com_can = new ArrayList<>();
+        ArrayList<DAOTransaction> arralList_other = new ArrayList<>();
+        DAOTransaction [] userTrDetails_com_can; // completed and cancelled
+        for (int i=0; i<userTrDetails.length; i++) {
+            if (userTrDetails[i].getTrstatus().equals(Utils.TR_STATUS_Cancelled) ||
+                    userTrDetails[i].getTrstatus().equals(Utils.TR_STATUS_UserConfirmed ) )  {
+                arralList_com_can.add(userTrDetails[i]);
+            } else {
+                arralList_other.add(userTrDetails[i]);
+            }
+
+        }
+
+        JSONArray tr_array_com_can = setTrData(arralList_com_can);
+        JSONArray tr_array_other = setTrData(arralList_other);
+
+       // JSONArray tr_array = setTrData(userTrDetails);
 
 
         DAOAgentUser agentdetails = agentUserService.getAgentIdByUserID(USER_ID);
@@ -152,8 +171,8 @@ public class UserDetailsController {
         allDetails.put("user", jo_userDetails);
         allDetails.put("customerBankAccounts", bankacounts);
         allDetails.put("customerBankDetails", userBankDetails);
-        allDetails.put("customerTransactionDataOther", tr_array); // this may need to change
-        allDetails.put("customerTransactionDataMajorStatus", tr_array); // this may need to change
+        allDetails.put("customerTransactionDataOther", tr_array_com_can); // this may need to change
+        allDetails.put("customerTransactionDataMajorStatus", tr_array_other); // this may need to change
         allDetails.put("agentBankDetails", jsonAgentDetalils);
         allDetails.put("currencies", ar_currency);
         allDetails.put("agentSystems", ar_agentSystem);
@@ -355,4 +374,24 @@ public class UserDetailsController {
         return tr_array;
     }
 
+    private JSONArray setTrData(ArrayList<DAOTransaction> userTrDetails) {
+        JSONArray tr_array = new JSONArray();
+        JSONObject tr_json = new JSONObject();
+        for (int i = 0; i < userTrDetails.size(); i++) {
+            tr_json.put(Utils.TR_AMOUNT, userTrDetails.get(i).getTramount());
+            tr_json.put(Utils.TR_TYPE, userTrDetails.get(i).getTrtype());
+            tr_json.put(Utils.TR_DATE, userTrDetails.get(i).getTrdatetime());
+            tr_json.put(Utils.TR_USERID, userTrDetails.get(i).getUserid());
+            tr_json.put(Utils.TR_ID, userTrDetails.get(i).getTrid());
+            tr_json.put(Utils.TR_STATUS, userTrDetails.get(i).getTrstatus());
+            tr_json.put(Utils.TR_AMOUNT, userTrDetails.get(i).getTramount());
+            tr_json.put(Utils.TR_SLIP, userTrDetails.get(i).getSlip());
+            tr_json.put(Utils.TR_SLIP_DATe, userTrDetails.get(i).getSlipdate());
+            tr_json.put(Utils.TR_CUS_REMARKS, userTrDetails.get(i).getCustomerremarks());
+            tr_json.put(Utils.TR_CCAGENT_REMARKS, userTrDetails.get(i).getCcagentremarks());
+            tr_json.put(Utils.TR_AGENT_REMARKS, userTrDetails.get(i).getAgentremarks());
+            tr_array.put(i, tr_json);
+        }
+        return tr_array;
+    }
 }

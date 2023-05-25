@@ -47,6 +47,17 @@ public class Utils {
 	public static final String TR_SLIP = "slip";
 
 	public static final String TR_SLIP_DATe = "slipDate";
+
+	// Transaction table statues
+
+	public static final String TR_STATUS_Created  = "Created";
+	public static final String TR_STATUS_NotReceived = "Not Received";
+	public static final String TR_STATUS_AwatingConfirmation = "Awaiting Confirmation";
+	public static final String TR_STATUS_Received  = "Received";
+	public static final String TR_STATUS_Cancelled  = "Cancelled";
+	public static final String TR_STATUS_AmountDifferent  = "Amount Different";
+	public static final String TR_STATUS_InsufficientFunds  = "Insufficient Funds";
+	public static final String TR_STATUS_UserConfirmed  = "User Confirmed";
 	private static Utils utils = null;
 
 	DAOUser currentUser = null;
