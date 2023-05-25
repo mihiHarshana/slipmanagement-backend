@@ -1,6 +1,7 @@
 
 package com.mhsoft.utils;
 
+import com.mhsoft.model.DAOUser;
 import org.json.JSONObject;
 import org.springframework.http.HttpStatus;
 
@@ -8,7 +9,7 @@ public class Utils {
 
 	String message;
 	HttpStatus statusCode;
-	
+
 	final String MESSAGE = "message";
 	final String STATUS_CODE= "statusCode";
 
@@ -48,24 +49,26 @@ public class Utils {
 	public static final String TR_SLIP_DATe = "slipDate";
 	private static Utils utils = null;
 
+	DAOUser currentUser = null;
+
 	private Utils () {}
 
-	public static synchronized Utils getInstance()
-	{
+	public static synchronized Utils getInstance() {
 		if (utils == null)
 			utils = new Utils();
 
 		return utils;
 	}
+
 	public String JsonMessage (String message, HttpStatus statusCode) {
-		
+
 		this.message = message;
 		this.statusCode = statusCode;
-		
+
 		JSONObject jo = new JSONObject();
 		jo.put(MESSAGE, message);
 		jo.put(STATUS_CODE, statusCode.value());
-		
+
 		return jo.toString();
 	}
 
@@ -81,5 +84,18 @@ public class Utils {
 	public String getTokenFromAuthKey(String Authorization) {
 		return Authorization.substring(7);
 
+	}
+
+	public void setUserDetails(DAOUser daoUser) {
+		currentUser = new DAOUser();
+		currentUser.setUserId(daoUser.getUserid());
+		currentUser.setUserType(daoUser.getUsertype());
+		currentUser.setUserfname(daoUser.getUserfname());
+		currentUser.setUserlname(daoUser.getUserlname());
+		currentUser.setUserstatus(daoUser.getUserStatus());
+
+	}
+	public DAOUser getUserDetails() {
+		return currentUser;
 	}
 }

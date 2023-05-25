@@ -1,5 +1,6 @@
 package com.mhsoft.controller;
 
+import com.mhsoft.config.JwtTokenUtil;
 import com.mhsoft.dao.BankDao;
 import com.mhsoft.model.DAOBank;
 import com.mhsoft.service.BankService;
@@ -18,6 +19,8 @@ public class BankController {
     BankDao bankDao;
     @Autowired
     BankService bankService;
+    @Autowired
+    JwtTokenUtil jwtTokenUtil;
 
 
 /*    @RequestMapping(value = "/api/bankdetails", method = RequestMethod.POST)
@@ -48,10 +51,14 @@ public class BankController {
                 new ArrayList<>());
     }*/
 
-    @RequestMapping(value = "/api/savebankdetails", method = RequestMethod.POST)
-        public String setBankDetailsByUserID(@RequestBody DAOBank bankdetails) {
-        DAOBank bankDao1 = bankDao.save(bankdetails);
+    @RequestMapping(value = "/api/new-bank-details", method = RequestMethod.POST)
+        public String setBankDetailsByUserID(@RequestBody DAOBank bankdetails, @RequestHeader String Authorization) {
+        int USER_ID = 0;
+        String token = Utils.getInstance().getTokenFromAuthKey(Authorization);
 
+        bankdetails.setUserid(USER_ID);
+        DAOBank bankDao1 = bankDao.save(bankdetails);
+        String username = jwtTokenUtil.getUsernameFromToken(token);
         if(bankDao1 != null) {
           return Utils.getInstance().JsonMessage("Bank details saved successfully", HttpStatus.ACCEPTED);
         } else {

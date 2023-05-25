@@ -140,7 +140,7 @@ public class UserDetailsController {
         }
 
         //Load Currencies
-        DAOCurrency ar_currency[] = currencyService.getAllCurrency();
+        String ar_currency[] = currencyService.getAllCurrency();
         DAOAgentSystem ar_agentSystem[] = agentSystemService.getAgentSystemByAgentId(agentdetails.getAgentid());
 
         JSONObject jo_userDetails = new JSONObject();

@@ -52,6 +52,7 @@ public class JwtAuthenticationController {
                     jo.put("token", token);
                     jo.put("logintime", System.currentTimeMillis());
                     jo.put("user", userobj);
+                    Utils.getInstance().setUserDetails(daoUser);
                     return jo.toString();
                 } else if (daoUser.getUserStatus().equals("PENDING")) {
                     return Utils.getInstance().JsonMessage("User Not approved", HttpStatus.NOT_ACCEPTABLE);
