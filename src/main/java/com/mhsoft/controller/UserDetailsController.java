@@ -70,7 +70,8 @@ public class UserDetailsController {
             bankacounts = new String[bankDetailsOfUser.length ];
 
             for (int i = 0; i < bankacounts.length; i++) {
-                bankacounts[i] = bankDetailsOfUser[i].getBankaccno();
+                bankacounts[i] = bankDetailsOfUser[i].getBankaccno().concat(" ").
+                        concat(bankDetailsOfUser[i].getBankname());
             }
 
             for (int i = 0; i < bankacounts.length; i++) {
