@@ -22,4 +22,7 @@ public interface BankRepo extends JpaRepository<DAOBank, Integer>{
                 "VALUES (value1, value2, value3, value4) where id =?1" , nativeQuery = true)
         int updateUserDetailsById (int userid);*/
 
+/*        @Query(value = "SELECT * from bankdetails WHERE bankaccno = ?1 AND latest=1 " , nativeQuery = true)
+        DAOBank [] getBankDetailsByBankAccounNo(String bankAccno);*/
+
 }

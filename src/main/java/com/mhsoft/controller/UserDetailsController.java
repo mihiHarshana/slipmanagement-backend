@@ -42,19 +42,24 @@ public class UserDetailsController {
 
     @PostMapping("/customer-details")
     // @RequestMapping(value = "/api/customer-details", method = RequestMethod.POST)
-    public String getUserBankTransactionDetails(@RequestHeader String Authorization) {
+    public String getUserBankTransactionDetails(@RequestHeader String Authorization ,
+                                                @RequestBody String defaultAccount) {
         // JwtTokenUtil jwtTokenUtil = new JwtTokenUtil();
         int USER_ID = 0;
         String token = Utils.getInstance().getTokenFromAuthKey(Authorization);
         String[] bankacounts = null;
 
         String username = jwtTokenUtil.getUsernameFromToken(token);
-        // System.out.println(jwtTokenUtil.isTokenExpired(token));
-
-
         DAOUser DAOUser = userRepo.getUserByUserName(username);
         USER_ID = DAOUser.getUserid();
 
+        System.out.println(defaultAccount);
+        String [] default_account = defaultAccount.split(":");
+
+        default_account[1] = default_account[1].replace("\"" , "");
+        default_account[1] = default_account[1].replace("}" , "");
+        System.out.println(default_account[1]);
+        bankService.updateBankDetailsByUserID(USER_ID,default_account[1].trim());
 
         // System.out.println("user name ============ : " + username);
         DAOBank bankDetailsOfUser[] = bankService.getBankDetailsByIUserId(USER_ID);
