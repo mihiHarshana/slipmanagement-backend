@@ -53,14 +53,18 @@ public class UserDetailsController {
         DAOUser DAOUser = userRepo.getUserByUserName(username);
         USER_ID = DAOUser.getUserid();
 
-        System.out.println(defaultAccount);
-        String [] default_account = defaultAccount.split(":");
+        System.out.println("Default Account printing :  " + defaultAccount);
+        //Processing Default account
+        String [] temp1 = defaultAccount.split(":");
+        String [] temp2 = temp1[1].split(" ");
+        System.out.println("1nd split" + temp1[1]);
+        System.out.println("2nd split" + temp2[0]);
+        String temp3 = temp2[0].replace("\"","");
+        System.out.println(temp3);
+       // if (default_account.length > 1) {
 
-        default_account[1] = default_account[1].replace("\"" , "");
-        default_account[1] = default_account[1].replace("}" , "");
-        System.out.println(default_account[1]);
-        bankService.updateBankDetailsByUserID(USER_ID,default_account[1].trim());
-
+            bankService.updateBankDetailsByUserID(USER_ID, temp3);
+        //}
         // System.out.println("user name ============ : " + username);
         DAOBank bankDetailsOfUser[] = bankService.getBankDetailsByIUserId(USER_ID);
         JSONObject userBankDetails = new JSONObject();
