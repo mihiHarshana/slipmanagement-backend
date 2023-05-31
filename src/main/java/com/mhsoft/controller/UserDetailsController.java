@@ -367,13 +367,13 @@ public class UserDetailsController {
         JSONArray tr_array = new JSONArray();
         JSONObject tr_json = new JSONObject();
         for (int i = 0; i < userTrDetails.length; i++) {
-            tr_json.put(Utils.TR_AMOUNT, userTrDetails[i].getTramount());
+            tr_json.put(Utils.TR_AMOUNT, userTrDetails[i].getAmount());
             tr_json.put(Utils.TR_TYPE, userTrDetails[i].getTrtype());
             tr_json.put(Utils.TR_DATE, userTrDetails[i].getTrdatetime());
             tr_json.put(Utils.TR_USERID, userTrDetails[i].getUserid());
             tr_json.put(Utils.TR_ID, userTrDetails[i].getid());
             tr_json.put(Utils.TR_STATUS, userTrDetails[i].getStatus());
-            tr_json.put(Utils.TR_AMOUNT, userTrDetails[i].getTramount());
+            tr_json.put(Utils.TR_AMOUNT, userTrDetails[i].getAmount());
             tr_json.put(Utils.TR_SLIP, userTrDetails[i].getSlip());
             tr_json.put(Utils.TR_SLIP_DATe, userTrDetails[i].getSlipdate());
             tr_json.put(Utils.TR_CUS_REMARKS, userTrDetails[i].getCustomerremarks());
@@ -388,13 +388,13 @@ public class UserDetailsController {
         JSONArray tr_array = new JSONArray();
         JSONObject tr_json = new JSONObject();
         for (int i = 0; i < userTrDetails.size(); i++) {
-            tr_json.put(Utils.TR_AMOUNT, userTrDetails.get(i).getTramount());
+            tr_json.put(Utils.TR_AMOUNT, userTrDetails.get(i).getAmount());
             tr_json.put(Utils.TR_TYPE, userTrDetails.get(i).getTrtype());
             tr_json.put(Utils.TR_DATE, userTrDetails.get(i).getTrdatetime());
             tr_json.put(Utils.TR_USERID, userTrDetails.get(i).getUserid());
             tr_json.put(Utils.TR_ID, userTrDetails.get(i).getid());
             tr_json.put(Utils.TR_STATUS, userTrDetails.get(i).getStatus());
-            tr_json.put(Utils.TR_AMOUNT, userTrDetails.get(i).getTramount());
+            tr_json.put(Utils.TR_AMOUNT, userTrDetails.get(i).getAmount());
             tr_json.put(Utils.TR_SLIP, userTrDetails.get(i).getSlip());
             tr_json.put(Utils.TR_SLIP_DATe, userTrDetails.get(i).getSlipdate());
             tr_json.put(Utils.TR_CUS_REMARKS, userTrDetails.get(i).getCustomerremarks());

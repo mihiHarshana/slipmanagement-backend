@@ -11,7 +11,7 @@ public class DAOTransaction {
 
     private Long trdatetime;
     private String trtype;
-    private double tramount;
+    private double amount;
     private String status;
     private int userid;
   //  private double trdisputeamount;
@@ -33,25 +33,25 @@ public class DAOTransaction {
         this.currency = currency;
     }
 
-    public String getAgentsystem() {
-        return agentsystem;
+    public String getAgentSystem() {
+        return agentSystem;
     }
 
-    public void setAgentsystem(String agentSystem) {
-        this.agentsystem = agentSystem;
+    public void setAgentSystem(String agentSystem) {
+        this.agentSystem = agentSystem;
     }
 
-    public String getPlayeruser() {
-        return playeruser;
+    public String getPlayerUser() {
+        return playerUser;
     }
 
-    public void setPlayeruser(String playerUser) {
-        this.playeruser = playerUser;
+    public void setPlayerUser(String playerUser) {
+        this.playerUser = playerUser;
     }
-
-    private String agentsystem;
-
-    private String playeruser;
+@Column (name="agentsystem")
+    private String agentSystem;
+    @Column (name="playeruser")
+    private String playerUser;
 
    // private String remarks;
 
@@ -146,12 +146,12 @@ public class DAOTransaction {
         this.trtype = trtype;
     }
 
-    public double getTramount() {
-        return tramount;
+    public double getAmount() {
+        return amount;
     }
 
-    public void setTramount(double tramount) {
-        this.tramount = tramount;
+    public void setAmount(double tramount) {
+        this.amount = tramount;
     }
 
     public String getStatus() {

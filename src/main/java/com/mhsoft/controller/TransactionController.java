@@ -55,7 +55,7 @@ public class TransactionController {
         DAOTransaction tempTr= new DAOTransaction();
         System.out.println("==== Time Stamp " + LocalDateTime.now().toEpochSecond(ZoneOffset.MIN));
         tempTr.setTrdatetime(LocalDateTime.now().toEpochSecond(ZoneOffset.UTC));
-        tempTr.setTramount(daoTrans.getTramount());
+        tempTr.setAmount(daoTrans.getAmount());
         tempTr.setStatus(daoTrans.getStatus());
         tempTr.setTrtype(daoTrans.getTrtype());
         tempTr.setUserid(daoTrans.getUserid());
@@ -67,8 +67,8 @@ public class TransactionController {
         tempTr.setUtrnumber(daoTrans.getUtrnumber());
      //   tempTr.setFilename(daoTrans.getFilename());
         tempTr.setTrdisputeamount(daoTrans.getTrdisputeamount());
-        tempTr.setAgentsystem(daoTrans.getAgentsystem());
-        tempTr.setPlayeruser(daoTrans.getPlayeruser());
+        tempTr.setAgentSystem(daoTrans.getAgentSystem());
+        tempTr.setPlayerUser(daoTrans.getPlayerUser());
         return tempTr;
 
     }
@@ -94,10 +94,10 @@ public class TransactionController {
         daoTransaction.setUtrnumber(UTRNumber);
         daoTransaction.setSlipdate(slipTime);
         daoTransaction.setCustomerremarks(remarks);
-        daoTransaction.setTramount(amount);
+        daoTransaction.setAmount(amount);
         daoTransaction.setUserid(USER_ID);
-        daoTransaction.setAgentsystem(agentSystem);
-        daoTransaction.setPlayeruser(playerUser);
+        daoTransaction.setAgentSystem(agentSystem);
+        daoTransaction.setPlayerUser(playerUser);
         daoTransaction.setCurrency(currency);
         daoTransaction.setStatus(Utils.TR_STATUS_Created);
         daoTransaction.setTrtype(Utils.TRTRYOEDEPOSIT);
@@ -152,10 +152,10 @@ public class TransactionController {
         DAOTransaction  update = new DAOTransaction();
         for (int i=0; i<olddata.length; i++) {
             if (olddata[i].getid() == trs.getid()) {
-                update.setPlayeruser(olddata[i].getPlayeruser());
-                update.setAgentsystem(olddata[i].getAgentsystem());
+                update.setPlayerUser(olddata[i].getPlayerUser());
+                update.setAgentSystem(olddata[i].getAgentSystem());
                 update.setCurrency(olddata[i].getCurrency());
-                update.setTramount(olddata[i].getTramount());
+                update.setAmount(olddata[i].getAmount());
                 update.setSlipdate(olddata[i].getSlipdate());
                 update.setCustomerremarks(olddata[i].getCustomerremarks());
                 update.setUtrnumber(olddata[i].getUtrnumber());
@@ -178,5 +178,20 @@ public class TransactionController {
             return Utils.getInstance().JsonMessage("Change Status Successful", HttpStatus.ACCEPTED);
         }
         return Utils.getInstance().JsonMessage("No data available for Change status", HttpStatus.NOT_ACCEPTABLE);
+    }
+
+    @RequestMapping (value = "api/new-withdrawal", method = RequestMethod.POST)
+    public String setNewWithdrawal (DAOTransaction daoWithdraw,  @RequestHeader String Authorization) {
+        int USER_ID = 0;
+        String token = Authorization.substring(7);
+        String username = jwtTokenUtil.getUsernameFromToken(token);
+        DAOUser DAOUser = userRepo.getUserByUserName(username);
+        USER_ID = DAOUser.getUserid();
+        daoWithdraw.setUserid(USER_ID);
+        daoWithdraw.setTrtype(Utils.TRTYPEWIDTHDRAW);
+        daoWithdraw.setTrdatetime(LocalDateTime.now().toEpochSecond(ZoneOffset.UTC));
+
+        transRepo.save(daoWithdraw);
+        return Utils.getInstance().JsonMessage("Withdrawal successfull", HttpStatus.ACCEPTED);
     }
 }

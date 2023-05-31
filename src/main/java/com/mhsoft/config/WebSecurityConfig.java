@@ -75,7 +75,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 				"/api/new-deposit",
 				"/api/change-status",
 				"/api/change-remarks",
-				"/api/new-bank-details"
+				"/api/new-bank-details",
+				"/api/new-withdrawal"
 
 				).permitAll().
 				// all other requests need to be authenticated
