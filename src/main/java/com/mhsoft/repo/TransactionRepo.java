@@ -19,11 +19,11 @@ public interface TransactionRepo extends JpaRepository<DAOTransaction, Integer> 
             " VALUES (, '22:22:57', 'SUBMITTED', 'DEPOSIT', '1')" , nativeQuery = true)
     String setDepositTransaction(DAOTransaction trans);*/
 
-    @Query(value = "SELECT tr.userid, tr.trid, tr.tramount, tr.trdatetime, tr.trstatus, tr.trtype, " +
+    @Query(value = "SELECT tr.userid, tr.id, tr.tramount, tr.trdatetime, tr.status, tr.trtype, " +
             "user.username FROM transaction AS tr   JOIN user ON tr.userid = user.id where tr.trType = ?1" , nativeQuery = true)
     String [] getTransactionsByType(String trType);
 
-    @Query(value = "SELECT tr.userid, tr.trid, tr.tramount, tr.trdatetime, tr.trstatus, tr.trtype, " +
+    @Query(value = "SELECT tr.userid, tr.id, tr.tramount, tr.trdatetime, tr.status, tr.trtype, " +
             "c.username," +
             "tr.agentremarks, tr.ccagentremarks, tr.customerremarks, tr.filename, tr.trdisputeamount, tr.utrnumber," +
             "tr.slipdate" +
@@ -33,13 +33,13 @@ public interface TransactionRepo extends JpaRepository<DAOTransaction, Integer> 
             "WHERE us.agentid =?1" , nativeQuery = true)
     DAOTransaction [] getTransactionsByUserAgentId(int agentId);
 
-    @Query(value = "SELECT tr.userid, tr.trid, tr.tramount, tr.trdatetime, tr.trstatus, tr.trtype, c.username, " +
+    @Query(value = "SELECT tr.userid, tr.id, tr.tramount, tr.trdatetime, tr.status, tr.trtype, c.username, " +
             "tr.agentremarks, tr.ccagentremarks, tr.customerremarks, tr.filename, tr.trdisputeamount, " +
-            "tr.utrnumber, tr.slipdate, tr.slip FROM transaction tr INNER JOIN user c ON c.id = tr.userid" +
+            "tr.utrnumber, tr.slipdate, tr.slip, tr.currency, tr.agentsystem, tr.playeruser FROM transaction tr INNER JOIN user c ON c.id = tr.userid" +
             " WHERE c.id =?1 ", nativeQuery = true)
     DAOTransaction [] getTransactionsByUserId(int agentId); //this is the one needed to check
 
-    @Query(value = "SELECT * FROM transaction WHERE utrnumber =?1 AND trstatus <> 'Rejected' "
+    @Query(value = "SELECT * FROM transaction WHERE utrnumber =?1 AND status <> 'Rejected' "
             , nativeQuery = true)
     DAOTransaction   isUtrNumberValid(String utrnumber);
 

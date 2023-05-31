@@ -123,8 +123,8 @@ public class UserDetailsController {
         ArrayList<DAOTransaction> arralList_other = new ArrayList<>();
         DAOTransaction [] userTrDetails_com_can; // completed and cancelled
         for (int i=0; i<userTrDetails.length; i++) {
-            if (userTrDetails[i].getTrstatus().equals(Utils.TR_STATUS_Cancelled) ||
-                    userTrDetails[i].getTrstatus().equals(Utils.TR_STATUS_UserConfirmed ) )  {
+            if (userTrDetails[i].getStatus().equals(Utils.TR_STATUS_Cancelled) ||
+                    userTrDetails[i].getStatus().equals(Utils.TR_STATUS_UserConfirmed ) )  {
                 arralList_com_can.add(userTrDetails[i]);
             } else {
                 arralList_other.add(userTrDetails[i]);
@@ -333,7 +333,7 @@ public class UserDetailsController {
     }*/
 
 
-    @PostMapping("/change-status")
+/*    @PostMapping("/change-status")
     public String changeStatus(@RequestHeader String Authorization, @RequestBody String obj ) {
         // JwtTokenUtil jwtTokenUtil = new JwtTokenUtil();
         int USER_ID = 0;
@@ -347,7 +347,7 @@ public class UserDetailsController {
 
         return "done";
 
-    }
+    }*/
 
     @PostMapping("/change-remarks")
     public String changeRemarks(@RequestHeader String Authorization, @RequestBody String obj ) {
@@ -371,8 +371,8 @@ public class UserDetailsController {
             tr_json.put(Utils.TR_TYPE, userTrDetails[i].getTrtype());
             tr_json.put(Utils.TR_DATE, userTrDetails[i].getTrdatetime());
             tr_json.put(Utils.TR_USERID, userTrDetails[i].getUserid());
-            tr_json.put(Utils.TR_ID, userTrDetails[i].getTrid());
-            tr_json.put(Utils.TR_STATUS, userTrDetails[i].getTrstatus());
+            tr_json.put(Utils.TR_ID, userTrDetails[i].getid());
+            tr_json.put(Utils.TR_STATUS, userTrDetails[i].getStatus());
             tr_json.put(Utils.TR_AMOUNT, userTrDetails[i].getTramount());
             tr_json.put(Utils.TR_SLIP, userTrDetails[i].getSlip());
             tr_json.put(Utils.TR_SLIP_DATe, userTrDetails[i].getSlipdate());
@@ -392,8 +392,8 @@ public class UserDetailsController {
             tr_json.put(Utils.TR_TYPE, userTrDetails.get(i).getTrtype());
             tr_json.put(Utils.TR_DATE, userTrDetails.get(i).getTrdatetime());
             tr_json.put(Utils.TR_USERID, userTrDetails.get(i).getUserid());
-            tr_json.put(Utils.TR_ID, userTrDetails.get(i).getTrid());
-            tr_json.put(Utils.TR_STATUS, userTrDetails.get(i).getTrstatus());
+            tr_json.put(Utils.TR_ID, userTrDetails.get(i).getid());
+            tr_json.put(Utils.TR_STATUS, userTrDetails.get(i).getStatus());
             tr_json.put(Utils.TR_AMOUNT, userTrDetails.get(i).getTramount());
             tr_json.put(Utils.TR_SLIP, userTrDetails.get(i).getSlip());
             tr_json.put(Utils.TR_SLIP_DATe, userTrDetails.get(i).getSlipdate());

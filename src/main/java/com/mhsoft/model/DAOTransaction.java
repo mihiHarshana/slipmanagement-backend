@@ -7,12 +7,12 @@ import javax.persistence.*;
 public class DAOTransaction {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int trid;
+    private int id;
 
     private Long trdatetime;
     private String trtype;
     private double tramount;
-    private String trstatus;
+    private String status;
     private int userid;
   //  private double trdisputeamount;
     private String utrnumber;
@@ -22,6 +22,36 @@ public class DAOTransaction {
     private String ccagentremarks;
     private Long slipdate;
     private double trdisputeamount;
+
+    private String currency;
+
+    public String getCurrency() {
+        return currency;
+    }
+
+    public void setCurrency(String currency) {
+        this.currency = currency;
+    }
+
+    public String getAgentsystem() {
+        return agentsystem;
+    }
+
+    public void setAgentsystem(String agentSystem) {
+        this.agentsystem = agentSystem;
+    }
+
+    public String getPlayeruser() {
+        return playeruser;
+    }
+
+    public void setPlayeruser(String playerUser) {
+        this.playeruser = playerUser;
+    }
+
+    private String agentsystem;
+
+    private String playeruser;
 
    // private String remarks;
 
@@ -92,12 +122,12 @@ public class DAOTransaction {
        this.customerremarks = customerRemarks;
     }
 
-    public int getTrid() {
-        return trid;
+    public int getid() {
+        return id;
     }
 
-    public void setTrid(int trid) {
-        this.trid = trid;
+    public void setid(int id) {
+        this.id = id;
     }
 
     public Long getTrdatetime() {
@@ -124,12 +154,12 @@ public class DAOTransaction {
         this.tramount = tramount;
     }
 
-    public String getTrstatus() {
-        return trstatus;
+    public String getStatus() {
+        return status;
     }
 
-    public void setTrstatus(String trstatus) {
-        this.trstatus = trstatus;
+    public void setStatus(String trstatus) {
+        this.status = trstatus;
     }
 
     public int getUserid() {
