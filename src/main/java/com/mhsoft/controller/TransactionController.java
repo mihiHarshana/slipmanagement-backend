@@ -12,7 +12,13 @@ import com.mhsoft.utils.Utils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 
@@ -65,17 +71,18 @@ public class TransactionController {
         tempTr.setCustomerremarks(daoTrans.getCustomerremarks());
         tempTr.setCcagentremarks(daoTrans.getCcagentremarks());
         tempTr.setUtrnumber(daoTrans.getUtrnumber());
-     //   tempTr.setFilename(daoTrans.getFilename());
+        tempTr.setFilename(daoTrans.getFilename());
         tempTr.setTrdisputeamount(daoTrans.getTrdisputeamount());
         tempTr.setAgentSystem(daoTrans.getAgentSystem());
         tempTr.setPlayerUser(daoTrans.getPlayerUser());
+        tempTr.setSlip(daoTrans.getSlip());
         return tempTr;
 
     }
 
     @RequestMapping (value = "api/new-deposit", method = RequestMethod.POST)
     public String setNewDeposit (DAOTransaction daoTransaction,
-                                 @RequestParam String file ,
+                                 @RequestParam("file") MultipartFile file ,
                                  @RequestParam String currency,
                                  @RequestParam double amount,
                                  @RequestParam String UTRNumber,
@@ -102,25 +109,41 @@ public class TransactionController {
         daoTransaction.setStatus(Utils.TR_STATUS_Created);
         daoTransaction.setTrtype(Utils.TRTRYOEDEPOSIT);
 
+
+
        boolean isTrNumberValid = trService.isUtrNumberValid(daoTransaction.getUtrnumber());
        if (isTrNumberValid) {
            return Utils.getInstance().JsonMessage("UTR Number duplicated.", HttpStatus.NOT_ACCEPTABLE);
        }
        // MultipartFile temp_file = (MultipartFile ) file;
-        System.out.println( file.getBytes().length);
+      //  System.out.println( file.);
      //  MultipartFile temp_file = (MultipartFile) file;
 
-/*        if (temp_file.isEmpty()) {
+        if (file.isEmpty()) {
             return Utils.getInstance().JsonMessage("Please select a file to upload", HttpStatus.NOT_ACCEPTABLE);
-        }*/
-        /*try {
+        }
+        try {
             // Get the file and save it somewhere
-            byte[] bytes = temp_file.getBytes();
+            byte[] bytes = file.getBytes();
             Path temp_path = Paths.get(UPLOADED_FOLDER + LocalDate.now() + "\\" + USER_ID + "\\");
             Files.createDirectories(temp_path);
-            Path path = Paths.get(temp_path + "\\" + temp_file.getOriginalFilename());
+            String originalName  = file.getOriginalFilename();
+            String filename =originalName.substring(0,file.getOriginalFilename().indexOf(".") );
+            String  extention = originalName.substring(file.getOriginalFilename().indexOf("."));
+            System.out.println("fter substring + " + filename + " " +  extention);;
+          //  System.out.println(file_tem[0] + "    " + file_tem[1]);
+            String fileNameToSave = filename+ "_" + LocalDateTime.now().toEpochSecond(ZoneOffset.UTC) + extention;
+
+
+
+  /*          String filenametoSave = temp_filename[0]+LocalDateTime.now().
+                    toEpochSecond(ZoneOffset.MIN) + temp_filename[1];*/
+            Path path = Paths.get(temp_path + "\\" + fileNameToSave);
             Files.write(path, bytes);
-            System.out.println("File uploaded sucessfully.");*/
+            System.out.println("File uploaded sucessfully.");
+
+            daoTransaction.setSlip(temp_path + "\\");
+            daoTransaction.setFilename(fileNameToSave);
 
             if (daoTransaction != null) {
                 DAOTransaction temp = transRepo.save(saveTrData(daoTransaction));
@@ -131,9 +154,9 @@ public class TransactionController {
             }
             return Utils.getInstance().JsonMessage("No data available for Deposit", HttpStatus.NOT_ACCEPTABLE);
 
-    /*   } catch (IOException e) {
+       } catch (IOException e) {
             return Utils.getInstance().JsonMessage("Somethign went wrong, please try again..! ", HttpStatus.NOT_ACCEPTABLE);
-        }*/
+        }
     }
 
     @RequestMapping(value = "/api/change-status", method = RequestMethod.POST)

@@ -9,8 +9,16 @@ import com.mhsoft.utils.Utils;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ByteArrayResource;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.UrlResource;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 
 @CrossOrigin(origins = "http://localhost:3000", allowedHeaders = "*")
@@ -122,14 +130,16 @@ public class UserDetailsController {
         ArrayList<DAOTransaction> arralList_com_can = new ArrayList<>();
         ArrayList<DAOTransaction> arralList_other = new ArrayList<>();
         DAOTransaction [] userTrDetails_com_can; // completed and cancelled
-        for (int i=0; i<userTrDetails.length; i++) {
-            if (userTrDetails[i].getStatus().equals(Utils.TR_STATUS_Cancelled) ||
-                    userTrDetails[i].getStatus().equals(Utils.TR_STATUS_UserConfirmed ) )  {
-                arralList_com_can.add(userTrDetails[i]);
-            } else {
-                arralList_other.add(userTrDetails[i]);
-            }
+        if (userTrDetails != null) {
+            for (int i=0; i<userTrDetails.length; i++) {
+                if (userTrDetails[i].getStatus().equals(Utils.TR_STATUS_Cancelled) ||
+                        userTrDetails[i].getStatus().equals(Utils.TR_STATUS_UserConfirmed ) )  {
+                    arralList_com_can.add(userTrDetails[i]);
+                } else {
+                    arralList_other.add(userTrDetails[i]);
+                }
 
+            }
         }
 
         JSONArray tr_array_com_can = setTrData(arralList_com_can);
@@ -395,11 +405,42 @@ public class UserDetailsController {
             tr_json.put(Utils.TR_ID, userTrDetails.get(i).getid());
             tr_json.put(Utils.TR_STATUS, userTrDetails.get(i).getStatus());
             tr_json.put(Utils.TR_AMOUNT, userTrDetails.get(i).getAmount());
-            tr_json.put(Utils.TR_SLIP, userTrDetails.get(i).getSlip());
+           // tr_json.put(Utils.TR_SLIP, userTrDetails.get(i).getSlip());
             tr_json.put(Utils.TR_SLIP_DATe, userTrDetails.get(i).getSlipdate());
             tr_json.put(Utils.TR_CUS_REMARKS, userTrDetails.get(i).getCustomerremarks());
             tr_json.put(Utils.TR_CCAGENT_REMARKS, userTrDetails.get(i).getCcagentremarks());
             tr_json.put(Utils.TR_AGENT_REMARKS, userTrDetails.get(i).getAgentremarks());
+
+            //File file = new File(userTrDetails.get(i).getSlip().concat(userTrDetails.get(i).getFilename() ));
+
+            Path path = Paths.get(userTrDetails.get(i).getSlip()
+                    .concat(userTrDetails.get(i).getFilename()));
+            try {
+                ByteArrayResource resource = new ByteArrayResource(Files.readAllBytes(path));
+                tr_json.put(Utils.TR_SLIP,resource);
+            }
+          catch (Exception e ) {
+              System.out.println(e);
+          }
+
+/*            try {
+                Path fiePath = Paths.get(userTrDetails.get(i).getSlip()
+                        .concat(userTrDetails.get(i).getFilename()));
+                Resource resource = new UrlResource(fiePath.toUri());
+                File multipartFile = new File(fiePath.toUri());
+                System.out.println(multipartFile);
+                System.out.println("is this a file " + multipartFile.isFile());
+
+                if(resource.exists()) {
+                    tr_json.put(Utils.TR_SLIP,multipartFile);
+                } else {;
+                    tr_json.put(Utils.TR_SLIP,"no file" );
+                }
+
+            }catch (Exception e ) {
+                System.err.println(e);;
+            }*/
+            // Adding the related file
             tr_array.put(i, tr_json);
         }
         return tr_array;
