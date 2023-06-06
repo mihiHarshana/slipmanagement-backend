@@ -190,8 +190,8 @@ public class UserDetailsController {
         allDetails.put("user", jo_userDetails);
         allDetails.put("customerBankAccounts", bankacounts);
         allDetails.put("customerBankDetails", userBankDetails);
-        allDetails.put("customerTransactionDataOther", tr_array_com_can); // this may need to change
-        allDetails.put("customerTransactionDataMajorStatus", tr_array_other); // this may need to change
+        allDetails.put("customerTransactionDataOther", tr_array_other ); // this may need to change
+        allDetails.put("customerTransactionDataMajorStatus", tr_array_com_can ); // this may need to change
         allDetails.put("agentBankDetails", jsonAgentDetalils);
         allDetails.put("currencies", ar_currency);
         allDetails.put("agentSystems", ar_agentSystem);
