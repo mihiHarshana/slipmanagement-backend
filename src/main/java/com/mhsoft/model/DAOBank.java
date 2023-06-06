@@ -31,6 +31,16 @@ public class DAOBank {
     private String branchname;
     @Column
     private boolean latest;
+    @Column
+    private boolean defaultacc;
+
+    public boolean isDefaultacc() {
+        return defaultacc;
+    }
+
+    public void setDefaultacc(boolean defaultacc) {
+        this.defaultacc = defaultacc;
+    }
 
     public int getId() {
         return id;

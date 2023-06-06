@@ -1,23 +1,18 @@
 package com.mhsoft.model;
 
-import org.springframework.web.multipart.MultipartFile;
-
 import javax.persistence.*;
-import java.io.File;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "transaction")
 public class DAOTransaction {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int trid;
+    private int id;
 
     private Long trdatetime;
     private String trtype;
-    private double tramount;
-    private String trstatus;
+    private double amount;
+    private String status;
     private int userid;
   //  private double trdisputeamount;
     private String utrnumber;
@@ -25,9 +20,58 @@ public class DAOTransaction {
     private String customerremarks;
     private String agentremarks;
     private String ccagentremarks;
-    private LocalDate slipdate;
+    private Long slipdate;
     private double trdisputeamount;
 
+    private String currency;
+
+    public String getCurrency() {
+        return currency;
+    }
+
+    public void setCurrency(String currency) {
+        this.currency = currency;
+    }
+
+    public String getAgentSystem() {
+        return agentSystem;
+    }
+
+    public void setAgentSystem(String agentSystem) {
+        this.agentSystem = agentSystem;
+    }
+
+    public String getPlayerUser() {
+        return playerUser;
+    }
+
+    public void setPlayerUser(String playerUser) {
+        this.playerUser = playerUser;
+    }
+@Column (name="agentsystem")
+    private String agentSystem;
+    @Column (name="playeruser")
+    private String playerUser;
+
+   // private String remarks;
+
+    private String slip;
+
+/*    public String getRemarks() {
+        return remarks;
+    }
+
+    public void setRemarks(String remarks) {
+        this.remarks = remarks;
+    }*/
+
+    public String getSlip() {
+        return slip;
+    }
+
+    public void setSlip(String slip) {
+        this.slip = slip;
+    }
 
     public String getAgentremarks() {
         return agentremarks;
@@ -78,12 +122,12 @@ public class DAOTransaction {
        this.customerremarks = customerRemarks;
     }
 
-    public int getTrid() {
-        return trid;
+    public int getid() {
+        return id;
     }
 
-    public void setTrid(int trid) {
-        this.trid = trid;
+    public void setid(int id) {
+        this.id = id;
     }
 
     public Long getTrdatetime() {
@@ -102,20 +146,20 @@ public class DAOTransaction {
         this.trtype = trtype;
     }
 
-    public double getTramount() {
-        return tramount;
+    public double getAmount() {
+        return amount;
     }
 
-    public void setTramount(double tramount) {
-        this.tramount = tramount;
+    public void setAmount(double tramount) {
+        this.amount = tramount;
     }
 
-    public String getTrstatus() {
-        return trstatus;
+    public String getStatus() {
+        return status;
     }
 
-    public void setTrstatus(String trstatus) {
-        this.trstatus = trstatus;
+    public void setStatus(String trstatus) {
+        this.status = trstatus;
     }
 
     public int getUserid() {
@@ -126,11 +170,11 @@ public class DAOTransaction {
         this.userid = userid;
     }
 
-    public LocalDate getSlipdate() {
+    public Long getSlipdate() {
         return slipdate;
     }
 
-    public void setSlipdate(LocalDate slipdate) {
+    public void setSlipdate(Long slipdate) {
         this.slipdate = slipdate;
     }
 }

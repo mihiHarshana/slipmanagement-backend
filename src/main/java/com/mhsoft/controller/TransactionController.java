@@ -1,5 +1,7 @@
 package com.mhsoft.controller;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mhsoft.config.JwtTokenUtil;
 import com.mhsoft.model.DAOTransaction;
 import com.mhsoft.model.DAOUser;
@@ -59,22 +61,35 @@ public class TransactionController {
         DAOTransaction tempTr= new DAOTransaction();
         System.out.println("==== Time Stamp " + LocalDateTime.now().toEpochSecond(ZoneOffset.MIN));
         tempTr.setTrdatetime(LocalDateTime.now().toEpochSecond(ZoneOffset.UTC));
-        tempTr.setTramount(daoTrans.getTramount());
-        tempTr.setTrstatus(daoTrans.getTrstatus());
+        tempTr.setAmount(daoTrans.getAmount());
+        tempTr.setStatus(daoTrans.getStatus());
         tempTr.setTrtype(daoTrans.getTrtype());
         tempTr.setUserid(daoTrans.getUserid());
-    //    tempTr.setAgentremarks(daoTrans.getAgentremarks());
-   //     tempTr.setCustomerremarks(daoTrans.getCustomerremarks());
-      //  tempTr.setCcagentremarks(daoTrans.getCcagentremarks());
-    //    tempTr.setUtrnumber(daoTrans.getUtrnumber());
-     //   tempTr.setFilename(daoTrans.getFilename());
-    //    tempTr.setTrdisputeamount(daoTrans.getTrdisputeamount());
+        tempTr.setCurrency(daoTrans.getCurrency());
+
+        tempTr.setAgentremarks(daoTrans.getAgentremarks());
+        tempTr.setCustomerremarks(daoTrans.getCustomerremarks());
+        tempTr.setCcagentremarks(daoTrans.getCcagentremarks());
+        tempTr.setUtrnumber(daoTrans.getUtrnumber());
+        tempTr.setFilename(daoTrans.getFilename());
+        tempTr.setTrdisputeamount(daoTrans.getTrdisputeamount());
+        tempTr.setAgentSystem(daoTrans.getAgentSystem());
+        tempTr.setPlayerUser(daoTrans.getPlayerUser());
+        tempTr.setSlip(daoTrans.getSlip());
         return tempTr;
 
     }
 
     @RequestMapping (value = "api/new-deposit", method = RequestMethod.POST)
-    public String setNewDeposit (DAOTransaction daoTransaction, @RequestParam("file") MultipartFile file ,
+    public String setNewDeposit (DAOTransaction daoTransaction,
+                                 @RequestParam("file") MultipartFile file ,
+                                 @RequestParam String currency,
+                                 @RequestParam double amount,
+                                 @RequestParam String UTRNumber,
+                                 @RequestParam String agentSystem,
+                                 @RequestParam String playerUser,
+                                 @RequestParam long slipTime,
+                                 @RequestParam String remarks,
                                  @RequestHeader String Authorization) {
 
         int USER_ID = 0;
@@ -83,10 +98,26 @@ public class TransactionController {
         DAOUser DAOUser = userRepo.getUserByUserName(username);
         USER_ID = DAOUser.getUserid();
 
+        daoTransaction.setUtrnumber(UTRNumber);
+        daoTransaction.setSlipdate(slipTime);
+        daoTransaction.setCustomerremarks(remarks);
+        daoTransaction.setAmount(amount);
+        daoTransaction.setUserid(USER_ID);
+        daoTransaction.setAgentSystem(agentSystem);
+        daoTransaction.setPlayerUser(playerUser);
+        daoTransaction.setCurrency(currency);
+        daoTransaction.setStatus(Utils.TR_STATUS_Created);
+        daoTransaction.setTrtype(Utils.TRTRYOEDEPOSIT);
+
+
+
        boolean isTrNumberValid = trService.isUtrNumberValid(daoTransaction.getUtrnumber());
        if (isTrNumberValid) {
            return Utils.getInstance().JsonMessage("UTR Number duplicated.", HttpStatus.NOT_ACCEPTABLE);
        }
+       // MultipartFile temp_file = (MultipartFile ) file;
+      //  System.out.println( file.);
+     //  MultipartFile temp_file = (MultipartFile) file;
 
         if (file.isEmpty()) {
             return Utils.getInstance().JsonMessage("Please select a file to upload", HttpStatus.NOT_ACCEPTABLE);
@@ -96,9 +127,23 @@ public class TransactionController {
             byte[] bytes = file.getBytes();
             Path temp_path = Paths.get(UPLOADED_FOLDER + LocalDate.now() + "\\" + USER_ID + "\\");
             Files.createDirectories(temp_path);
-            Path path = Paths.get(temp_path + "\\" + file.getOriginalFilename());
+            String originalName  = file.getOriginalFilename();
+            String filename =originalName.substring(0,file.getOriginalFilename().indexOf(".") );
+            String  extention = originalName.substring(file.getOriginalFilename().indexOf("."));
+            System.out.println("fter substring + " + filename + " " +  extention);;
+          //  System.out.println(file_tem[0] + "    " + file_tem[1]);
+            String fileNameToSave = filename+ "_" + LocalDateTime.now().toEpochSecond(ZoneOffset.UTC) + extention;
+
+
+
+  /*          String filenametoSave = temp_filename[0]+LocalDateTime.now().
+                    toEpochSecond(ZoneOffset.MIN) + temp_filename[1];*/
+            Path path = Paths.get(temp_path + "\\" + fileNameToSave);
             Files.write(path, bytes);
             System.out.println("File uploaded sucessfully.");
+
+            daoTransaction.setSlip(temp_path + "\\");
+            daoTransaction.setFilename(fileNameToSave);
 
             if (daoTransaction != null) {
                 DAOTransaction temp = transRepo.save(saveTrData(daoTransaction));
@@ -109,8 +154,67 @@ public class TransactionController {
             }
             return Utils.getInstance().JsonMessage("No data available for Deposit", HttpStatus.NOT_ACCEPTABLE);
 
-        } catch (IOException e) {
+       } catch (IOException e) {
             return Utils.getInstance().JsonMessage("Somethign went wrong, please try again..! ", HttpStatus.NOT_ACCEPTABLE);
         }
+    }
+
+    @RequestMapping(value = "/api/change-status", method = RequestMethod.POST)
+    public String changeTransStatus(@RequestBody String daoTrans, @RequestHeader String Authorization ) throws JsonProcessingException {
+        int USER_ID = 0;
+        String token = Authorization.substring(7);
+        String username = jwtTokenUtil.getUsernameFromToken(token);
+        DAOUser DAOUser = userRepo.getUserByUserName(username);
+        USER_ID = DAOUser.getUserid();
+
+
+        ObjectMapper objectMapper = new ObjectMapper();
+        DAOTransaction trs = objectMapper.readValue(daoTrans, DAOTransaction.class);
+
+        DAOTransaction [] olddata = trService.getTransactionsByUserId(USER_ID);
+        DAOTransaction  update = new DAOTransaction();
+        for (int i=0; i<olddata.length; i++) {
+            if (olddata[i].getid() == trs.getid()) {
+                update.setPlayerUser(olddata[i].getPlayerUser());
+                update.setAgentSystem(olddata[i].getAgentSystem());
+                update.setCurrency(olddata[i].getCurrency());
+                update.setAmount(olddata[i].getAmount());
+                update.setSlipdate(olddata[i].getSlipdate());
+                update.setCustomerremarks(olddata[i].getCustomerremarks());
+                update.setUtrnumber(olddata[i].getUtrnumber());
+                update.setSlip(olddata[i].getSlip());
+                update.setTrdatetime(olddata[i].getTrdatetime());
+                break;
+            }
+        }
+        if (daoTrans != null ) {
+
+            update.setTrtype(trs.getTrtype());
+            update.setid(trs.getid());
+            update.setStatus(trs.getStatus());
+
+            DAOTransaction temp = transRepo.save(update);
+            if (temp == null) {
+                return Utils.getInstance().JsonMessage("Cannot change status  Try again", HttpStatus.NOT_ACCEPTABLE);
+            }
+
+            return Utils.getInstance().JsonMessage("Change Status Successful", HttpStatus.ACCEPTED);
+        }
+        return Utils.getInstance().JsonMessage("No data available for Change status", HttpStatus.NOT_ACCEPTABLE);
+    }
+
+    @RequestMapping (value = "api/new-withdrawal", method = RequestMethod.POST)
+    public String setNewWithdrawal (DAOTransaction daoWithdraw,  @RequestHeader String Authorization) {
+        int USER_ID = 0;
+        String token = Authorization.substring(7);
+        String username = jwtTokenUtil.getUsernameFromToken(token);
+        DAOUser DAOUser = userRepo.getUserByUserName(username);
+        USER_ID = DAOUser.getUserid();
+        daoWithdraw.setUserid(USER_ID);
+        daoWithdraw.setTrtype(Utils.TRTYPEWIDTHDRAW);
+        daoWithdraw.setTrdatetime(LocalDateTime.now().toEpochSecond(ZoneOffset.UTC));
+
+        transRepo.save(daoWithdraw);
+        return Utils.getInstance().JsonMessage("Withdrawal successfull", HttpStatus.ACCEPTED);
     }
 }
