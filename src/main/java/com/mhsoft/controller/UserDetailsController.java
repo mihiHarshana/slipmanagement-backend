@@ -123,7 +123,6 @@ public class UserDetailsController {
 
 
         //    DAOTransaction[] userTrDetails = trService.getTransactionsByUserId(USER_ID);
-// TODO: this needs to be checked
         DAOTransaction[] userTrDetails = trService.getTransactionsByUserId(USER_ID);
 
        // JSONArray tr_can_com = new JSONArray();
