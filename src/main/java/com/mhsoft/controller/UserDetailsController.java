@@ -123,7 +123,7 @@ public class UserDetailsController {
 
 
         //    DAOTransaction[] userTrDetails = trService.getTransactionsByUserId(USER_ID);
-
+// TODO: this needs to be checked
         DAOTransaction[] userTrDetails = trService.getTransactionsByUserId(USER_ID);
 
        // JSONArray tr_can_com = new JSONArray();
@@ -395,9 +395,12 @@ public class UserDetailsController {
     }
 
     private JSONArray setTrData(ArrayList<DAOTransaction> userTrDetails) {
+        System.out.println("Printing recieved data ====== " + userTrDetails);
         JSONArray tr_array = new JSONArray();
-        JSONObject tr_json = new JSONObject();
+
         for (int i = 0; i < userTrDetails.size(); i++) {
+            JSONObject tr_json = new JSONObject();
+            System.out.println("Priting trid ----------- " + userTrDetails.get(i).getid());
             tr_json.put(Utils.TR_AMOUNT, userTrDetails.get(i).getAmount());
             tr_json.put(Utils.TR_TYPE, userTrDetails.get(i).getTrtype());
             tr_json.put(Utils.TR_DATE, userTrDetails.get(i).getTrdatetime());
@@ -443,6 +446,11 @@ public class UserDetailsController {
             // Adding the related file
             tr_array.put(i, tr_json);
         }
+
+        for (int i =0; i <=tr_array.length(); i++) {
+            System.out.println("Priting after wards " + tr_array);
+        }
+
         return tr_array;
     }
 }
