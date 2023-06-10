@@ -68,11 +68,11 @@ public class UserDetailsController {
         System.out.println("1nd split" + temp1[1]);
         System.out.println("2nd split" + temp2[0]);
         String temp3 = temp2[0].replace("\"","");
-        System.out.println(temp3);
-       // if (default_account.length > 1) {
-
+        temp3 = temp3.replace("}", "");
+        System.out.println("temp3  : " + temp3);
+        if (! temp3.isEmpty() ) {
             bankService.updateBankDetailsByUserID(USER_ID, temp3);
-        //}
+        }
         // System.out.println("user name ============ : " + username);
         DAOBank bankDetailsOfUser[] = bankService.getBankDetailsByIUserId(USER_ID);
         JSONObject userBankDetails = new JSONObject();
