@@ -383,7 +383,8 @@ public class UserDetailsController {
             tr_json.put(Utils.TR_ID, userTrDetails[i].getid());
             tr_json.put(Utils.TR_STATUS, userTrDetails[i].getStatus());
             tr_json.put(Utils.TR_AMOUNT, userTrDetails[i].getAmount());
-            tr_json.put(Utils.TR_SLIP, userTrDetails[i].getSlip());
+            tr_json.put(Utils.TR_SLIP, userTrDetails[i].getSlip()); //link
+            tr_json.put(Utils.TR_SLIP_NAME, userTrDetails[i].getFilename());
             tr_json.put(Utils.TR_SLIP_DATe, userTrDetails[i].getSlipdate());
             tr_json.put(Utils.TR_CUS_REMARKS, userTrDetails[i].getCustomerremarks());
             tr_json.put(Utils.TR_CCAGENT_REMARKS, userTrDetails[i].getCcagentremarks());
@@ -407,7 +408,8 @@ public class UserDetailsController {
             tr_json.put(Utils.TR_ID, userTrDetails.get(i).getid());
             tr_json.put(Utils.TR_STATUS, userTrDetails.get(i).getStatus());
             tr_json.put(Utils.TR_AMOUNT, userTrDetails.get(i).getAmount());
-           // tr_json.put(Utils.TR_SLIP, userTrDetails.get(i).getSlip());
+            tr_json.put(Utils.TR_SLIP, userTrDetails.get(i).getSlip());
+            tr_json.put(Utils.TR_SLIP_NAME, userTrDetails.get(i).getFilename());
             tr_json.put(Utils.TR_SLIP_DATe, userTrDetails.get(i).getSlipdate());
             tr_json.put(Utils.TR_CUS_REMARKS, userTrDetails.get(i).getCustomerremarks());
             tr_json.put(Utils.TR_CCAGENT_REMARKS, userTrDetails.get(i).getCcagentremarks());
@@ -415,7 +417,7 @@ public class UserDetailsController {
 
             //File file = new File(userTrDetails.get(i).getSlip().concat(userTrDetails.get(i).getFilename() ));
 
-            Path path = Paths.get(userTrDetails.get(i).getSlip()
+/*            Path path = Paths.get(userTrDetails.get(i).getSlip()
                     .concat(userTrDetails.get(i).getFilename()));
             try {
                 ByteArrayResource resource = new ByteArrayResource(Files.readAllBytes(path));
@@ -423,7 +425,7 @@ public class UserDetailsController {
             }
           catch (Exception e ) {
               System.out.println(e);
-          }
+          }*/
 
 /*            try {
                 Path fiePath = Paths.get(userTrDetails.get(i).getSlip()

@@ -44,7 +44,9 @@ public class Utils {
 
 	public static final String TR_AGENT_REMARKS = "agentRemarks";
 
-	public static final String TR_SLIP = "slip";
+	public static final String TR_SLIP = "slipLink";
+
+	public static final String TR_SLIP_NAME = "slipName";
 
 	public static final String TR_SLIP_DATe = "slipDate";
 
