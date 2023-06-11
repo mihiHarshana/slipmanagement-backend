@@ -4,11 +4,18 @@ import com.mhsoft.config.JwtTokenUtil;
 import com.mhsoft.model.DAOUser;
 import com.mhsoft.repo.UserRepo;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.InputStreamResource;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -68,6 +75,26 @@ public class FileUploadController {
     @RequestMapping(value="/uploadStatus", method = RequestMethod.GET)
     public String uploadStatus() {
         return "uploadStatus";
+    }
+
+
+    @RequestMapping (value="/download", method = RequestMethod.GET)
+    public ResponseEntity<Object> downloadFile(@RequestParam String fileName, @RequestParam String path) throws  IOException {
+        fileName = path.concat("\\").concat(fileName);
+        System.out.println(fileName);
+        File file = new File(fileName);
+        InputStreamResource resource = new InputStreamResource(new FileInputStream(file));
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("Content-Disposition", String.format("attachment; filename=\"%s\"",file.getName()));
+        headers.add("Cache-Control", "no-cache, no-store, must-revalidated");
+        headers.add("Pragma", "no-cache");
+        headers.add("Expires", "0");
+
+        ResponseEntity <Object> responseEntity = ResponseEntity.ok().headers(headers)
+                .contentLength(file.length())
+                .contentType(MediaType.parseMediaType("application/txt")).body(resource);
+        return responseEntity;
+
     }
 
 }
