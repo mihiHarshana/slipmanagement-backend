@@ -78,7 +78,7 @@ public class FileUploadController {
     }
 
 
-    @RequestMapping (value="/download", method = RequestMethod.GET)
+/*    @RequestMapping (value="/download", method = RequestMethod.GET)
     public ResponseEntity<Object> downloadFile(@RequestParam String fileName, @RequestParam String path) throws  IOException {
         fileName = path.concat("\\").concat(fileName);
         System.out.println(fileName);
@@ -94,6 +94,25 @@ public class FileUploadController {
                 .contentLength(file.length())
                 .contentType(MediaType.parseMediaType("application/txt")).body(resource);
         return responseEntity;
+
+    }*/
+
+    @RequestMapping (value="/download", method = RequestMethod.GET)
+    public byte [] downloadFile(@RequestParam String fileName, @RequestParam String path) throws  IOException {
+        fileName = path.concat("\\").concat(fileName);
+        System.out.println(fileName);
+        File file = new File(fileName);
+       InputStreamResource resource = new InputStreamResource(new FileInputStream(file));
+ /*       HttpHeaders headers = new HttpHeaders();
+        headers.add("Content-Disposition", String.format("attachment; filename=\"%s\"",file.getName()));
+        headers.add("Cache-Control", "no-cache, no-store, must-revalidated");
+        headers.add("Pragma", "no-cache");
+        headers.add("Expires", "0");
+
+        ResponseEntity <Object> responseEntity = ResponseEntity.ok().headers(headers)
+                .contentLength(file.length())
+                .contentType(MediaType.parseMediaType("application/txt")).body(resource);*/
+        return Files.readAllBytes(file.toPath()) ;
 
     }
 
