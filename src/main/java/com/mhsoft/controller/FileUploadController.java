@@ -1,10 +1,16 @@
 package com.mhsoft.controller;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mhsoft.config.JwtTokenUtil;
+import com.mhsoft.model.DAOTransaction;
 import com.mhsoft.model.DAOUser;
 import com.mhsoft.repo.UserRepo;
+import com.mhsoft.utils.ResponseData;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.InputStreamResource;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.UrlResource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -12,6 +18,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import javax.sql.rowset.serial.SerialBlob;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -19,6 +26,8 @@ import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.sql.Blob;
+import java.sql.SQLException;
 import java.time.LocalDate;
 
 @RestController
@@ -76,13 +85,17 @@ public class FileUploadController {
     public String uploadStatus() {
         return "uploadStatus";
     }
+//TODO: working
+/*    @RequestMapping (value="/download", method = RequestMethod.POST)
 
-
-/*    @RequestMapping (value="/download", method = RequestMethod.GET)
-    public ResponseEntity<Object> downloadFile(@RequestParam String fileName, @RequestParam String path) throws  IOException {
-        fileName = path.concat("\\").concat(fileName);
-        System.out.println(fileName);
-        File file = new File(fileName);
+    public ResponseEntity<Object> downloadFile(@RequestBody String body) throws  IOException {
+        ObjectMapper objectMapper = new ObjectMapper();
+        ResponseData obj = objectMapper.readValue(body, ResponseData.class);
+        String slipName = obj.getSlipName();
+        String slipLink = obj.getSlipLink();
+        slipName = slipLink.concat("\\").concat(slipName);
+        System.out.println(slipName);
+        File file = new File(slipName);
         InputStreamResource resource = new InputStreamResource(new FileInputStream(file));
         HttpHeaders headers = new HttpHeaders();
         headers.add("Content-Disposition", String.format("attachment; filename=\"%s\"",file.getName()));
@@ -94,16 +107,19 @@ public class FileUploadController {
                 .contentLength(file.length())
                 .contentType(MediaType.parseMediaType("application/txt")).body(resource);
         return responseEntity;
-
     }*/
 
-    @RequestMapping (value="/download", method = RequestMethod.GET)
-    public byte [] downloadFile(@RequestParam String fileName, @RequestParam String path) throws  IOException {
-        fileName = path.concat("\\").concat(fileName);
-        System.out.println(fileName);
-        File file = new File(fileName);
-       InputStreamResource resource = new InputStreamResource(new FileInputStream(file));
- /*       HttpHeaders headers = new HttpHeaders();
+/*    @RequestMapping (value="/download", method = RequestMethod.POST)
+    public ResponseEntity<Object> downloadFile(@RequestBody String body) throws  IOException {
+        ObjectMapper objectMapper = new ObjectMapper();
+        ResponseData obj = objectMapper.readValue(body, ResponseData.class);
+        String slipName = obj.getSlipName();
+        String slipLink = obj.getSlipLink();
+        slipName = slipLink.concat("\\").concat(slipName);
+        System.out.println(slipName);
+        File file = new File(slipName);
+        InputStreamResource resource = new InputStreamResource(new FileInputStream(file));
+        HttpHeaders headers = new HttpHeaders();
         headers.add("Content-Disposition", String.format("attachment; filename=\"%s\"",file.getName()));
         headers.add("Cache-Control", "no-cache, no-store, must-revalidated");
         headers.add("Pragma", "no-cache");
@@ -111,9 +127,78 @@ public class FileUploadController {
 
         ResponseEntity <Object> responseEntity = ResponseEntity.ok().headers(headers)
                 .contentLength(file.length())
-                .contentType(MediaType.parseMediaType("application/txt")).body(resource);*/
-        return Files.readAllBytes(file.toPath()) ;
+                .contentType(MediaType.parseMediaType("application/octet-stream")).body(resource);
+        return responseEntity;
+
+    }*/
+
+/*    @RequestMapping (value="/download", method = RequestMethod.POST)
+    public File  downloadFile(@RequestBody String body) throws  IOException {
+
+        ObjectMapper objectMapper = new ObjectMapper();
+        ResponseData obj = objectMapper.readValue(body, ResponseData.class);
+        String slipName = obj.getSlipName();
+        String slipLink = obj.getSlipLink();
+        slipName = slipLink.concat("\\").concat(slipName);
+        System.out.println(slipName);
+        File file = new File(slipName);
+       InputStreamResource resource = new InputStreamResource(new FileInputStream(file));
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("Content-Disposition", String.format("attachment; filename=\"%s\"",file.getName()));
+        headers.add("Cache-Control", "no-cache, no-store, must-revalidated");
+        headers.add("Pragma", "no-cache");
+        headers.add("Expires", "0");
+
+        ResponseEntity <Object> responseEntity = ResponseEntity.ok().headers(headers)
+                .contentLength(file.length())
+                .contentType(MediaType.parseMediaType("application/txt")).body(resource);
+        return file ;
+
+    }*/
+
+
+    @RequestMapping (value="/download", method = RequestMethod.POST)
+    public ResponseEntity<Resource> downloadFile(@RequestBody String body) throws IOException, SQLException {
+        ObjectMapper objectMapper = new ObjectMapper();
+        ResponseData obj = objectMapper.readValue(body, ResponseData.class);
+        String slipName = obj.getSlipName();
+        String slipLink = obj.getSlipLink();
+        slipName = slipLink.concat("\\").concat(slipName);
+        System.out.println(slipName);
+       // File file = new File(slipName);
+      //  Resource resource = new UrlResource(file.toURI());
+
+
+
+        Resource resource = new FileSystemResource(slipName);
+
+        // Set the appropriate content type for the response
+        String contentType = "application/octet-stream";
+
+        return ResponseEntity.ok()
+                .contentType(MediaType.parseMediaType(contentType))
+                .body(resource);
+
+
+
+
+/*        InputStreamResource resource = new InputStreamResource(new FileInputStream(file));
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("Content-Disposition", String.format("attachment; filename=\"%s\"",file.getName()));
+        headers.add("Cache-Control", "no-cache, no-store, must-revalidated");
+        headers.add("Pragma", "no-cache");
+        headers.add("Expires", "0");
+
+        ResponseEntity <Object> responseEntity = ResponseEntity.ok().headers(headers)
+                .contentLength(file.length())
+                .contentType(MediaType.parseMediaType("application/octet-stream")).body(resource);*/
+/*        byte [] fileinbytes = Files.readAllBytes(file.toPath());
+     //   Blob blob = new SerialBlob(fileinbytes);
+        Blob blob = new SerialBlob(file.toPath(). );
+        return blob;*/
 
     }
+
+
 
 }
