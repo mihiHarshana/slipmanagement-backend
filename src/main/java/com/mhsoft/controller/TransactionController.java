@@ -184,6 +184,9 @@ public class TransactionController {
                 update.setUtrnumber(olddata[i].getUtrnumber());
                 update.setSlip(olddata[i].getSlip());
                 update.setTrdatetime(olddata[i].getTrdatetime());
+                update.setUserid(olddata[i].getUserid());
+                update.setFilename(olddata[i].getFilename());
+                update.setSlip(olddata[i].getSlip());
                 break;
             }
         }
