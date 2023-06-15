@@ -7,6 +7,7 @@ E:\projects\slipmanagement-backend\src\main\java\com\mhsoft\model\JwtResponse.ja
 E:\projects\slipmanagement-backend\src\main\java\com\mhsoft\model\UserDTO.java
 E:\projects\slipmanagement-backend\src\main\java\com\mhsoft\dao\BankDao.java
 E:\projects\slipmanagement-backend\src\main\java\com\mhsoft\service\CurrencyService.java
+E:\projects\slipmanagement-backend\src\main\java\com\mhsoft\utils\Withdrawal.java
 E:\projects\slipmanagement-backend\src\main\java\com\mhsoft\service\StorageService.java
 E:\projects\slipmanagement-backend\src\main\java\com\mhsoft\repo\BankRepo.java
 E:\projects\slipmanagement-backend\src\main\java\com\mhsoft\utils\Utils.java

@@ -8,12 +8,15 @@ import com.mhsoft.model.DAOUser;
 import com.mhsoft.repo.TransactionRepo;
 import com.mhsoft.repo.UserRepo;
 import com.mhsoft.service.TransactionService;
+import com.mhsoft.utils.ResponseData;
 import com.mhsoft.utils.Utils;
+import com.mhsoft.utils.Withdrawal;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.DataInput;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -207,16 +210,26 @@ public class TransactionController {
     }
 
     @RequestMapping (value = "api/new-withdrawal", method = RequestMethod.POST)
-    public String setNewWithdrawal (DAOTransaction daoWithdraw,  @RequestHeader String Authorization) {
+    public String setNewWithdrawal (@RequestBody  String daoWithdrawUserValues,  @RequestHeader String Authorization) throws JsonProcessingException {
+
+        ObjectMapper objectMapper = new ObjectMapper();
+        Withdrawal obj = objectMapper.readValue( daoWithdrawUserValues, Withdrawal.class);
+
         int USER_ID = 0;
         String token = Authorization.substring(7);
         String username = jwtTokenUtil.getUsernameFromToken(token);
         DAOUser DAOUser = userRepo.getUserByUserName(username);
+        DAOTransaction daoWithdraw = new DAOTransaction();
         USER_ID = DAOUser.getUserid();
         daoWithdraw.setUserid(USER_ID);
+        daoWithdraw.setPlayerUser(obj.getPlayerUser());
+        daoWithdraw.setAgentSystem(obj.getAgentSystem());
+        daoWithdraw.setCurrency(obj.getCurrency());
+        daoWithdraw.setAmount(obj.getAmount());
+        daoWithdraw.setCustomerremarks(obj.getRemarks());
         daoWithdraw.setTrtype(Utils.TRTYPEWIDTHDRAW);
+        daoWithdraw.setStatus(Utils.TR_STATUS_Created);
         daoWithdraw.setTrdatetime(LocalDateTime.now().toEpochSecond(ZoneOffset.UTC));
-
         transRepo.save(daoWithdraw);
         return Utils.getInstance().JsonMessage("Withdrawal successfull", HttpStatus.ACCEPTED);
     }
