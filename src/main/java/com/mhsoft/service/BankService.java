@@ -37,26 +37,26 @@ public class BankService {
                 System.out.println("OLD default account found");
                 DAOBank newBankDetails = new DAOBank();
                 newBankDetails.setId(allBankDetails[i].getId());
-                newBankDetails.setBankaccno(allBankDetails[i].getBankaccno());
+                newBankDetails.setAccountNo(allBankDetails[i].getAccountNo());
                 newBankDetails.setBranchname(allBankDetails[i].getBranchname());
-                newBankDetails.setBankname(allBankDetails[i].getBankname());
-                newBankDetails.setBankinst(allBankDetails[i].getBankinst());
+                newBankDetails.setBankName(allBankDetails[i].getBankName());
+                newBankDetails.setInstructions(allBankDetails[i].getInstructions());
                 newBankDetails.setLatest(allBankDetails[i].isLatest());
-                newBankDetails.setBankcode(allBankDetails[i].getBankcode());
+                newBankDetails.setBankCode(allBankDetails[i].getBankCode());
                 newBankDetails.setUserid(allBankDetails[i].getUserid());
                 newBankDetails.setDefaultacc(false);
                 bankRepo.save(newBankDetails);
                 isOldFefaultFound = true;
             }
-            if (allBankDetails[i].getBankaccno().equals(bankAccNo) ) {
+            if (allBankDetails[i].getAccountNo().equals(bankAccNo) ) {
                 System.out.println("New  default account found");
                 newDefault.setId(allBankDetails[i].getId());
-                newDefault.setBankaccno(allBankDetails[i].getBankaccno());
+                newDefault.setAccountNo(allBankDetails[i].getAccountNo());
                 newDefault.setBranchname(allBankDetails[i].getBranchname());
-                newDefault.setBankname(allBankDetails[i].getBankname());
-                newDefault.setBankinst(allBankDetails[i].getBankinst());
+                newDefault.setBankName(allBankDetails[i].getBankName());
+                newDefault.setInstructions(allBankDetails[i].getInstructions());
                 newDefault.setLatest(allBankDetails[i].isLatest());
-                newDefault.setBankcode(allBankDetails[i].getBankcode());
+                newDefault.setBankCode(allBankDetails[i].getBankCode());
                 newDefault.setUserid(allBankDetails[i].getUserid());
                 newDefault.setDefaultacc(true);
                 bankRepo.save(newDefault);

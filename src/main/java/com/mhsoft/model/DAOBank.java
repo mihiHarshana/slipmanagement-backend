@@ -14,21 +14,21 @@ public class DAOBank {
     private int userid;
 
     public String getBranchname() {
-        return branchname;
+        return branchName;
     }
     public void setBranchname(String branchname) {
-        this.branchname = branchname;
+        this.branchName = branchname;
     }
-    @Column
-    private String bankname;
-    @Column
-    private String bankcode;
-    @Column
-    private String bankaccno;
-    @Column
-    private String bankinst;
-    @Column
-    private String branchname;
+    @Column (name="bankname")
+    private String bankName;
+    @Column (name="bankcode")
+    private String bankCode;
+    @Column (name = "bankaccno")
+    private String accountNo;
+    @Column (name = "bankinst")
+    private String instructions;
+    @Column (name="branchname")
+    private String branchName;
     @Column
     private boolean latest;
     @Column
@@ -58,36 +58,36 @@ public class DAOBank {
         this.userid = userid;
     }
 
-    public String getBankname() {
-        return bankname;
+    public String getBankName() {
+        return bankName;
     }
 
-    public void setBankname(String bankname) {
-        this.bankname = bankname;
+    public void setBankName(String bankname) {
+        this.bankName = bankname;
     }
 
-    public String getBankcode() {
-        return bankcode;
+    public String getBankCode() {
+        return bankCode;
     }
 
-    public void setBankcode(String bankcode) {
-        this.bankcode = bankcode;
+    public void setBankCode(String bankcode) {
+        this.bankCode = bankcode;
     }
 
-    public String getBankaccno() {
-        return bankaccno;
+    public String getAccountNo() {
+        return accountNo;
     }
 
-    public void setBankaccno(String bankaccno) {
-        this.bankaccno = bankaccno;
+    public void setAccountNo(String bankaccno) {
+        this.accountNo = bankaccno;
     }
 
-    public String getBankinst() {
-        return bankinst;
+    public String getInstructions() {
+        return instructions;
     }
 
-    public void setBankinst(String bankinst) {
-        this.bankinst = bankinst;
+    public void setInstructions(String bankinst) {
+        this.instructions = bankinst;
     }
 
     public boolean isLatest() {

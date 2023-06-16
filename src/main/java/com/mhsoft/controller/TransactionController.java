@@ -15,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import sun.tools.jconsole.JConsole;
 
 import java.io.DataInput;
 import java.io.IOException;
@@ -79,6 +80,7 @@ public class TransactionController {
         tempTr.setAgentSystem(daoTrans.getAgentSystem());
         tempTr.setPlayerUser(daoTrans.getPlayerUser());
         tempTr.setSlip(daoTrans.getSlip());
+        tempTr.setSlipdate(daoTrans.getSlipdate());
         return tempTr;
 
     }
@@ -100,7 +102,7 @@ public class TransactionController {
         String username = jwtTokenUtil.getUsernameFromToken(token);
         DAOUser DAOUser = userRepo.getUserByUserName(username);
         USER_ID = DAOUser.getUserid();
-
+        System.out.println("Slip Date time : " +  slipTime);
         daoTransaction.setUtrnumber(UTRNumber);
         daoTransaction.setSlipdate(slipTime);
         daoTransaction.setCustomerremarks(remarks);

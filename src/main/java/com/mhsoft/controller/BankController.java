@@ -7,7 +7,6 @@ import com.mhsoft.model.DAOUser;
 import com.mhsoft.repo.UserRepo;
 import com.mhsoft.service.BankService;
 import com.mhsoft.utils.Utils;
-import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -68,11 +67,11 @@ public class BankController {
         newDetails.setLatest(true);
         newDetails.setDefaultacc(false);
         newDetails.setUserid(USER_ID);
-        newDetails.setBankaccno(bankdetails.getBankaccno());
-        newDetails.setBankinst(bankdetails.getBankinst());
-        newDetails.setBankname(bankdetails.getBankname());
+        newDetails.setAccountNo(bankdetails.getAccountNo());
+        newDetails.setInstructions(bankdetails.getInstructions());
+        newDetails.setBankName(bankdetails.getBankName());
         newDetails.setBranchname(bankdetails.getBranchname());
-        newDetails.setBankcode(bankdetails.getBankcode());
+        newDetails.setBankCode(bankdetails.getBankCode());
 
 
         DAOBank bankDao1 = bankDao.save(newDetails);

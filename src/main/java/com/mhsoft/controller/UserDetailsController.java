@@ -9,16 +9,8 @@ import com.mhsoft.utils.Utils;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.ByteArrayResource;
-import org.springframework.core.io.Resource;
-import org.springframework.core.io.UrlResource;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
-import java.io.File;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 
 @CrossOrigin(origins = "http://localhost:3000", allowedHeaders = "*")
@@ -87,17 +79,17 @@ public class UserDetailsController {
             bankacounts = new String[bankDetailsOfUser.length ];
 
             for (int i = 0; i < bankacounts.length; i++) {
-                bankacounts[i] = bankDetailsOfUser[i].getBankaccno().concat(" ").
-                        concat(bankDetailsOfUser[i].getBankname());
+                bankacounts[i] = bankDetailsOfUser[i].getAccountNo().concat(" ").
+                        concat(bankDetailsOfUser[i].getBankName());
             }
 
             for (int i = 0; i < bankacounts.length; i++) {
                 if (bankDetailsOfUser[i].isDefaultacc()) {
-                    userBankDetails.put(Utils.BANK_NAME, bankDetailsOfUser[i].getBankname());
-                    userBankDetails.put(Utils.BANK_CODE, bankDetailsOfUser[i].getBankcode());
+                    userBankDetails.put(Utils.BANK_NAME, bankDetailsOfUser[i].getBankName());
+                    userBankDetails.put(Utils.BANK_CODE, bankDetailsOfUser[i].getBankCode());
                     userBankDetails.put(Utils.BANK_BRANCH, bankDetailsOfUser[i].getBranchname());
-                    userBankDetails.put(Utils.BANK_INS, bankDetailsOfUser[i].getBankinst());
-                    userBankDetails.put(Utils.BANK_ACC_NO, bankDetailsOfUser[i].getBankaccno());
+                    userBankDetails.put(Utils.BANK_INS, bankDetailsOfUser[i].getInstructions());
+                    userBankDetails.put(Utils.BANK_ACC_NO, bankDetailsOfUser[i].getAccountNo());
                 }
             }
         }
@@ -163,16 +155,16 @@ public class UserDetailsController {
             bankacountsagent = new String[tempAgentDetails.length];
 
             for (int i = 0; i < bankacountsagent.length; i++) {
-                bankacountsagent[i] = tempAgentDetails[i].getBankaccno();
+                bankacountsagent[i] = tempAgentDetails[i].getAccountNo();
             }
 
             for (int i = 0; i < bankacountsagent.length; i++) {
                 if (tempAgentDetails[i].isDefaultacc()) {
-                    jsonAgentDetalils.put(Utils.BANK_NAME, tempAgentDetails[i].getBankname());
-                    jsonAgentDetalils.put(Utils.BANK_CODE, tempAgentDetails[i].getBankcode());
+                    jsonAgentDetalils.put(Utils.BANK_NAME, tempAgentDetails[i].getBankName());
+                    jsonAgentDetalils.put(Utils.BANK_CODE, tempAgentDetails[i].getBankCode());
                     jsonAgentDetalils.put(Utils.BANK_BRANCH, tempAgentDetails[i].getBranchname());
-                    jsonAgentDetalils.put(Utils.BANK_INS, tempAgentDetails[i].getBankinst());
-                    jsonAgentDetalils.put(Utils.BANK_ACC_NO, tempAgentDetails[i].getBankaccno());
+                    jsonAgentDetalils.put(Utils.BANK_INS, tempAgentDetails[i].getInstructions());
+                    jsonAgentDetalils.put(Utils.BANK_ACC_NO, tempAgentDetails[i].getAccountNo());
                 }
             }
         }
