@@ -8,7 +8,7 @@ import com.mhsoft.model.DAOUser;
 import com.mhsoft.repo.TransactionRepo;
 import com.mhsoft.repo.UserRepo;
 import com.mhsoft.service.TransactionService;
-import com.mhsoft.utils.ResponseData;
+
 import com.mhsoft.utils.Utils;
 import com.mhsoft.utils.Withdrawal;
 import org.springframework.beans.factory.annotation.Autowired;

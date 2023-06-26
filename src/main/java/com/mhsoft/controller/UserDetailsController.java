@@ -5,6 +5,7 @@ import com.mhsoft.dao.BankDao;
 import com.mhsoft.model.*;
 import com.mhsoft.repo.UserRepo;
 import com.mhsoft.service.*;
+import com.mhsoft.utils.AgentUserTransDetails;
 import com.mhsoft.utils.Utils;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -39,6 +40,9 @@ public class UserDetailsController {
 
     @Autowired
     AgentSystemService agentSystemService;
+
+    @Autowired
+    AgentCodeService agentCodeService;
 
     @PostMapping("/customer-details")
     // @RequestMapping(value = "/api/customer-details", method = RequestMethod.POST)
@@ -255,6 +259,76 @@ public class UserDetailsController {
 
         return jo.toString();
     }*/
+
+       @PostMapping( "/agent-details")
+    public String getAgentBankTransactionDetails(@RequestHeader String Authorization)  {
+           int USER_ID = 0;
+           String[] bankacounts = null;
+           String token = Authorization.substring(7);
+           String username = jwtTokenUtil.getUsernameFromToken(token);
+           DAOUser DAOUser = userRepo.getUserByUserName(username);
+           USER_ID = DAOUser.getUserid();
+
+
+           DAOBank [] bankDetailsOfUser = bankService.getBankDetailsByIUserId(USER_ID);
+           JSONObject userBankDetails = new JSONObject();
+           if (bankDetailsOfUser == null) {
+               userBankDetails.put(Utils.BANK_NAME, "null");
+               userBankDetails.put(Utils.BANK_CODE, "null");
+               userBankDetails.put(Utils.BANK_BRANCH, "null");
+               userBankDetails.put(Utils.BANK_INS, "null");
+               userBankDetails.put(Utils.BANK_ACC_NO, "null");
+           } else {
+               bankacounts = new String[bankDetailsOfUser.length];
+
+               for (int i = 0; i < bankacounts.length; i++) {
+                   bankacounts[i] = bankDetailsOfUser[i].getAccountNo().concat(" ").
+                           concat(bankDetailsOfUser[i].getBankName());
+               }
+
+               for (int i = 0; i < bankacounts.length; i++) {
+                   if (bankDetailsOfUser[i].isDefaultacc()) {
+                       userBankDetails.put(Utils.BANK_NAME, bankDetailsOfUser[i].getBankName());
+                       userBankDetails.put(Utils.BANK_CODE, bankDetailsOfUser[i].getBankCode());
+                       userBankDetails.put(Utils.BANK_BRANCH, bankDetailsOfUser[i].getBranchname());
+                       userBankDetails.put(Utils.BANK_INS, bankDetailsOfUser[i].getInstructions());
+                       userBankDetails.put(Utils.BANK_ACC_NO, bankDetailsOfUser[i].getAccountNo());
+                   }
+               }
+           }
+
+         //  Strng s [] temp_Trans = trService.getTransactionsByUserTransAgentId(USER_ID);
+          // DAOTransaction [] transaction = new DAOTransaction[temp_Trans.length];
+
+    JSONArray trans_Array = new JSONArray();
+
+/*           for (int i=0; i< temp_Trans.length; i++) {
+               JSONObject j_trans = new JSONObject();
+               j_trans.put("customerID",temp_Trans[i].getCustomerId() );
+               j_trans.put("userName",temp_Trans[i].getUserName() );
+               j_trans.put("firstName", temp_Trans[i].getFirstName());
+               j_trans.put("customerStatus", temp_Trans[i].getCustomerStatus());
+               j_trans.put("agentSystem", temp_Trans[i].getAgentSystem());
+               j_trans.put("playerId", temp_Trans[i].getPlayerId());
+
+               trans_Array.put(i, trans_Array);
+           }*/
+
+
+        DAOAgentCode daoAgentCode =  agentCodeService.getLatestAgentDetails(USER_ID);
+
+           JSONObject jo = new JSONObject();
+           jo.put("agentId", USER_ID);
+           jo.put("currentAgentCode",daoAgentCode.getAgentCode() );
+           jo.put("agentBankAccounts",bankacounts );
+           jo.put("agentBanKDetails", userBankDetails);
+           jo.put("customersRecords", trService.getTransactionsByUserTransAgentId(USER_ID));
+           //jo.put("withdrawalData", array_withdrawal);
+           return jo.toString();
+       }
+
+
+
     /*@PostMapping( "/agent-details")
     public String getAgentBankTransactionDetails(@RequestHeader String Authorization)  {
         int USER_ID = 0;

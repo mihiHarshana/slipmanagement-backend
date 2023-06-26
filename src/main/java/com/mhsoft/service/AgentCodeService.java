@@ -30,4 +30,10 @@ public class AgentCodeService {
         agentRepo.save(agentNew);
         return agentNew;
     }
+
+    public DAOAgentCode getLatestAgentDetails(int agentId) {
+        DAOAgentCode daoAgentCode = agentRepo.getLatestAgentCodeById(agentId);
+        return daoAgentCode;
+
+    }
 }
