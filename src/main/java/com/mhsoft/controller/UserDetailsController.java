@@ -261,13 +261,28 @@ public class UserDetailsController {
     }*/
 
        @PostMapping( "/agent-details")
-    public String getAgentBankTransactionDetails(@RequestHeader String Authorization)  {
+    public String getAgentBankTransactionDetails(@RequestHeader String Authorization,
+                    @RequestBody String defaultAccount) {
            int USER_ID = 0;
            String[] bankacounts = null;
            String token = Authorization.substring(7);
            String username = jwtTokenUtil.getUsernameFromToken(token);
            DAOUser DAOUser = userRepo.getUserByUserName(username);
            USER_ID = DAOUser.getUserid();
+
+
+           System.out.println("Printing Agent Default Account : " + defaultAccount);
+           //Processing Default account
+           String [] temp1 = defaultAccount.split(":");
+           String [] temp2 = temp1[1].split(" ");
+           System.out.println("1nd split" + temp1[1]);
+           System.out.println("2nd split" + temp2[0]);
+           String temp3 = temp2[0].replace("\"","");
+           temp3 = temp3.replace("}", "");
+           System.out.println("temp3  : " + temp3);
+           if (! temp3.isEmpty() ) {
+               bankService.updateBankDetailsByUserID(USER_ID, temp3);
+           }
 
 
            DAOBank [] bankDetailsOfUser = bankService.getBankDetailsByIUserId(USER_ID);
@@ -297,24 +312,6 @@ public class UserDetailsController {
                }
            }
 
-         //  Strng s [] temp_Trans = trService.getTransactionsByUserTransAgentId(USER_ID);
-          // DAOTransaction [] transaction = new DAOTransaction[temp_Trans.length];
-
-    JSONArray trans_Array = new JSONArray();
-
-/*           for (int i=0; i< temp_Trans.length; i++) {
-               JSONObject j_trans = new JSONObject();
-               j_trans.put("customerID",temp_Trans[i].getCustomerId() );
-               j_trans.put("userName",temp_Trans[i].getUserName() );
-               j_trans.put("firstName", temp_Trans[i].getFirstName());
-               j_trans.put("customerStatus", temp_Trans[i].getCustomerStatus());
-               j_trans.put("agentSystem", temp_Trans[i].getAgentSystem());
-               j_trans.put("playerId", temp_Trans[i].getPlayerId());
-
-               trans_Array.put(i, trans_Array);
-           }*/
-
-
         DAOAgentCode daoAgentCode =  agentCodeService.getLatestAgentDetails(USER_ID);
 
            JSONObject jo = new JSONObject();
@@ -326,87 +323,6 @@ public class UserDetailsController {
            //jo.put("withdrawalData", array_withdrawal);
            return jo.toString();
        }
-
-
-
-    /*@PostMapping( "/agent-details")
-    public String getAgentBankTransactionDetails(@RequestHeader String Authorization)  {
-        int USER_ID = 0;
-        String token = Authorization.substring(7);
-        String username = jwtTokenUtil.getUsernameFromToken(token);
-        DAOUser DAOUser = userRepo.getUserByUserName(username);
-        USER_ID = DAOUser.getUserid();
-
-        DAOBank bankDetailsOfUser = bankService.getBankDetailsByIUserId(USER_ID);
-        JSONObject userBankDetails = new JSONObject();
-        if (bankDetailsOfUser == null) {
-            userBankDetails.put(Utils.BANK_NAME, "null");
-            userBankDetails.put(Utils.BANK_CODE, "null");
-            userBankDetails.put(Utils.BANK_BRANCH, "null");
-            userBankDetails.put(Utils.BANK_INS, "null");
-            userBankDetails.put(Utils.BANK_ACC_NO, "null");
-        } else {
-            userBankDetails.put(Utils.BANK_NAME, bankDetailsOfUser.getBankname());
-            userBankDetails.put(Utils.BANK_CODE, bankDetailsOfUser.getBankcode());
-            userBankDetails.put(Utils.BANK_BRANCH, bankDetailsOfUser.getBranchname());
-            userBankDetails.put(Utils.BANK_INS, bankDetailsOfUser.getBankinst());
-            userBankDetails.put(Utils.BANK_ACC_NO, bankDetailsOfUser.getBankaccno());
-        }
-        DAOTransaction [] transactions = trService.getTransactionsByAgentId(USER_ID);
-
-        JSONArray tr_array = new JSONArray();
-
-        for (int i =0; i<transactions.length; i++) {
-            JSONObject tr_json = new JSONObject();
-            tr_json.put(Utils.TR_AMOUNT,transactions[i].getTramount());
-            tr_json.put(Utils.TR_TYPE,transactions[i].getTrtype());
-            tr_json.put(Utils.TR_DATE,transactions[i].getTrdatetime());
-            tr_json.put(Utils.TR_USERID,transactions[i].getUserid());
-            tr_json.put(Utils.TR_ID,transactions[i].getTrid());
-            tr_array.put(i,tr_json);
-        }*/
-
-
-/*        String[] deposits = trService.getTransactionsByAgentId(USER_ID);
-        String  [] withdrawals = trService.getTransactionsByAgentId(USER_ID);
-
-        JSONArray array = new JSONArray();
-        for (int i = 0; i < deposits.length; i++) {
-            System.out.println("Deposit --- length :" + i);
-            String[] temp_deposit = deposits[i].split(",");
-            JSONObject jo_deposit = new JSONObject();
-            jo_deposit.put(Utils.TR_USERID, temp_deposit[0]);
-            jo_deposit.put(Utils.TR_ID, temp_deposit[1]);
-            jo_deposit.put(Utils.TR_AMOUNT, temp_deposit[2]);
-            jo_deposit.put(Utils.TR_DATE, temp_deposit[3]); // Date to Be Fixed
-            jo_deposit.put(Utils.TR_STATUS, temp_deposit[4]);
-            jo_deposit.put(Utils.TR_TYPE, temp_deposit[5]);
-            jo_deposit.put("userName", temp_deposit[6]);
-            array.put(i, jo_deposit);
-        }
-
-        JSONArray array_withdrawal = new JSONArray();
-        for (int i = 0; i < withdrawals.length; i++) {
-            System.out.println("withdrawals --- length :" + i);
-            String[] temp_withdrawal = withdrawals[i].split(",");
-            JSONObject jo_withdrawal = new JSONObject();
-            jo_withdrawal.put(Utils.TR_USERID, temp_withdrawal[0]);
-            jo_withdrawal.put(Utils.TR_ID, temp_withdrawal[1]);
-            jo_withdrawal.put(Utils.TR_AMOUNT, temp_withdrawal[2]);
-            jo_withdrawal.put(Utils.TR_DATE, temp_withdrawal[3]);
-            jo_withdrawal.put(Utils.TR_STATUS, temp_withdrawal[4]);
-            jo_withdrawal.put(Utils.TR_TYPE, temp_withdrawal[5]);
-            jo_withdrawal.put("userName", temp_withdrawal[6]);
-            array_withdrawal.put(i, jo_withdrawal);
-        }
-
-        JSONObject jo = new JSONObject();
-        jo.put("agentBanKDetails", userBankDetails);
-        jo.put("userTransDetails", tr_array);
-        //jo.put("withdrawalData", array_withdrawal);
-        return jo.toString();
-    }*/
-
 
 /*    @PostMapping("/change-status")
     public String changeStatus(@RequestHeader String Authorization, @RequestBody String obj ) {
