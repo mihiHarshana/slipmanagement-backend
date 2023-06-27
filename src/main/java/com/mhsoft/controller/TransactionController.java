@@ -9,8 +9,11 @@ import com.mhsoft.repo.TransactionRepo;
 import com.mhsoft.repo.UserRepo;
 import com.mhsoft.service.TransactionService;
 
+import com.mhsoft.service.UserDetailService;
+import com.mhsoft.utils.CustomerStatus;
 import com.mhsoft.utils.Utils;
 import com.mhsoft.utils.Withdrawal;
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -31,6 +34,7 @@ public class TransactionController {
   @Autowired JwtTokenUtil jwtTokenUtil;
   @Autowired UserRepo userRepo;
   @Autowired TransactionService trService;
+  @Autowired UserDetailService userDetailService;
 
     private static String UPLOADED_FOLDER = "E:\\projects\\fileuploads\\";
 
@@ -231,5 +235,25 @@ public class TransactionController {
         daoWithdraw.setTrdatetime(LocalDateTime.now().toEpochSecond(ZoneOffset.UTC));
         transRepo.save(daoWithdraw);
         return Utils.getInstance().JsonMessage("Withdrawal successfull", HttpStatus.ACCEPTED);
+    }
+
+    @RequestMapping (value = "api/change-customer-status" , method = RequestMethod.POST)
+    public String changeCustomerStatus (@RequestBody  String strCustomerData,  @RequestHeader String Authorization) throws JsonProcessingException {
+        ObjectMapper objectMapper = new ObjectMapper();
+        CustomerStatus customerData = objectMapper.readValue( strCustomerData, CustomerStatus.class);
+        String token = Authorization.substring(7);
+        String username = jwtTokenUtil.getUsernameFromToken(token);
+        DAOUser DAOUser = userDetailService.getUserDetailsByUserId(customerData.getId());
+        DAOUser daoNewUser = new DAOUser();
+        daoNewUser.setUserstatus(customerData.getCustomerStatus());
+        daoNewUser.setUserType(DAOUser.getUsertype());
+        daoNewUser.setUserId(customerData.getId());
+        daoNewUser.setPassword(DAOUser.getPassword());
+        daoNewUser.setUserlname(DAOUser.getUserlname());
+        daoNewUser.setUserfname(DAOUser.getUserfname());
+        daoNewUser.setUsername(DAOUser.getUsername());
+        userRepo.save(daoNewUser);
+
+        return Utils.getInstance().JsonMessage("User Status updated Successfully", HttpStatus.ACCEPTED);
     }
 }

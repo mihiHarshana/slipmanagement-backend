@@ -21,4 +21,7 @@ public interface UserRepo extends JpaRepository<DAOUser, Integer>{
         @Query (value = "INSERT INTO table_name (username, password, usertype, userstatus)" +
                 "VALUES (value1, value2, value3, value4) where id =?1" , nativeQuery = true)
         int updateUserDetailsById (int userid);
+
+        @Query(value = "SELECT * from user WHERE id = ?1 " , nativeQuery = true)
+        DAOUser getUserDetailsByUserId(int userId);
 }
