@@ -321,7 +321,7 @@ public class UserDetailsController {
            jo.put("agentId", USER_ID);
            jo.put("currentAgentCode",daoAgentCode.getAgentCode() );
            jo.put("agentBankAccounts",bankacounts );
-           jo.put("agentBanKDetails", userBankDetails);
+           jo.put("agentBankDetails", userBankDetails);
            jo.put("customersRecords", trService.getTransactionsByUserTransAgentId(USER_ID));
            //jo.put("withdrawalData", array_withdrawal);
            return jo.toString();
