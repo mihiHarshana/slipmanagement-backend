@@ -1,17 +1,11 @@
 package com.mhsoft.service;
 
 import com.mhsoft.model.DAOTransaction;
-import com.mhsoft.model.IDAOTransaction;
 import com.mhsoft.repo.TransactionRepo;
-import com.mhsoft.utils.AgentUserTransDetails;
-import org.hibernate.mapping.Array;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import java.sql.ResultSet;
-import java.util.ArrayList;
 
 @Service
 public class TransactionService {
