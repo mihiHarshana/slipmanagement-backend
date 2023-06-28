@@ -8,12 +8,10 @@ import com.mhsoft.model.DAOUser;
 import com.mhsoft.repo.TransactionRepo;
 import com.mhsoft.repo.UserRepo;
 import com.mhsoft.service.TransactionService;
-
 import com.mhsoft.service.UserDetailService;
 import com.mhsoft.utils.CustomerStatus;
 import com.mhsoft.utils.Utils;
 import com.mhsoft.utils.Withdrawal;
-import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -115,15 +113,10 @@ public class TransactionController {
         daoTransaction.setStatus(Utils.TR_STATUS_Created);
         daoTransaction.setTrtype(Utils.TRTRYOEDEPOSIT);
 
-
-
        boolean isTrNumberValid = trService.isUtrNumberValid(daoTransaction.getUtrnumber());
        if (isTrNumberValid) {
            return Utils.getInstance().JsonMessage("UTR Number duplicated.", HttpStatus.NOT_ACCEPTABLE);
        }
-       // MultipartFile temp_file = (MultipartFile ) file;
-      //  System.out.println( file.);
-     //  MultipartFile temp_file = (MultipartFile) file;
 
         if (file.isEmpty()) {
             return Utils.getInstance().JsonMessage("Please select a file to upload", HttpStatus.NOT_ACCEPTABLE);
@@ -137,13 +130,8 @@ public class TransactionController {
             String filename =originalName.substring(0,file.getOriginalFilename().indexOf(".") );
             String  extention = originalName.substring(file.getOriginalFilename().indexOf("."));
             System.out.println("fter substring + " + filename + " " +  extention);;
-          //  System.out.println(file_tem[0] + "    " + file_tem[1]);
             String fileNameToSave = filename+ "_" + LocalDateTime.now().toEpochSecond(ZoneOffset.UTC) + extention;
 
-
-
-  /*          String filenametoSave = temp_filename[0]+LocalDateTime.now().
-                    toEpochSecond(ZoneOffset.MIN) + temp_filename[1];*/
             Path path = Paths.get(temp_path + "\\" + fileNameToSave);
             Files.write(path, bytes);
             System.out.println("File uploaded sucessfully.");
