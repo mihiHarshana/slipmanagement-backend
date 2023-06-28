@@ -9,8 +9,8 @@ public class DAOAgentCode {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
-    @Column
-    private int agentid;
+    @Column (name = "agentid")
+    private int agentId;
 
     public int getId() {
         return id;
@@ -20,12 +20,12 @@ public class DAOAgentCode {
         this.id = id;
     }
 
-    public int getAgentid() {
-        return agentid;
+    public int getAgentId() {
+        return agentId;
     }
 
-    public void setAgentid(int agentid) {
-        this.agentid = agentid;
+    public void setAgentId(int agentid) {
+        this.agentId = agentid;
     }
 
     public String getAgentCode() {
@@ -44,7 +44,7 @@ public class DAOAgentCode {
         this.latest = latest;
     }
 
-    @Column
+    @Column (name="agentcode")
     private String agentCode;
 
     @Column

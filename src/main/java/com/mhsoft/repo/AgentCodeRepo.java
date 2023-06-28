@@ -11,4 +11,5 @@ public interface AgentCodeRepo extends JpaRepository<DAOAgentCode, Integer> {
     @Query(value = "SELECT * from agentcode WHERE agentid = ?1 AND latest=1 " , nativeQuery = true)
     DAOAgentCode  getLatestAgentCodeById(int agentid);
 
+
 }
