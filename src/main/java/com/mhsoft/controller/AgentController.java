@@ -52,49 +52,23 @@ public class AgentController {
         jo.put("agentid",agentCode.getAgentId() );
 
         return jo.toString();
-
     }
 
     @RequestMapping(value = "/api/saveAgentCode", method = RequestMethod.POST)
     public String saveAgentCode(@RequestBody DAOAgentCode agentCode) {
         agentCodeService.saveAgentData(agentCode);
-
         return Utils.getInstance().JsonMessage("Agent Code Saved", HttpStatus.ACCEPTED);
     }
     @RequestMapping(value = "/api/new-agnet-code", method = RequestMethod.POST)
     public String saveNewAgentCode(@RequestBody String newAgentCode) throws JsonProcessingException {
-
-        System.out.println("AGentCode data " + newAgentCode +  " * ********************** * ");
-
         ObjectMapper objectMapper = new ObjectMapper();
         AgentCode agentCode = objectMapper.readValue(newAgentCode, AgentCode.class);
-        System.out.println(agentCode.getAgentId());
-        System.out.println(agentCode.getAgentCode());
-
-
-        // TODO: Get old agent data and update the table
-
- /*       DAOAgentCode oldAgentDetail = agentCodeService.getLatestAgentDetails(agentCode.getAgentid());
-        oldAgentDetail.setId(oldAgentDetail.getId());
-        oldAgentDetail.setAgentCode(oldAgentDetail.getAgentCode());
-        oldAgentDetail.setLatest(false);
-        agentCodeRepo.save(oldAgentDetail);
-
-        // TODO: Add new agent data to the table.
-        DAOAgentCode newAgentDetail = new DAOAgentCode();
-        newAgentDetail.setLatest(true);
-        newAgentDetail.setAgentCode(agentCode.getAgent_code());
-        newAgentDetail.setAgentid(agentCode.getAgentid());
-        agentCodeRepo.save(newAgentDetail);*/
-
-        //Create agentDao with new details and send for saving. Saving part check and do the needfull.
         DAOAgentCode agentDetails = new DAOAgentCode();
         agentDetails.setAgentCode(agentCode.getAgentCode());
         agentDetails.setAgentId(agentCode.getAgentId());
         agentDetails.setLatest(agentDetails.isLatest());
-
         agentCodeService.saveAgentData(agentDetails);
 
-        return Utils.getInstance().JsonMessage("Agent Code Saved", HttpStatus.ACCEPTED);
+        return Utils.getInstance().JsonMessage("New agent code updated successfully", HttpStatus.ACCEPTED);
     }
 }
