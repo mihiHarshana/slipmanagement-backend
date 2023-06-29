@@ -1,15 +1,20 @@
 package com.mhsoft.model;
 
+import javax.persistence.Column;
+
 public class UserDTO {
 	private String username;
 	private String password;
-	private String usertype;
-	private String userstatus;
-
+	@Column(name="usertype")
+	private String userType;
+	@Column (name="userstatus")
+	private String userStatus;
 	private  int id;
 
-	private String userfname;
-	private String userlname;
+	@Column(name = "userfname")
+	private String firstname;
+	@Column(name = "userlname")
+	private String lastname;
 	public String getUsername() {
 		return username;
 	}
@@ -28,38 +33,38 @@ public class UserDTO {
 		this.password = password;
 	}
 	
-	public String getUsertype() {
-		return usertype;
+	public String getUserType() {
+		return userType;
 	}
 	
-	public void setUsertype(String usertype) {
-		this.usertype = usertype;
+	public void setUserType(String userType) {
+		this.userType = userType;
 	}
 	
-	public void setUserstatus(String userstatus) {
-		this.userstatus = userstatus;
+	public void setUserStatus(String userStatus) {
+		this.userStatus = userStatus;
 	}
 	
 	public String  getUserStatus() {
-		return userstatus;
+		return userStatus;
 	}
 	public void setId(int userid) {
 		this.id = userid;
 	}
 
-	public String getUserfname() {
-		return userfname;
+	public String getFirstname() {
+		return firstname;
 	}
 
-	public String getUserlname() {
-		return userlname;
+	public String getLastname() {
+		return lastname;
 	}
 
-	public void setUserfname(String userfname) {
-		this.userfname = userfname;
+	public void setFirstname(String firstname) {
+		this.firstname = firstname;
 	}
 
-	public void setUserlname(String userlname) {
-		this.userlname = userlname;
+	public void setLastname(String lastname) {
+		this.lastname = lastname;
 	}
 }
