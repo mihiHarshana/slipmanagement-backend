@@ -396,6 +396,8 @@ public class UserDetailsController {
             tr_json.put(Utils.TR_CUS_REMARKS, userTrDetails.get(i).getCustomerremarks());
             tr_json.put(Utils.TR_CCAGENT_REMARKS, userTrDetails.get(i).getCcagentremarks());
             tr_json.put(Utils.TR_AGENT_REMARKS, userTrDetails.get(i).getAgentremarks());
+            tr_json.put(Utils.TR_STATUS_LIST, Utils.getInstance().getTransStatus(userTrDetails.get(i).getStatus(),
+                    userTrDetails.get(i).getTrtype()));
 
             //File file = new File(userTrDetails.get(i).getSlip().concat(userTrDetails.get(i).getFilename() ));
 

@@ -60,6 +60,7 @@ public class Utils {
 	public static final String TR_STATUS_AmountDifferent  = "Amount Different";
 	public static final String TR_STATUS_InsufficientFunds  = "Insufficient Funds";
 	public static final String TR_STATUS_UserConfirmed  = "User Confirmed";
+	public static final String TR_STATUS_LIST = "statusList";
 	private static Utils utils = null;
 
 	DAOUser currentUser = null;
@@ -110,5 +111,37 @@ public class Utils {
 	}
 	public DAOUser getUserDetails() {
 		return currentUser;
+	}
+
+	public String [] getTransStatus(String currentStatus, String trType) {
+	if (trType.equals(Utils.TRTYPEWIDTHDRAW)) {
+		if (currentStatus.equals(TR_STATUS_Created)) {
+			String [] array= new String[4];
+			array[0] = TR_STATUS_Cancelled;
+			array[1] = TR_STATUS_Received;
+			array[2] = TR_STATUS_AmountDifferent;
+			array[3] = TR_STATUS_AwatingConfirmation;
+			return array;
+		}
+		if (currentStatus.equals(TR_STATUS_Cancelled)) {
+			String [] array= new String[1];
+			array[0] = TR_STATUS_Created;
+			return array;
+		}
+	} else if (trType.equals(Utils.TRTRYOEDEPOSIT)){
+		if (currentStatus.equals(TR_STATUS_Created)) {
+			String [] array= new String[2];
+			array[0] = TR_STATUS_Cancelled;
+			array[1] = TR_STATUS_Received;
+			return array;
+		}
+		if (currentStatus.equals(TR_STATUS_Cancelled)) {
+			String [] array= new String[1];
+			array[0] = TR_STATUS_Created;
+			return array;
+		}
+	}
+		return null;
+
 	}
 }
