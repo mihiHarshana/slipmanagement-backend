@@ -110,7 +110,7 @@ public class TransactionController {
         daoTransaction.setAgentSystem(agentSystem);
         daoTransaction.setPlayerUser(playerUser);
         daoTransaction.setCurrency(currency);
-        daoTransaction.setStatus(Utils.TR_STATUS_Created);
+        daoTransaction.setStatus(Utils.TR_STATUS_SUBMITTED);
         daoTransaction.setTrtype(Utils.TRTRYOEDEPOSIT);
 
        boolean isTrNumberValid = trService.isUtrNumberValid(daoTransaction.getUtrnumber());
@@ -219,7 +219,7 @@ public class TransactionController {
         daoWithdraw.setAmount(obj.getAmount());
         daoWithdraw.setCustomerremarks(obj.getRemarks());
         daoWithdraw.setTrtype(Utils.TRTYPEWIDTHDRAW);
-        daoWithdraw.setStatus(Utils.TR_STATUS_Created);
+        daoWithdraw.setStatus(Utils.TR_STATUS_SUBMITTED);
         daoWithdraw.setTrdatetime(LocalDateTime.now().toEpochSecond(ZoneOffset.UTC));
         transRepo.save(daoWithdraw);
         return Utils.getInstance().JsonMessage("Withdrawal successfull", HttpStatus.ACCEPTED);
@@ -244,4 +244,11 @@ public class TransactionController {
 
         return Utils.getInstance().JsonMessage("User Status updated Successfully", HttpStatus.ACCEPTED);
     }
+
+ /*   @RequestMapping (value ="api/view-transaction" , method = RequestMethod.POST)
+    public String  viewTransactions(@ String id,  @RequestHeader String Authorization) {
+        System.out.println("This is the id " + id);
+
+        return "Hello";
+    }*/
 }

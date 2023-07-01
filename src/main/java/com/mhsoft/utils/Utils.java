@@ -52,7 +52,9 @@ public class Utils {
 
 	// Transaction table statues
 
-	public static final String TR_STATUS_Created  = "Created";
+	public static final String TR_STATUS_SUBMITTED = "Submitted";
+
+	public static final String TR_STATUS_RESUBMITTED = "Re Submitted";
 	public static final String TR_STATUS_NotReceived = "Not Received";
 	public static final String TR_STATUS_AwatingConfirmation = "Awaiting Confirmation";
 	public static final String TR_STATUS_Received  = "Received";
@@ -114,34 +116,37 @@ public class Utils {
 	}
 
 	public String [] getTransStatus(String currentStatus, String trType) {
-	if (trType.equals(Utils.TRTYPEWIDTHDRAW)) {
-		if (currentStatus.equals(TR_STATUS_Created)) {
-			String [] array= new String[4];
-			array[0] = TR_STATUS_Cancelled;
-			array[1] = TR_STATUS_Received;
-			array[2] = TR_STATUS_AmountDifferent;
-			array[3] = TR_STATUS_AwatingConfirmation;
-			return array;
-		}
-		if (currentStatus.equals(TR_STATUS_Cancelled)) {
+	if (trType.equals(Utils.TRTRYOEDEPOSIT)) {
+		if (currentStatus.equals(TR_STATUS_SUBMITTED)) {
 			String [] array= new String[1];
-			array[0] = TR_STATUS_Created;
+			array[0] = TR_STATUS_Cancelled;
 			return array;
 		}
-	} else if (trType.equals(Utils.TRTRYOEDEPOSIT)){
-		if (currentStatus.equals(TR_STATUS_Created)) {
+		if (currentStatus.equals(TR_STATUS_NotReceived)) {
 			String [] array= new String[2];
-			array[0] = TR_STATUS_Cancelled;
-			array[1] = TR_STATUS_Received;
+			array[0] = TR_STATUS_RESUBMITTED;
+			array[1] = TR_STATUS_Cancelled;
 			return array;
 		}
-		if (currentStatus.equals(TR_STATUS_Cancelled)) {
+	} else if (trType.equals(Utils.TRTYPEWIDTHDRAW)){
+		if (currentStatus.equals(TR_STATUS_SUBMITTED)) {
 			String [] array= new String[1];
-			array[0] = TR_STATUS_Created;
+			array[0] = TR_STATUS_Cancelled;
+			return array;
+		}
+		if (currentStatus.equals(TR_STATUS_AwatingConfirmation)) {
+			String [] array= new String[2];
+			array[0] = TR_STATUS_UserConfirmed;
+			array[1] = TR_STATUS_NotReceived;
+			return array;
+		}
+		if (currentStatus.equals(TR_STATUS_AmountDifferent)) {
+			String [] array= new String[2];
+			array[0] = TR_STATUS_UserConfirmed;
+			array[1] = TR_STATUS_NotReceived;
 			return array;
 		}
 	}
 		return null;
-
 	}
 }
