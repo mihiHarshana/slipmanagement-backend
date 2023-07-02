@@ -1,16 +1,21 @@
 package com.mhsoft.service;
 
 import com.mhsoft.model.DAOTransaction;
+import com.mhsoft.model.DAOUser;
 import com.mhsoft.repo.TransactionRepo;
+import com.mhsoft.repo.UserRepo;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+
 @Service
 public class TransactionService {
 @Autowired
     private TransactionRepo transactionRepo;
+    @Autowired
+    private UserRepo userRepo;
 
     public DAOTransaction [] getTransactionsByUserId(int userid) {
         DAOTransaction [] transaction = transactionRepo.getTransactionsByUserId(userid);
@@ -54,6 +59,28 @@ public class TransactionService {
                     jo.put("playerId",s[6]);
 
                 }
+                response.put(i,jo);
+            }
+        }
+        return response;
+    }
+
+    public JSONArray getUserDetailsByAgentId (int agentId) {
+        DAOUser[] daoUser = userRepo.getUserDetailsByAgentId(agentId);
+        JSONArray response = new JSONArray();
+
+        if (daoUser == null) {
+            return null;
+        } else {
+            for (int i =0; i< daoUser.length; i++) {
+
+                JSONObject jo = new JSONObject();
+
+                    jo.put("customerId", daoUser[i].getUserid() );
+                    jo.put("userName",daoUser[i].getUsername());
+                    jo.put("firstName",daoUser[i].getUserfname());
+                    jo.put("customerStatus",daoUser[i].getUserStatus());
+
                 response.put(i,jo);
             }
         }

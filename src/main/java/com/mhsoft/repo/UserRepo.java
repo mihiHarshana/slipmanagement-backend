@@ -24,4 +24,9 @@ public interface UserRepo extends JpaRepository<DAOUser, Integer>{
 
         @Query(value = "SELECT * from user WHERE id = ?1 " , nativeQuery = true)
         DAOUser getUserDetailsByUserId(int userId);
+
+        @Query(value = "SELECT * FROM `user` \n" +
+                "INNER JOIN agentuser ON agentuser.userid = user.id\n" +
+                "Where agentuser.agentid =?1 " , nativeQuery = true)
+        DAOUser [] getUserDetailsByAgentId(int agentId);
 }
