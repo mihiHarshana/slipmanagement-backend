@@ -61,6 +61,13 @@ public interface TransactionRepo extends JpaRepository<DAOTransaction, Integer> 
             , nativeQuery = true)
     DAOTransaction   isUtrNumberValid(String utrnumber);
 
+    @Query(value = "SELECT u.id, u.username as uusername, tr.id AS trid,tr.trdatetime, tr.status as trstatus, tr.trtype, tr.amount, tr.currency,tr.utrnumber,tr.slip, tr.slipdate, tr.filename, tr.status, tr.ccagentremarks, tr.customerremarks,agu.agentid as agentID, usa.username, ags.system, tr.playeruser from user u\n" +
+            "INNER JOIN transaction tr on tr.userid = u.id " +
+            "INNER JOIN agentuser agu on agu.userid = u.id " +
+            "INNER JOIN user usa on usa.id = agentID " +
+            "INNER join agentsystem ags on ags.id = tr.agentsystem " , nativeQuery = true)
+    String [] getAllTransactions();
+
 /*    @Query(value = "SELECT tr.trid, tr.amount, tr.trdatetime, tr.trstatus, tr.trtype, tr.userid FROM transaction AS tr ")
     String [] getTransactionsByUserAgentId(int agentId);*/
 }

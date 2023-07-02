@@ -63,6 +63,12 @@ public class Utils {
 	public static final String TR_STATUS_InsufficientFunds  = "Insufficient Funds";
 	public static final String TR_STATUS_UserConfirmed  = "User Confirmed";
 	public static final String TR_STATUS_LIST = "statusList";
+
+	public static final String TR_STATUS_FULLYRECIEVED  = "Fully Recieved";
+
+	public static final String TR_STATUS_PARCIALLYRECIEVED  = "Partially Recieved";
+
+	public static final String TR_STATUS_PROCESSING = "Processing";
 	private static Utils utils = null;
 
 	DAOUser currentUser = null;
@@ -149,4 +155,57 @@ public class Utils {
 	}
 		return null;
 	}
+
+	public String [] getTransStatusForCCA(String currentStatus, String trType) {
+		if (trType.equals(Utils.TRTRYOEDEPOSIT)) {
+			if (currentStatus.equals(TR_STATUS_SUBMITTED)) {
+				String [] array= new String[4];
+				array[0] = TR_STATUS_FULLYRECIEVED;
+				array[1] = TR_STATUS_PARCIALLYRECIEVED;
+				array[2] = TR_STATUS_NotReceived;
+				array[3] = TR_STATUS_AwatingConfirmation;
+				return array;
+			}
+			if (currentStatus.equals(TR_STATUS_RESUBMITTED)) {
+				String [] array= new String[4];
+				array[0] = TR_STATUS_FULLYRECIEVED;
+				array[1] = TR_STATUS_PARCIALLYRECIEVED;
+				array[2] = TR_STATUS_NotReceived;
+				array[3] = TR_STATUS_AwatingConfirmation;
+				return array;
+			}
+
+			if (currentStatus.equals(TR_STATUS_AwatingConfirmation)) {
+				String [] array= new String[3];
+				array[0] = TR_STATUS_FULLYRECIEVED;
+				array[1] = TR_STATUS_PARCIALLYRECIEVED;
+				array[2] = TR_STATUS_NotReceived;
+				return array;
+			}
+
+
+		} else if (trType.equals(Utils.TRTYPEWIDTHDRAW)){
+			if (currentStatus.equals(TR_STATUS_SUBMITTED)) {
+				String [] array= new String[4];
+				array[0] = TR_STATUS_PROCESSING;
+				array[1] = TR_STATUS_InsufficientFunds;
+				array[2] = TR_STATUS_AwatingConfirmation;
+				array[3] = TR_STATUS_AmountDifferent;
+				return array;
+			}
+			if (currentStatus.equals(TR_STATUS_NotReceived)) {
+				String [] array= new String[4];
+				array[0] = TR_STATUS_PROCESSING;
+				array[1] = TR_STATUS_InsufficientFunds;
+				array[2] = TR_STATUS_AwatingConfirmation;
+				array[3] = TR_STATUS_AmountDifferent;
+				return array;
+			}
+		}
+		// TODO : Increase the count of the cycle by one
+		// TODO : 1. Widthrawal at processing
+		// TODO : 2. Deposit at Submit Status
+		return null;
+	}
+
 }
