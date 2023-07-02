@@ -79,7 +79,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 				"/api/new-withdrawal",
 				"/download",
 				"/api/change-customer-status",
-				"/api/new-agnet-code"
+				"/api/new-agnet-code",
+				"/api/view-transaction"
 
 				).permitAll().
 				// all other requests need to be authenticated

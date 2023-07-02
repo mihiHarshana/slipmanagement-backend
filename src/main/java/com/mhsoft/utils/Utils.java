@@ -52,7 +52,9 @@ public class Utils {
 
 	// Transaction table statues
 
-	public static final String TR_STATUS_Created  = "Created";
+	public static final String TR_STATUS_SUBMITTED = "Submitted";
+
+	public static final String TR_STATUS_RESUBMITTED = "Re Submitted";
 	public static final String TR_STATUS_NotReceived = "Not Received";
 	public static final String TR_STATUS_AwatingConfirmation = "Awaiting Confirmation";
 	public static final String TR_STATUS_Received  = "Received";
@@ -60,6 +62,7 @@ public class Utils {
 	public static final String TR_STATUS_AmountDifferent  = "Amount Different";
 	public static final String TR_STATUS_InsufficientFunds  = "Insufficient Funds";
 	public static final String TR_STATUS_UserConfirmed  = "User Confirmed";
+	public static final String TR_STATUS_LIST = "statusList";
 	private static Utils utils = null;
 
 	DAOUser currentUser = null;
@@ -110,5 +113,40 @@ public class Utils {
 	}
 	public DAOUser getUserDetails() {
 		return currentUser;
+	}
+
+	public String [] getTransStatus(String currentStatus, String trType) {
+	if (trType.equals(Utils.TRTRYOEDEPOSIT)) {
+		if (currentStatus.equals(TR_STATUS_SUBMITTED)) {
+			String [] array= new String[1];
+			array[0] = TR_STATUS_Cancelled;
+			return array;
+		}
+		if (currentStatus.equals(TR_STATUS_NotReceived)) {
+			String [] array= new String[2];
+			array[0] = TR_STATUS_RESUBMITTED;
+			array[1] = TR_STATUS_Cancelled;
+			return array;
+		}
+	} else if (trType.equals(Utils.TRTYPEWIDTHDRAW)){
+		if (currentStatus.equals(TR_STATUS_SUBMITTED)) {
+			String [] array= new String[1];
+			array[0] = TR_STATUS_Cancelled;
+			return array;
+		}
+		if (currentStatus.equals(TR_STATUS_AwatingConfirmation)) {
+			String [] array= new String[2];
+			array[0] = TR_STATUS_UserConfirmed;
+			array[1] = TR_STATUS_NotReceived;
+			return array;
+		}
+		if (currentStatus.equals(TR_STATUS_AmountDifferent)) {
+			String [] array= new String[2];
+			array[0] = TR_STATUS_UserConfirmed;
+			array[1] = TR_STATUS_NotReceived;
+			return array;
+		}
+	}
+		return null;
 	}
 }
