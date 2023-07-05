@@ -5,7 +5,6 @@ import com.mhsoft.dao.BankDao;
 import com.mhsoft.model.*;
 import com.mhsoft.repo.UserRepo;
 import com.mhsoft.service.*;
-import com.mhsoft.utils.AgentUserTransDetails;
 import com.mhsoft.utils.Utils;
 import org.json.JSONArray;
 import org.json.JSONObject;

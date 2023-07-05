@@ -2,7 +2,6 @@ package com.mhsoft.repo;
 
 import com.mhsoft.model.DAOTransaction;
 import com.mhsoft.model.IDAOTransaction;
-import com.mhsoft.utils.AgentUserTransDetails;
 import org.hibernate.mapping.Array;
 import org.json.JSONObject;
 import org.springframework.data.jpa.repository.JpaRepository;
