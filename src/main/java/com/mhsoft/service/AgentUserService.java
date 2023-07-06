@@ -18,5 +18,10 @@ public class AgentUserService {
         return agentData;
     }
 
+    public DAOAgentUser saveAgentUser(DAOAgentUser agentUser) {
+        return agentUserRepo.save(agentUser);
+    }
+
+
 
 }
