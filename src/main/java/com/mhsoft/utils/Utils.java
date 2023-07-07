@@ -69,6 +69,8 @@ public class Utils {
 	public static final String TR_STATUS_PARCIALLYRECIEVED  = "Partially Recieved";
 
 	public static final String TR_STATUS_PROCESSING = "Processing";
+
+	public static final String TR_STATUS_Completed  = "Completed";
 	private static Utils utils = null;
 
 	DAOUser currentUser = null;
@@ -136,6 +138,18 @@ public class Utils {
 			array[1] = TR_STATUS_Cancelled;
 			return array;
 		}
+
+		if (currentStatus.equals(TR_STATUS_Cancelled)) {
+			String [] array= new String[1];
+			array[0] = TR_STATUS_Cancelled;
+			return array;
+		}
+		if (currentStatus.equals(TR_STATUS_Completed)) {
+			String [] array= new String[1];
+			array[0] = TR_STATUS_Completed;
+			return array;
+		}
+
 	} else if (trType.equals(Utils.TRTYPEWIDTHDRAW)){
 		if (currentStatus.equals(TR_STATUS_SUBMITTED)) {
 			String [] array= new String[2];

@@ -181,14 +181,17 @@ public class TransactionController {
                 update.setUserid(olddata[i].getUserid());
                 update.setFilename(olddata[i].getFilename());
                 update.setSlip(olddata[i].getSlip());
+                update.setTrtype(olddata[i].getTrtype());
+                update.setid(trs.getid());
+                update.setStatus(trs.getStatus());
                 break;
             }
         }
         if (daoTrans != null ) {
 
-            update.setTrtype(trs.getTrtype());
+/*            update.setTrtype(trs.getTrtype());
             update.setid(trs.getid());
-            update.setStatus(trs.getStatus());
+            update.setStatus(trs.getStatus());*/
 
             DAOTransaction temp = transRepo.save(update);
             if (temp == null) {

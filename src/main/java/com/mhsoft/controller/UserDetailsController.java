@@ -127,7 +127,7 @@ public class UserDetailsController {
         if (userTrDetails != null) {
             for (int i=0; i<userTrDetails.length; i++) {
                 if (userTrDetails[i].getStatus().equals(Utils.TR_STATUS_Cancelled) ||
-                        userTrDetails[i].getStatus().equals(Utils.TR_STATUS_UserConfirmed ) )  {
+                        userTrDetails[i].getStatus().equals(Utils.TR_STATUS_Completed ) )  {
                     arralList_com_can.add(userTrDetails[i]);
                 } else {
                     arralList_other.add(userTrDetails[i]);
