@@ -3,13 +3,15 @@ package com.mhsoft.controller;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mhsoft.model.DAOTransaction;
+import com.mhsoft.repo.TransactionRepo;
 import com.mhsoft.service.CallCenterAgentService;
 import com.mhsoft.service.TransactionService;
+import com.mhsoft.utils.CcAgentChangeRemarks;
 import com.mhsoft.utils.CcAgentChangeStatus;
-import com.mhsoft.utils.CustomerStatus;
 import com.mhsoft.utils.Utils;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -21,6 +23,8 @@ public class CallCenterAgentController {
     @Autowired
     CallCenterAgentService ccaTrService;
 
+    @Autowired
+    TransactionService trService;
 
     @RequestMapping("/api/call-center-agent-details")
     public String getCallCenterAgentDetails (@RequestHeader String Authorization) {
@@ -50,8 +54,6 @@ public class CallCenterAgentController {
                 jo.put("playerUser", s[18]);
                 jo.put("utrNumber", s[8]);
 
-
-            System.out.println("What happens to s[10] " + s[10]);
                 if (! s[10].equals("null")) {
                     jo.put("slipDate", Long.parseLong(s[10]));
                 }
@@ -79,15 +81,39 @@ public class CallCenterAgentController {
 
     }
 
-    @RequestMapping(value = "/api/cca/change-status" , method = RequestMethod.PUT)
+    @RequestMapping(value = "/api/cca/change-status" , method = RequestMethod.POST)
 
     public String ccAgentChangeStatus (@RequestHeader String Authorization, @RequestBody String ccaStatus) throws JsonProcessingException {
         int USER_ID = 0;
         String token = Utils.getInstance().getTokenFromAuthKey(Authorization);
         ObjectMapper objectMapper = new ObjectMapper();
         CcAgentChangeStatus customerData = objectMapper.readValue( ccaStatus, CcAgentChangeStatus.class);
+        System.out.println(customerData.getId());
+        System.out.println(customerData.getStatus());
+        DAOTransaction oldtrans = trService.getTransactionByTrId(customerData.getId());
+        oldtrans.setStatus(customerData.getStatus());
+        DAOTransaction savedTrans =  trService.setTransactionData(oldtrans);
+        if (savedTrans != null) {
+            return Utils.getInstance().JsonMessage("Status updated", HttpStatus.ACCEPTED);
+        }
 
-        return "";
+        return  Utils.getInstance().JsonMessage("Status not updated", HttpStatus.NOT_ACCEPTABLE);
+    }
 
+    @RequestMapping(value = "/api/change-call-center-agent-remarks" , method = RequestMethod.POST)
+
+    public String ccAgentChangeRemarks (@RequestHeader String Authorization, @RequestBody String ccaStatus) throws JsonProcessingException {
+        int USER_ID = 0;
+        String token = Utils.getInstance().getTokenFromAuthKey(Authorization);
+        ObjectMapper objectMapper = new ObjectMapper();
+        CcAgentChangeRemarks customerData = objectMapper.readValue( ccaStatus, CcAgentChangeRemarks.class);
+        DAOTransaction oldtrans = trService.getTransactionByTrId(customerData.getId());
+        oldtrans.setCcagentremarks(customerData.getRemarks());
+        DAOTransaction savedTrans =  trService.setTransactionData(oldtrans);
+        if (savedTrans != null) {
+            return Utils.getInstance().JsonMessage("Remarks updated", HttpStatus.ACCEPTED);
+        }
+
+        return  Utils.getInstance().JsonMessage("Remarks not updated", HttpStatus.NOT_ACCEPTABLE);
     }
 }

@@ -80,7 +80,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 				"/download",
 				"/api/change-customer-status",
 				"/api/new-agnet-code",
-				"/api/view-transaction"
+				"/api/view-transaction",
+				"/api/cca/change-status",
+				"/api/change-call-center-agent-remarks"
 
 				).permitAll().
 				// all other requests need to be authenticated

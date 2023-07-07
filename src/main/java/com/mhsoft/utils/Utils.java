@@ -183,7 +183,7 @@ public class Utils {
 			}
 
 			if (currentStatus.equals(TR_STATUS_AwatingConfirmation)) {
-				String [] array= new String[3];
+				String [] array= new String[4];
 				array[0] = TR_STATUS_AwatingConfirmation;
 				array[1] = TR_STATUS_FULLYRECIEVED;
 				array[2] = TR_STATUS_PARCIALLYRECIEVED;
@@ -203,7 +203,7 @@ public class Utils {
 				return array;
 			}
 			if (currentStatus.equals(TR_STATUS_NotReceived)) {
-				String [] array= new String[4];
+				String [] array= new String[5];
 				array[0] = TR_STATUS_NotReceived;
 				array[1] = TR_STATUS_PROCESSING;
 				array[2] = TR_STATUS_InsufficientFunds;

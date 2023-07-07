@@ -69,4 +69,7 @@ public interface TransactionRepo extends JpaRepository<DAOTransaction, Integer> 
 
 /*    @Query(value = "SELECT tr.trid, tr.amount, tr.trdatetime, tr.trstatus, tr.trtype, tr.userid FROM transaction AS tr ")
     String [] getTransactionsByUserAgentId(int agentId);*/
+
+    @Query(value = "SELECT * from transaction where id = ?1 " , nativeQuery = true )
+    DAOTransaction getTransactionByTrId(int trId);
 }

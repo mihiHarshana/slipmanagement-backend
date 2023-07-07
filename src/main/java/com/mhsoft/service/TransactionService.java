@@ -4,6 +4,7 @@ import com.mhsoft.model.DAOTransaction;
 import com.mhsoft.model.DAOUser;
 import com.mhsoft.repo.TransactionRepo;
 import com.mhsoft.repo.UserRepo;
+import com.mhsoft.utils.Utils;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +17,8 @@ public class TransactionService {
     private TransactionRepo transactionRepo;
     @Autowired
     private UserRepo userRepo;
+
+
 
     public DAOTransaction [] getTransactionsByUserId(int userid) {
         DAOTransaction [] transaction = transactionRepo.getTransactionsByUserId(userid);
@@ -85,6 +88,17 @@ public class TransactionService {
             }
         }
         return response;
+    }
+
+    public DAOTransaction getTransactionByTrId(int trId) {
+       DAOTransaction daoTransaction = transactionRepo.getTransactionByTrId(trId);
+       return daoTransaction;
+
+    }
+
+    public DAOTransaction setTransactionData (DAOTransaction daoTrans) {
+        return transactionRepo.save(daoTrans);
+
     }
 
     public boolean isUtrNumberValid(String utrNumber) {
