@@ -313,12 +313,39 @@ public class UserDetailsController {
 
         DAOAgentCode daoAgentCode =  agentCodeService.getLatestAgentDetails(USER_ID);
 
+           DAOUser [] trans = trService.getUserDetailsByAgentId(USER_ID);
+           JSONObject [] customerRecords;
+           JSONObject [] registeredCustomersRecords;
+           ArrayList<JSONObject> cusRec = new ArrayList<>();
+           ArrayList<JSONObject> otherCus = new ArrayList<>();
+
+           for (int i=0; i< trans.length; i++) {
+               if (trans[i].getUserStatus().equals("REGISTERED")) {
+                   JSONObject registered = new JSONObject();
+                   registered.put("customerId", trans[i].getUserid() );
+                   registered.put("userName",trans[i].getUsername());
+                   registered.put("firstName",trans[i].getUserfname());
+                   registered.put("customerStatus",trans[i].getUserStatus());
+                   cusRec.add(registered);
+               } else {
+                   JSONObject other = new JSONObject();
+                   other.put("customerId", trans[i].getUserid() );
+                   other.put("userName",trans[i].getUsername());
+                   other.put("firstName",trans[i].getUserfname());
+                   other.put("customerStatus",trans[i].getUserStatus());
+                   otherCus.add(other);
+               }
+
+           }
+
+
            JSONObject jo = new JSONObject();
            jo.put("agentId", USER_ID);
            jo.put("currentAgentCode",daoAgentCode.getAgentCode() );
            jo.put("agentBankAccounts",bankacounts );
            jo.put("agentBankDetails", userBankDetails);
-           jo.put("customersRecords", trService.getUserDetailsByAgentId(USER_ID));
+           jo.put("customersRecords", otherCus);
+           jo.put("registeredCustomersRecords", cusRec);
            //jo.put("withdrawalData", array_withdrawal);
            return jo.toString();
        }

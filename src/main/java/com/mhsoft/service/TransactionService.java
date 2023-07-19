@@ -68,9 +68,10 @@ public class TransactionService {
         return response;
     }
 
-    public JSONArray getUserDetailsByAgentId (int agentId) {
+    public DAOUser [] getUserDetailsByAgentId (int agentId) {
         DAOUser[] daoUser = userRepo.getUserDetailsByAgentId(agentId);
-        JSONArray response = new JSONArray();
+        return daoUser;
+       /* JSONArray response = new JSONArray();
 
         if (daoUser == null) {
             return null;
@@ -87,7 +88,7 @@ public class TransactionService {
                 response.put(i,jo);
             }
         }
-        return response;
+        return response;*/
     }
 
     public DAOTransaction getTransactionByTrId(int trId) {
