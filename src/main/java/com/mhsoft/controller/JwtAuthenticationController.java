@@ -20,6 +20,9 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
+import java.time.ZoneOffset;
+
 @RestController
 @CrossOrigin(origins = "*", allowedHeaders = "*")
 public class JwtAuthenticationController {
@@ -87,6 +90,7 @@ public class JwtAuthenticationController {
         newUser.setUserStatus(user.getUserStatus());
         newUser.setUsername(user.getUsername());
         newUser.setUserType(user.getUserType());
+        newUser.setRegisterdate(LocalDateTime.now().toEpochSecond(ZoneOffset.UTC));
         String jo = userDetailsService.save(newUser);
         DAOUser savedUser;
         savedUser  = userRepo.getUserByUserName(user.getUsername());

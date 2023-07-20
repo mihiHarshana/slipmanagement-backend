@@ -326,6 +326,7 @@ public class UserDetailsController {
                    registered.put("userName",trans[i].getUsername());
                    registered.put("firstName",trans[i].getUserfname());
                    registered.put("customerStatus",trans[i].getUserStatus());
+                   registered.put("registeredTime", trans[i].getRegisterdate());
                    cusRec.add(registered);
                } else {
                    JSONObject other = new JSONObject();

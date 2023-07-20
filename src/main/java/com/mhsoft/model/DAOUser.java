@@ -25,6 +25,17 @@ public class DAOUser {
     @Column
     private String userlname;
 
+    @Column
+    private Long registerdate;
+
+    public Long getRegisterdate() {
+        return registerdate;
+    }
+
+    public void setRegisterdate(Long registerdate) {
+        this.registerdate = registerdate;
+    }
+
     public String getUsername() {
         return username;
     }

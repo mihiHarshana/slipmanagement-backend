@@ -44,6 +44,7 @@ public class JwtUserDetailsService implements UserDetailsService {
             newUser.setUserType(user.getUserType());
             newUser.setUserfname(user.getFirstname());
             newUser.setUserlname(user.getLastname());
+            newUser.setRegisterdate(user.getRegisterdate());
             userDao.save(newUser);
             return Utils.getInstance().JsonMessage("User registration successfull", HttpStatus.ACCEPTED).toString();
         }
