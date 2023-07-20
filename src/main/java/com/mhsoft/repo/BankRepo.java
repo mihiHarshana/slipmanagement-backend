@@ -3,10 +3,7 @@ package com.mhsoft.repo;
 
 import com.mhsoft.model.DAOBank;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
-
-import javax.transaction.Transactional;
 
 public interface BankRepo extends JpaRepository<DAOBank, Integer>{
 

@@ -1,15 +1,8 @@
 package com.mhsoft.repo;
 
 import com.mhsoft.model.DAOTransaction;
-import com.mhsoft.model.IDAOTransaction;
-import com.mhsoft.utils.CcAgentTransResponse;
-import org.hibernate.mapping.Array;
-import org.json.JSONObject;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
-
-import java.sql.ResultSet;
-import java.util.ArrayList;
 
 public interface TransactionRepo extends JpaRepository<DAOTransaction, Integer> {
     @Query(value = "SELECT * from transaction WHERE userid = ?1 " , nativeQuery = true)
