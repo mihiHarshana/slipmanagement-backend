@@ -44,6 +44,7 @@ public class BankService {
                 newBankDetails.setLatest(allBankDetails[i].isLatest());
                 newBankDetails.setBankCode(allBankDetails[i].getBankCode());
                 newBankDetails.setUserid(allBankDetails[i].getUserid());
+                newBankDetails.setValidTo(allBankDetails[i].getValidTo());
                 newBankDetails.setDefaultacc(false);
                 bankRepo.save(newBankDetails);
                 isOldFefaultFound = true;
@@ -58,6 +59,7 @@ public class BankService {
                 newDefault.setLatest(allBankDetails[i].isLatest());
                 newDefault.setBankCode(allBankDetails[i].getBankCode());
                 newDefault.setUserid(allBankDetails[i].getUserid());
+                newDefault.setValidTo(allBankDetails[i].getValidTo());
                 newDefault.setDefaultacc(true);
                 bankRepo.save(newDefault);
                 isDefaultFound = true;
