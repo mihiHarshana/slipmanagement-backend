@@ -425,37 +425,6 @@ public class UserDetailsController {
             tr_json.put(Utils.TR_AGENT_REMARKS, userTrDetails.get(i).getAgentremarks());
             tr_json.put(Utils.TR_STATUS_LIST, Utils.getInstance().getTransStatus(userTrDetails.get(i).getStatus(),
                     userTrDetails.get(i).getTrtype()));
-
-            //File file = new File(userTrDetails.get(i).getSlip().concat(userTrDetails.get(i).getFilename() ));
-
-/*            Path path = Paths.get(userTrDetails.get(i).getSlip()
-                    .concat(userTrDetails.get(i).getFilename()));
-            try {
-                ByteArrayResource resource = new ByteArrayResource(Files.readAllBytes(path));
-                tr_json.put(Utils.TR_SLIP,resource);
-            }
-          catch (Exception e ) {
-              System.out.println(e);
-          }*/
-
-/*            try {
-                Path fiePath = Paths.get(userTrDetails.get(i).getSlip()
-                        .concat(userTrDetails.get(i).getFilename()));
-                Resource resource = new UrlResource(fiePath.toUri());
-                File multipartFile = new File(fiePath.toUri());
-                System.out.println(multipartFile);
-                System.out.println("is this a file " + multipartFile.isFile());
-
-                if(resource.exists()) {
-                    tr_json.put(Utils.TR_SLIP,multipartFile);
-                } else {;
-                    tr_json.put(Utils.TR_SLIP,"no file" );
-                }
-
-            }catch (Exception e ) {
-                System.err.println(e);;
-            }*/
-            // Adding the related file
             tr_array.put(i, tr_json);
         }
 

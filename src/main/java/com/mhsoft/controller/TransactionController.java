@@ -9,9 +9,12 @@ import com.mhsoft.repo.TransactionRepo;
 import com.mhsoft.repo.UserRepo;
 import com.mhsoft.service.TransactionService;
 import com.mhsoft.service.UserDetailService;
+import com.mhsoft.utils.CustomerDetails;
 import com.mhsoft.utils.CustomerStatus;
 import com.mhsoft.utils.Utils;
 import com.mhsoft.utils.Withdrawal;
+import org.json.JSONArray;
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -24,6 +27,7 @@ import java.nio.file.Paths;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
+import java.util.ArrayList;
 
 @RestController
 @CrossOrigin(origins = "*", allowedHeaders = "*")
@@ -249,10 +253,89 @@ public class TransactionController {
         return Utils.getInstance().JsonMessage("User Status updated Successfully", HttpStatus.ACCEPTED);
     }
 
- /*   @RequestMapping (value ="api/view-transaction" , method = RequestMethod.POST)
-    public String  viewTransactions(@ String id,  @RequestHeader String Authorization) {
-        System.out.println("This is the id " + id);
+    @RequestMapping (value ="/api/view-transaction" , method = RequestMethod.POST)
+    public String  viewTransactions(@RequestBody CustomerDetails cusDetails, @RequestHeader String Authorization) {
+        System.out.println("This is the id " + cusDetails.getCustomerId());
+        DAOTransaction [] daoTrans = trService.getTransactionsByUserId(cusDetails.getCustomerId());
+       JSONObject jo = new JSONObject();
+  /*       JSONArray trArray = new JSONArray();
 
-        return "Hello";
-    }*/
+        for (int i=0; i<daoTrans.length; i++) {
+            JSONObject trans =  new JSONObject();
+            trans.put("transactionId", daoTrans[i].getid());
+            trans.put("date",daoTrans[i].getTrdatetime());
+            trans.put("type", daoTrans[i].getTrtype());
+            trans.put("amount", daoTrans[i].getAmount());
+            trans.put("status",daoTrans[i].getStatus());
+            trans.put("statusList",daoTrans[i].getStatus()); //TODO need to load proper list here
+            trans.put("slipDate", daoTrans[i].getSlipdate());
+            trans.put("customerRemarks",daoTrans[i].getCustomerremarks());
+            trans.put("agentRemarks",daoTrans[i].getAgentremarks());
+            trans.put("ccAgentRemarks" ,daoTrans[i].getCcagentremarks());
+            trans.put("slipLink",daoTrans[i].getSlip());
+            trans.put("slipName", daoTrans[i].getFilename());
+
+            trArray.put(i, trans);
+        }
+        jo.put("CustomerTransaction", trArray);
+        return jo.toString();*/
+
+        DAOTransaction[] userTrDetails = trService.getTransactionsByUserId(cusDetails.getCustomerId());
+
+        // JSONArray tr_can_com = new JSONArray();
+        ArrayList<DAOTransaction> arralList_com_can = new ArrayList<>();
+        ArrayList<DAOTransaction> arralList_other = new ArrayList<>();
+        DAOTransaction [] userTrDetails_com_can; // completed and cancelled
+        if (userTrDetails != null) {
+            for (int i=0; i<userTrDetails.length; i++) {
+                if (userTrDetails[i].getStatus().equals(Utils.TR_STATUS_Cancelled) ||
+                        userTrDetails[i].getStatus().equals(Utils.TR_STATUS_Completed ) )  {
+                    arralList_com_can.add(userTrDetails[i]);
+                } else {
+                    arralList_other.add(userTrDetails[i]);
+                }
+
+            }
+        }
+
+        JSONArray tr_array_com_can = setTrData(arralList_com_can);
+        JSONArray tr_array_other = setTrData(arralList_other);
+
+        jo.put("customerTransactionDataOther", tr_array_other ); // this may need to change
+        jo.put("customerTransactionDataMajorStatus", tr_array_com_can ); // this may need to change
+
+        return jo.toString();
+    }
+
+
+    private JSONArray setTrData(ArrayList<DAOTransaction> userTrDetails) {
+        System.out.println("Printing recieved data ====== " + userTrDetails);
+        JSONArray tr_array = new JSONArray();
+
+        for (int i = 0; i < userTrDetails.size(); i++) {
+            JSONObject tr_json = new JSONObject();
+            System.out.println("Priting trid ----------- " + userTrDetails.get(i).getid());
+            tr_json.put(Utils.TR_AMOUNT, userTrDetails.get(i).getAmount());
+            tr_json.put(Utils.TR_TYPE, userTrDetails.get(i).getTrtype());
+            tr_json.put(Utils.TR_DATE, userTrDetails.get(i).getTrdatetime());
+            tr_json.put(Utils.TR_USERID, userTrDetails.get(i).getUserid());
+            tr_json.put(Utils.TR_ID, userTrDetails.get(i).getid());
+            tr_json.put(Utils.TR_STATUS, userTrDetails.get(i).getStatus());
+            tr_json.put(Utils.TR_AMOUNT, userTrDetails.get(i).getAmount());
+            tr_json.put(Utils.TR_SLIP, userTrDetails.get(i).getSlip());
+            tr_json.put(Utils.TR_SLIP_NAME, userTrDetails.get(i).getFilename());
+            tr_json.put(Utils.TR_SLIP_DATe, userTrDetails.get(i).getSlipdate());
+            tr_json.put(Utils.TR_CUS_REMARKS, userTrDetails.get(i).getCustomerremarks());
+            tr_json.put(Utils.TR_CCAGENT_REMARKS, userTrDetails.get(i).getCcagentremarks());
+            tr_json.put(Utils.TR_AGENT_REMARKS, userTrDetails.get(i).getAgentremarks());
+            tr_json.put(Utils.TR_STATUS_LIST, Utils.getInstance().getTransStatus(userTrDetails.get(i).getStatus(),
+                    userTrDetails.get(i).getTrtype()));
+            tr_array.put(i, tr_json);
+        }
+
+        for (int i =0; i <=tr_array.length(); i++) {
+            System.out.println("Priting after wards " + tr_array);
+        }
+        return tr_array;
+    }
 }
