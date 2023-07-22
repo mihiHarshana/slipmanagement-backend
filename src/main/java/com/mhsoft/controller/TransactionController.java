@@ -9,8 +9,10 @@ import com.mhsoft.repo.TransactionRepo;
 import com.mhsoft.repo.UserRepo;
 import com.mhsoft.service.TransactionService;
 import com.mhsoft.service.UserDetailService;
-import com.mhsoft.utils.*;
-import org.hibernate.usertype.UserType;
+import com.mhsoft.utils.CustomerDetails;
+import com.mhsoft.utils.CustomerStatus;
+import com.mhsoft.utils.Utils;
+import com.mhsoft.utils.Withdrawal;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -84,9 +86,7 @@ public class TransactionController {
         tempTr.setSlip(daoTrans.getSlip());
         tempTr.setSlipdate(daoTrans.getSlipdate());
         return tempTr;
-
     }
-
     @RequestMapping (value = "api/new-deposit", method = RequestMethod.POST)
     public String setNewDeposit (DAOTransaction daoTransaction,
                                  @RequestParam("file") MultipartFile file ,
@@ -132,12 +132,10 @@ public class TransactionController {
             String originalName  = file.getOriginalFilename();
             String filename =originalName.substring(0,file.getOriginalFilename().indexOf(".") );
             String  extention = originalName.substring(file.getOriginalFilename().indexOf("."));
-            System.out.println("fter substring + " + filename + " " +  extention);;
             String fileNameToSave = filename+ "_" + LocalDateTime.now().toEpochSecond(ZoneOffset.UTC) + extention;
 
             Path path = Paths.get(temp_path + "\\" + fileNameToSave);
             Files.write(path, bytes);
-            System.out.println("File uploaded sucessfully.");
 
             daoTransaction.setSlip(temp_path + "\\");
             daoTransaction.setFilename(fileNameToSave);
@@ -220,7 +218,6 @@ public class TransactionController {
         return Utils.getInstance().JsonMessage("No data available for Change status", HttpStatus.NOT_ACCEPTABLE);
     }
 
-
     @RequestMapping (value = "api/new-withdrawal", method = RequestMethod.POST)
     public String setNewWithdrawal (@RequestBody  String daoWithdrawUserValues,  @RequestHeader String Authorization) throws JsonProcessingException {
 
@@ -271,34 +268,10 @@ public class TransactionController {
         System.out.println("This is the id " + cusDetails.getCustomerId());
         DAOTransaction [] daoTrans = trService.getTransactionsByUserId(cusDetails.getCustomerId());
        JSONObject jo = new JSONObject();
-  /*       JSONArray trArray = new JSONArray();
-
-        for (int i=0; i<daoTrans.length; i++) {
-            JSONObject trans =  new JSONObject();
-            trans.put("transactionId", daoTrans[i].getid());
-            trans.put("date",daoTrans[i].getTrdatetime());
-            trans.put("type", daoTrans[i].getTrtype());
-            trans.put("amount", daoTrans[i].getAmount());
-            trans.put("status",daoTrans[i].getStatus());
-            trans.put("statusList",daoTrans[i].getStatus()); //TODO need to load proper list here
-            trans.put("slipDate", daoTrans[i].getSlipdate());
-            trans.put("customerRemarks",daoTrans[i].getCustomerremarks());
-            trans.put("agentRemarks",daoTrans[i].getAgentremarks());
-            trans.put("ccAgentRemarks" ,daoTrans[i].getCcagentremarks());
-            trans.put("slipLink",daoTrans[i].getSlip());
-            trans.put("slipName", daoTrans[i].getFilename());
-
-            trArray.put(i, trans);
-        }
-        jo.put("CustomerTransaction", trArray);
-        return jo.toString();*/
 
         DAOTransaction[] userTrDetails = trService.getTransactionsByUserId(cusDetails.getCustomerId());
-
-        // JSONArray tr_can_com = new JSONArray();
         ArrayList<DAOTransaction> arralList_com_can = new ArrayList<>();
         ArrayList<DAOTransaction> arralList_other = new ArrayList<>();
-        DAOTransaction [] userTrDetails_com_can; // completed and cancelled
         if (userTrDetails != null) {
             for (int i=0; i<userTrDetails.length; i++) {
                 if (userTrDetails[i].getStatus().equals(Utils.TR_STATUS_Cancelled) ||
@@ -307,7 +280,6 @@ public class TransactionController {
                 } else {
                     arralList_other.add(userTrDetails[i]);
                 }
-
             }
         }
 
@@ -344,10 +316,6 @@ public class TransactionController {
             tr_json.put(Utils.TR_STATUS_LIST, Utils.getInstance().getTransStatus(userTrDetails.get(i).getStatus(),
                     userTrDetails.get(i).getTrtype()));
             tr_array.put(i, tr_json);
-        }
-
-        for (int i =0; i <=tr_array.length(); i++) {
-            System.out.println("Priting after wards " + tr_array);
         }
         return tr_array;
     }
