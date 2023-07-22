@@ -9,10 +9,8 @@ import com.mhsoft.repo.TransactionRepo;
 import com.mhsoft.repo.UserRepo;
 import com.mhsoft.service.TransactionService;
 import com.mhsoft.service.UserDetailService;
-import com.mhsoft.utils.CustomerDetails;
-import com.mhsoft.utils.CustomerStatus;
-import com.mhsoft.utils.Utils;
-import com.mhsoft.utils.Withdrawal;
+import com.mhsoft.utils.*;
+import org.hibernate.usertype.UserType;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -159,54 +157,69 @@ public class TransactionController {
     }
 
     @RequestMapping(value = "/api/change-status", method = RequestMethod.POST)
-    public String changeTransStatus(@RequestBody String daoTrans, @RequestHeader String Authorization ) throws JsonProcessingException {
+    public String changeTransStatus(@RequestBody String daoTrans, @RequestHeader String Authorization )
+            throws JsonProcessingException {
         int USER_ID = 0;
         String token = Authorization.substring(7);
         String username = jwtTokenUtil.getUsernameFromToken(token);
         DAOUser DAOUser = userRepo.getUserByUserName(username);
         USER_ID = DAOUser.getUserid();
-
-
         ObjectMapper objectMapper = new ObjectMapper();
         DAOTransaction trs = objectMapper.readValue(daoTrans, DAOTransaction.class);
-
-        DAOTransaction [] olddata = trService.getTransactionsByUserId(USER_ID);
         DAOTransaction  update = new DAOTransaction();
-        for (int i=0; i<olddata.length; i++) {
-            if (olddata[i].getid() == trs.getid()) {
-                update.setPlayerUser(olddata[i].getPlayerUser());
-                update.setAgentSystem(olddata[i].getAgentSystem());
-                update.setCurrency(olddata[i].getCurrency());
-                update.setAmount(olddata[i].getAmount());
-                update.setSlipdate(olddata[i].getSlipdate());
-                update.setCustomerremarks(olddata[i].getCustomerremarks());
-                update.setUtrnumber(olddata[i].getUtrnumber());
-                update.setSlip(olddata[i].getSlip());
-                update.setTrdatetime(olddata[i].getTrdatetime());
-                update.setUserid(olddata[i].getUserid());
-                update.setFilename(olddata[i].getFilename());
-                update.setSlip(olddata[i].getSlip());
-                update.setTrtype(olddata[i].getTrtype());
-                update.setid(trs.getid());
-                update.setStatus(trs.getStatus());
-                break;
+        if (DAOUser.getUsertype().equals(Utils.USERETYPE.CUSTOMER)) {
+            DAOTransaction [] olddata = trService.getTransactionsByUserId(USER_ID);
+            for (int i=0; i<olddata.length; i++) {
+                if (olddata[i].getid() == trs.getid()) {
+                    update.setPlayerUser(olddata[i].getPlayerUser());
+                    update.setAgentSystem(olddata[i].getAgentSystem());
+                    update.setCurrency(olddata[i].getCurrency());
+                    update.setAmount(olddata[i].getAmount());
+                    update.setSlipdate(olddata[i].getSlipdate());
+                    update.setCustomerremarks(olddata[i].getCustomerremarks());
+                    update.setUtrnumber(olddata[i].getUtrnumber());
+                    update.setSlip(olddata[i].getSlip());
+                    update.setTrdatetime(olddata[i].getTrdatetime());
+                    update.setUserid(olddata[i].getUserid());
+                    update.setFilename(olddata[i].getFilename());
+                    update.setSlip(olddata[i].getSlip());
+                    update.setTrtype(olddata[i].getTrtype());
+                    update.setid(trs.getid());
+                    update.setStatus(trs.getStatus());
+                    break;
+                }
             }
+
+        } else if ( DAOUser.getUsertype().equals(Utils.USERETYPE.CCAGENT)  ||
+                DAOUser.getUsertype().equals(Utils.USERETYPE.AGENT) ) {
+
+            DAOTransaction  olddata = trService.getTransactionByTrId(trs.getid());
+            update.setPlayerUser(olddata.getPlayerUser());
+            update.setAgentSystem(olddata.getAgentSystem());
+            update.setCurrency(olddata.getCurrency());
+            update.setAmount(olddata.getAmount());
+            update.setSlipdate(olddata.getSlipdate());
+            update.setCustomerremarks(olddata.getCustomerremarks());
+            update.setUtrnumber(olddata.getUtrnumber());
+            update.setSlip(olddata.getSlip());
+            update.setTrdatetime(olddata.getTrdatetime());
+            update.setUserid(olddata.getUserid());
+            update.setFilename(olddata.getFilename());
+            update.setSlip(olddata.getSlip());
+            update.setTrtype(olddata.getTrtype());
+            update.setid(trs.getid());
+            update.setStatus(trs.getStatus());
         }
         if (daoTrans != null ) {
-
-/*            update.setTrtype(trs.getTrtype());
-            update.setid(trs.getid());
-            update.setStatus(trs.getStatus());*/
-
             DAOTransaction temp = transRepo.save(update);
             if (temp == null) {
                 return Utils.getInstance().JsonMessage("Cannot change status  Try again", HttpStatus.NOT_ACCEPTABLE);
             }
-
             return Utils.getInstance().JsonMessage("Change Status Successful", HttpStatus.ACCEPTED);
         }
         return Utils.getInstance().JsonMessage("No data available for Change status", HttpStatus.NOT_ACCEPTABLE);
     }
+
 
     @RequestMapping (value = "api/new-withdrawal", method = RequestMethod.POST)
     public String setNewWithdrawal (@RequestBody  String daoWithdrawUserValues,  @RequestHeader String Authorization) throws JsonProcessingException {

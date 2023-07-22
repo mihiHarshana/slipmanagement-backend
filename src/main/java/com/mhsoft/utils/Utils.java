@@ -232,4 +232,12 @@ public class Utils {
 		return null;
 	}
 
+	public enum  USERETYPE {
+		CUSTOMER,
+		AGENT,
+		CCAGENT
+	}
+
 }
+
+
