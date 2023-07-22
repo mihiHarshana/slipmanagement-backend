@@ -3,12 +3,10 @@ package com.mhsoft.controller;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mhsoft.model.DAOTransaction;
-import com.mhsoft.repo.TransactionRepo;
 import com.mhsoft.service.CallCenterAgentService;
 import com.mhsoft.service.TransactionService;
 import com.mhsoft.utils.CcAgentChangeRemarks;
 import com.mhsoft.utils.CcAgentChangeStatus;
-import com.mhsoft.utils.CcAgentTransResponse;
 import com.mhsoft.utils.Utils;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -177,4 +175,16 @@ public class CallCenterAgentController {
 
         return  Utils.getInstance().JsonMessage("Remarks not updated", HttpStatus.NOT_ACCEPTABLE);
     }
+
+/*    @RequestMapping (value = "/download" , method = RequestMethod.POST)
+    public String downloadFile (@RequestHeader  String Authorization, @RequestBody String downloadFile) throws JsonProcessingException {
+        int USER_ID = 0;
+        String token = Utils.getInstance().getTokenFromAuthKey(Authorization);
+        ObjectMapper objectMapper = new ObjectMapper();
+        DownloadFile customerData = objectMapper.readValue( downloadFile, DownloadFile.class);
+
+
+        return "";
+
+    }*/
 }
