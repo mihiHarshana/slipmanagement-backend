@@ -7,6 +7,7 @@ import com.mhsoft.model.DAOTransaction;
 import com.mhsoft.model.DAOUser;
 import com.mhsoft.repo.TransactionRepo;
 import com.mhsoft.repo.UserRepo;
+import com.mhsoft.service.CallCenterAgentService;
 import com.mhsoft.service.TransactionService;
 import com.mhsoft.service.UserDetailService;
 import com.mhsoft.utils.CustomerDetails;
@@ -21,6 +22,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.math.BigInteger;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -38,6 +40,7 @@ public class TransactionController {
   @Autowired UserRepo userRepo;
   @Autowired TransactionService trService;
   @Autowired UserDetailService userDetailService;
+  @Autowired CallCenterAgentService trccaService;
 
     private static String UPLOADED_FOLDER = "E:\\projects\\fileuploads\\";
 
@@ -95,7 +98,7 @@ public class TransactionController {
                                  @RequestParam String UTRNumber,
                                  @RequestParam String agentSystem,
                                  @RequestParam String playerUser,
-                                 @RequestParam long slipTime,
+                                 @RequestParam Long slipTime,
                                  @RequestParam String remarks,
                                  @RequestHeader String Authorization) {
 
@@ -165,7 +168,7 @@ public class TransactionController {
         ObjectMapper objectMapper = new ObjectMapper();
         DAOTransaction trs = objectMapper.readValue(daoTrans, DAOTransaction.class);
         DAOTransaction  update = new DAOTransaction();
-        if (DAOUser.getUsertype().equals(Utils.USERETYPE.CUSTOMER)) {
+        if (DAOUser.getUsertype().toString().equalsIgnoreCase(Utils.USERETYPE.CUSTOMER.toString())) {
             DAOTransaction [] olddata = trService.getTransactionsByUserId(USER_ID);
             for (int i=0; i<olddata.length; i++) {
                 if (olddata[i].getid() == trs.getid()) {
@@ -291,6 +294,17 @@ public class TransactionController {
 
         return jo.toString();
     }
+
+/*    @RequestMapping (value ="/api/test-api" , method = RequestMethod.POST)
+    public String  testTransacton(@RequestBody CustomerDetails cusDetails, @RequestHeader String Authorization) {
+        DAOTransaction [] daotrans = trccaService.getAllTransactionDetails();
+
+        JSONObject jo = new JSONObject();
+        jo.put("transactions", daotrans);
+
+        return jo.toString();
+
+    }*/
 
 
     private JSONArray setTrData(ArrayList<DAOTransaction> userTrDetails) {
