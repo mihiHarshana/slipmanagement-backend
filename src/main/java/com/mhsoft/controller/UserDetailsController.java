@@ -1,10 +1,13 @@
 package com.mhsoft.controller;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mhsoft.config.JwtTokenUtil;
 import com.mhsoft.dao.BankDao;
 import com.mhsoft.model.*;
 import com.mhsoft.repo.UserRepo;
 import com.mhsoft.service.*;
+import com.mhsoft.utils.ChangeRemarks;
 import com.mhsoft.utils.Utils;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -368,7 +371,8 @@ public class UserDetailsController {
     }*/
 
     @PostMapping("/change-remarks")
-    public String changeRemarks(@RequestHeader String Authorization, @RequestBody String obj ) {
+    public String changeRemarks(@RequestHeader String Authorization, @RequestBody String obj )
+            throws JsonProcessingException {
         // JwtTokenUtil jwtTokenUtil = new JwtTokenUtil();
         int USER_ID = 0;
         String token = Utils.getInstance().getTokenFromAuthKey(Authorization);
@@ -376,8 +380,22 @@ public class UserDetailsController {
 
         DAOUser DAOUser = userRepo.getUserByUserName(username);
         USER_ID = DAOUser.getUserid();
-        System.out.println(obj);
 
+        System.out.println(obj);
+         // TODO : get user type and save the remarks accordingly.
+        ObjectMapper objectMapper = new ObjectMapper();
+        ChangeRemarks trs = objectMapper.readValue(obj, ChangeRemarks.class);
+        DAOTransaction trans = trService.getTransactionByTrId(trs.getId());
+        if (DAOUser.getUsertype().equalsIgnoreCase("CUSTOMER")) {
+            trans.setCustomerremarks(trs.getRemarks());
+        } else if (DAOUser.getUsertype().equalsIgnoreCase("AGENT")) {
+            trans.setAgentremarks(trs.getRemarks());
+        } else if (DAOUser.getUsertype().equalsIgnoreCase("CCAGENT")) {
+            trans.setCcagentremarks(trs.getRemarks());
+        } else {
+            return "Error saving data - User type not defined";
+        }
+         trService.setTransactionData(trans);
         return "done";
 
     }
@@ -404,7 +422,7 @@ public class UserDetailsController {
     }
 
     private JSONArray setTrData(ArrayList<DAOTransaction> userTrDetails) {
-        System.out.println("Printing recieved data ====== " + userTrDetails);
+     //   System.out.println("Printing recieved data ====== " + userTrDetails);
         JSONArray tr_array = new JSONArray();
 
         for (int i = 0; i < userTrDetails.size(); i++) {
@@ -428,9 +446,9 @@ public class UserDetailsController {
             tr_array.put(i, tr_json);
         }
 
-        for (int i =0; i <=tr_array.length(); i++) {
+/*        for (int i =0; i <=tr_array.length(); i++) {
             System.out.println("Priting after wards " + tr_array);
-        }
+        }*/
 
         return tr_array;
     }
