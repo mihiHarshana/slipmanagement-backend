@@ -30,11 +30,8 @@ public class BankService {
         boolean isDefaultFound =false;
         boolean isOldFefaultFound = false;
 
-        System.out.println("Trying to find and upate default account");
         for (int i =0; i <allBankDetails.length; i++) {
-            System.out.println(allBankDetails[i].isDefaultacc());
             if (allBankDetails[i].isDefaultacc() ==true ) {
-                System.out.println("OLD default account found");
                 DAOBank newBankDetails = new DAOBank();
                 newBankDetails.setId(allBankDetails[i].getId());
                 newBankDetails.setAccountNo(allBankDetails[i].getAccountNo());
@@ -50,7 +47,6 @@ public class BankService {
                 isOldFefaultFound = true;
             }
             if (allBankDetails[i].getAccountNo().equals(bankAccNo) ) {
-                System.out.println("New  default account found");
                 newDefault.setId(allBankDetails[i].getId());
                 newDefault.setAccountNo(allBankDetails[i].getAccountNo());
                 newDefault.setBranchname(allBankDetails[i].getBranchname());
@@ -65,7 +61,6 @@ public class BankService {
                 isDefaultFound = true;
             }
         }
-        System.out.println("Compelted replacing default and old account");
         return   newDefault;
     }
 }

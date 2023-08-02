@@ -59,15 +59,11 @@ public class UserDetailsController {
         DAOUser DAOUser = userRepo.getUserByUserName(username);
         USER_ID = DAOUser.getUserid();
 
-        System.out.println("Default Account printing :  " + defaultAccount);
         //Processing Default account
         String [] temp1 = defaultAccount.split(":");
         String [] temp2 = temp1[1].split(" ");
-        System.out.println("1nd split" + temp1[1]);
-        System.out.println("2nd split" + temp2[0]);
         String temp3 = temp2[0].replace("\"","");
         temp3 = temp3.replace("}", "");
-        System.out.println("temp3  : " + temp3);
         if (! temp3.isEmpty() ) {
             bankService.updateBankDetailsByUserID(USER_ID, temp3);
         }
@@ -427,7 +423,6 @@ public class UserDetailsController {
 
         for (int i = 0; i < userTrDetails.size(); i++) {
             JSONObject tr_json = new JSONObject();
-            System.out.println("Priting trid ----------- " + userTrDetails.get(i).getid());
             tr_json.put(Utils.TR_AMOUNT, userTrDetails.get(i).getAmount());
             tr_json.put(Utils.TR_TYPE, userTrDetails.get(i).getTrtype());
             tr_json.put(Utils.TR_DATE, userTrDetails.get(i).getTrdatetime());
