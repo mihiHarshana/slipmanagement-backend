@@ -45,4 +45,35 @@ public class FileDownloadController {
                 .body(resource);
 
     }
+
+    @RequestMapping(value = "/api/download" , method = RequestMethod.POST)
+    public ResponseEntity<Resource> downloadFileCustomerFile (@RequestHeader String Authorization,
+                                                              @RequestBody String downloadFile)
+            throws JsonProcessingException, IOException {
+        int USER_ID = 0;
+        String token = Utils.getInstance().getTokenFromAuthKey(Authorization);
+        ObjectMapper objectMapper = new ObjectMapper();
+        DownloadFile fileData = objectMapper.readValue( downloadFile, DownloadFile.class);
+
+
+
+
+        // Set the appropriate content type for the response
+        String  slipName = fileData.getSlipLink().concat("\\").concat(fileData.getSlipName());
+        System.out.println(slipName);
+        // File file = new File(slipName);
+        //  Resource resource = new UrlResource(file.toURI());
+
+
+
+        Resource resource = new FileSystemResource(slipName);
+
+        // Set the appropriate content type for the response
+        String contentType = "application/octet-stream";
+
+        return ResponseEntity.ok()
+                .contentType(MediaType.parseMediaType(contentType))
+                .body(resource);
+
+    }
 }

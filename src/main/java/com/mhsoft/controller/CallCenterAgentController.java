@@ -7,6 +7,7 @@ import com.mhsoft.service.CallCenterAgentService;
 import com.mhsoft.service.TransactionService;
 import com.mhsoft.utils.CcAgentChangeRemarks;
 import com.mhsoft.utils.CcAgentChangeStatus;
+import com.mhsoft.utils.DownloadFile;
 import com.mhsoft.utils.Utils;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -176,7 +177,7 @@ public class CallCenterAgentController {
         return  Utils.getInstance().JsonMessage("Remarks not updated", HttpStatus.NOT_ACCEPTABLE);
     }
 
-/*    @RequestMapping (value = "/download" , method = RequestMethod.POST)
+/*    @RequestMapping (value = "api/download" , method = RequestMethod.POST)
     public String downloadFile (@RequestHeader  String Authorization, @RequestBody String downloadFile) throws JsonProcessingException {
         int USER_ID = 0;
         String token = Utils.getInstance().getTokenFromAuthKey(Authorization);
