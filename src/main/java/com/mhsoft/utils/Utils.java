@@ -5,6 +5,13 @@ import com.mhsoft.model.DAOUser;
 import org.json.JSONObject;
 import org.springframework.http.HttpStatus;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.ZoneOffset;
+import java.util.concurrent.TimeUnit;
+
+import static java.util.concurrent.TimeUnit.MICROSECONDS;
+
 public class Utils {
 
 	String message;
@@ -21,6 +28,10 @@ public class Utils {
 	public static final String BANK_ACC_NO="accountNo";
 
 	public static final String BANK_NAME="bankName";
+
+	public static final String VALID_TO="validTo";
+
+	public static final String LAST_UPDATED="lastUpdated";
 
 	public static final String AGENT="agent";
 
@@ -119,59 +130,60 @@ public class Utils {
 		currentUser.setUserstatus(daoUser.getUserStatus());
 
 	}
+
 	public DAOUser getUserDetails() {
 		return currentUser;
 	}
 
 	public String [] getTransStatus(String currentStatus, String trType) {
-	if (trType.equals(Utils.TRTRYOEDEPOSIT)) {
-		if (currentStatus.equals(TR_STATUS_SUBMITTED)) {
-			String [] array= new String[2];
-			array[0] = TR_STATUS_SUBMITTED;
-			array[1] = TR_STATUS_Cancelled;
-			return array;
-		}
-		if (currentStatus.equals(TR_STATUS_NotReceived)) {
-			String [] array= new String[3];
-			array[0] = TR_STATUS_NotReceived;
-			array[0] = TR_STATUS_RESUBMITTED;
-			array[1] = TR_STATUS_Cancelled;
-			return array;
-		}
+		if (trType.equals(Utils.TRTRYOEDEPOSIT)) {
+			if (currentStatus.equals(TR_STATUS_SUBMITTED)) {
+				String [] array= new String[2];
+				array[0] = TR_STATUS_SUBMITTED;
+				array[1] = TR_STATUS_Cancelled;
+				return array;
+			}
+			if (currentStatus.equals(TR_STATUS_NotReceived)) {
+				String [] array= new String[3];
+				array[0] = TR_STATUS_NotReceived;
+				array[0] = TR_STATUS_RESUBMITTED;
+				array[1] = TR_STATUS_Cancelled;
+				return array;
+			}
 
-		if (currentStatus.equals(TR_STATUS_Cancelled)) {
-			String [] array= new String[1];
-			array[0] = TR_STATUS_Cancelled;
-			return array;
-		}
-		if (currentStatus.equals(TR_STATUS_Completed)) {
-			String [] array= new String[1];
-			array[0] = TR_STATUS_Completed;
-			return array;
-		}
+			if (currentStatus.equals(TR_STATUS_Cancelled)) {
+				String [] array= new String[1];
+				array[0] = TR_STATUS_Cancelled;
+				return array;
+			}
+			if (currentStatus.equals(TR_STATUS_Completed)) {
+				String [] array= new String[1];
+				array[0] = TR_STATUS_Completed;
+				return array;
+			}
 
-	} else if (trType.equals(Utils.TRTYPEWIDTHDRAW)){
-		if (currentStatus.equals(TR_STATUS_SUBMITTED)) {
-			String [] array= new String[2];
-			array[0] = TR_STATUS_SUBMITTED;
-			array[1] = TR_STATUS_Cancelled;
-			return array;
+		} else if (trType.equals(Utils.TRTYPEWIDTHDRAW)){
+			if (currentStatus.equals(TR_STATUS_SUBMITTED)) {
+				String [] array= new String[2];
+				array[0] = TR_STATUS_SUBMITTED;
+				array[1] = TR_STATUS_Cancelled;
+				return array;
+			}
+			if (currentStatus.equals(TR_STATUS_AwatingConfirmation)) {
+				String [] array= new String[2];
+				array[0] = TR_STATUS_AwatingConfirmation;
+				array[1] = TR_STATUS_UserConfirmed;
+				array[2] = TR_STATUS_NotReceived;
+				return array;
+			}
+			if (currentStatus.equals(TR_STATUS_AmountDifferent)) {
+				String [] array= new String[2];
+				array[0] = TR_STATUS_AmountDifferent;
+				array[1] = TR_STATUS_UserConfirmed;
+				array[2] = TR_STATUS_NotReceived;
+				return array;
+			}
 		}
-		if (currentStatus.equals(TR_STATUS_AwatingConfirmation)) {
-			String [] array= new String[2];
-			array[0] = TR_STATUS_AwatingConfirmation;
-			array[1] = TR_STATUS_UserConfirmed;
-			array[2] = TR_STATUS_NotReceived;
-			return array;
-		}
-		if (currentStatus.equals(TR_STATUS_AmountDifferent)) {
-			String [] array= new String[2];
-			array[0] = TR_STATUS_AmountDifferent;
-			array[1] = TR_STATUS_UserConfirmed;
-			array[2] = TR_STATUS_NotReceived;
-			return array;
-		}
-	}
 		return null;
 	}
 
@@ -237,6 +249,19 @@ public class Utils {
 		AGENT,
 		CCAGENT
 	}
+/**
+Gets the time in miliseconds and convert it to How many days passed.
+and return a string.
+ */
+public String calculateElaspedDays(Long lastRecordTime) {
+	long days = TimeUnit.SECONDS.toDays(lastRecordTime);
+	Long current = LocalDateTime.now().toEpochSecond(ZoneOffset.UTC);
+	Long diff =  current -lastRecordTime ;
+
+	return String.valueOf(diff /86400  + " day(s)");
+
+
+}
 
 }
 

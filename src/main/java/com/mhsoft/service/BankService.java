@@ -3,8 +3,12 @@ package com.mhsoft.service;
 import com.mhsoft.dao.BankDao;
 import com.mhsoft.model.DAOBank;
 import com.mhsoft.repo.BankRepo;
+import com.mysql.cj.util.Util;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 
 @Service
 public class BankService {
@@ -42,6 +46,7 @@ public class BankService {
                 newBankDetails.setBankCode(allBankDetails[i].getBankCode());
                 newBankDetails.setUserid(allBankDetails[i].getUserid());
                 newBankDetails.setValidTo(allBankDetails[i].getValidTo());
+                newBankDetails.setLastUpdatedTime(LocalDateTime.now().toEpochSecond(ZoneOffset.UTC)); //TODO :
                 newBankDetails.setDefaultacc(false);
                 bankRepo.save(newBankDetails);
                 isOldFefaultFound = true;
@@ -56,6 +61,7 @@ public class BankService {
                 newDefault.setBankCode(allBankDetails[i].getBankCode());
                 newDefault.setUserid(allBankDetails[i].getUserid());
                 newDefault.setValidTo(allBankDetails[i].getValidTo());
+                newDefault.setLastUpdatedTime(allBankDetails[i].getLastUpdatedTime());
                 newDefault.setDefaultacc(true);
                 bankRepo.save(newDefault);
                 isDefaultFound = true;

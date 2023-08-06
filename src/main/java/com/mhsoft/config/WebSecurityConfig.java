@@ -77,7 +77,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 				"/api/change-remarks",
 				"/api/new-bank-details",
 				"/api/new-withdrawal",
-				"/download",
+				"/api/download",
 				"/api/change-customer-status",
 				"/api/new-agnet-code",
 				"/api/view-transaction",

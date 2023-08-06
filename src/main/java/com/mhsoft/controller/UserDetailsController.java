@@ -8,6 +8,8 @@ import com.mhsoft.model.*;
 import com.mhsoft.repo.UserRepo;
 import com.mhsoft.service.*;
 import com.mhsoft.utils.ChangeRemarks;
+import com.mhsoft.utils.CustomerStatus;
+import com.mhsoft.utils.DefaultAccount;
 import com.mhsoft.utils.Utils;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -60,6 +62,8 @@ public class UserDetailsController {
         USER_ID = DAOUser.getUserid();
 
         //Processing Default account
+
+        //TODO : Replace this code from Agent Detils code
         String [] temp1 = defaultAccount.split(":");
         String [] temp2 = temp1[1].split(" ");
         String temp3 = temp2[0].replace("\"","");
@@ -153,6 +157,8 @@ public class UserDetailsController {
             jsonAgentDetalils.put(Utils.BANK_BRANCH, "null");
             jsonAgentDetalils.put(Utils.BANK_INS, "null");
             jsonAgentDetalils.put(Utils.BANK_ACC_NO, "null");
+            jsonAgentDetalils.put(Utils.VALID_TO, "null");
+            jsonAgentDetalils.put(Utils.LAST_UPDATED, "null");
         } else {
             bankacountsagent = new String[tempAgentDetails.length];
 
@@ -167,6 +173,9 @@ public class UserDetailsController {
                     jsonAgentDetalils.put(Utils.BANK_BRANCH, tempAgentDetails[i].getBranchname());
                     jsonAgentDetalils.put(Utils.BANK_INS, tempAgentDetails[i].getInstructions());
                     jsonAgentDetalils.put(Utils.BANK_ACC_NO, tempAgentDetails[i].getAccountNo());
+                    jsonAgentDetalils.put(Utils.VALID_TO, tempAgentDetails[i].getValidTo());
+                    jsonAgentDetalils.put(Utils.LAST_UPDATED, Utils.getInstance().
+                            calculateElaspedDays(tempAgentDetails[i].getLastUpdatedTime()));
                 }
             }
         }
@@ -260,7 +269,7 @@ public class UserDetailsController {
 
        @PostMapping( "/agent-details")
     public String getAgentBankTransactionDetails(@RequestHeader String Authorization,
-                    @RequestBody String defaultAccount) {
+                    @RequestBody String defaultAccount) throws JsonProcessingException {
            int USER_ID = 0;
            String[] bankacounts = null;
            String token = Authorization.substring(7);
@@ -268,20 +277,18 @@ public class UserDetailsController {
            DAOUser DAOUser = userRepo.getUserByUserName(username);
            USER_ID = DAOUser.getUserid();
 
+           ObjectMapper objectMapper = new ObjectMapper();
+           DefaultAccount customerData = objectMapper.readValue( defaultAccount, DefaultAccount.class);
 
-           System.out.println("Printing Agent Default Account : " + defaultAccount);
-           //Processing Default account
-           String [] temp1 = defaultAccount.split(":");
-           String [] temp2 = temp1[1].split(" ");
-           System.out.println("1nd split" + temp1[1]);
-           System.out.println("2nd split" + temp2[0]);
-           String temp3 = temp2[0].replace("\"","");
-           temp3 = temp3.replace("}", "");
-           System.out.println("temp3  : " + temp3);
-           if (! temp3.isEmpty() ) {
-               bankService.updateBankDetailsByUserID(USER_ID, temp3);
+           System.out.println(customerData.getDefaultAccount());
+           String [] defAccountOnly = null;
+           if (! customerData.getDefaultAccount().equals("")) {
+               defAccountOnly    = customerData.getDefaultAccount().split(" ");
            }
 
+           if (  defAccountOnly != null) {
+               bankService.updateBankDetailsByUserID(USER_ID, defAccountOnly[0]);
+           }
 
            DAOBank [] bankDetailsOfUser = bankService.getBankDetailsByIUserId(USER_ID);
            JSONObject userBankDetails = new JSONObject();
@@ -291,6 +298,8 @@ public class UserDetailsController {
                userBankDetails.put(Utils.BANK_BRANCH, "null");
                userBankDetails.put(Utils.BANK_INS, "null");
                userBankDetails.put(Utils.BANK_ACC_NO, "null");
+               userBankDetails.put(Utils.VALID_TO, "null");
+               userBankDetails.put(Utils.LAST_UPDATED, "null");
            } else {
                bankacounts = new String[bankDetailsOfUser.length];
 
@@ -306,6 +315,9 @@ public class UserDetailsController {
                        userBankDetails.put(Utils.BANK_BRANCH, bankDetailsOfUser[i].getBranchname());
                        userBankDetails.put(Utils.BANK_INS, bankDetailsOfUser[i].getInstructions());
                        userBankDetails.put(Utils.BANK_ACC_NO, bankDetailsOfUser[i].getAccountNo());
+                       userBankDetails.put(Utils.VALID_TO,bankDetailsOfUser[i].getValidTo());
+                       userBankDetails.put(Utils.LAST_UPDATED, Utils.getInstance()
+                               .calculateElaspedDays(bankDetailsOfUser[i].getLastUpdatedTime()));
                    }
                }
            }
