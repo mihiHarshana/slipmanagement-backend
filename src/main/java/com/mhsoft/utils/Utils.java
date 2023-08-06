@@ -280,6 +280,15 @@ public String calculateElaspedDays(Long lastRecordTime) {
 	Long current = LocalDateTime.now().toEpochSecond(ZoneOffset.UTC);
 	Long diff =  current -lastRecordTime ;
 
+
+	if (diff / 3600 == 0) {
+		return diff/60 + " mins(s)";
+	}
+
+	if (diff /86400 == 0) {
+		return diff/ 3600 + " hour(s)";
+	}
+
 	return String.valueOf(diff /86400  + " day(s)");
 
 
