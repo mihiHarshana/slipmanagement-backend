@@ -161,6 +161,11 @@ public class Utils {
 				array[0] = TR_STATUS_Completed;
 				return array;
 			}
+			if (currentStatus.equals(TR_STATUS_FULLYRECIEVED)) {
+				String [] array= new String[1];
+				array[0] = TR_STATUS_FULLYRECIEVED;
+				return array;
+			}
 
 		} else if (trType.equals(Utils.TRTYPEWIDTHDRAW)){
 			if (currentStatus.equals(TR_STATUS_SUBMITTED)) {
@@ -181,6 +186,11 @@ public class Utils {
 				array[0] = TR_STATUS_AmountDifferent;
 				array[1] = TR_STATUS_UserConfirmed;
 				array[2] = TR_STATUS_NotReceived;
+				return array;
+			}
+			if (currentStatus.equals(TR_STATUS_FULLYRECIEVED)) {
+				String [] array= new String[1];
+				array[0] = TR_STATUS_FULLYRECIEVED;
 				return array;
 			}
 		}
@@ -217,6 +227,12 @@ public class Utils {
 				return array;
 			}
 
+			if (currentStatus.equals(TR_STATUS_FULLYRECIEVED)) {
+				String [] array= new String[1];
+				array[0] = TR_STATUS_FULLYRECIEVED;
+				return array;
+			}
+
 
 		} else if (trType.equals(Utils.TRTYPEWIDTHDRAW)){
 			if (currentStatus.equals(TR_STATUS_SUBMITTED)) {
@@ -235,6 +251,12 @@ public class Utils {
 				array[2] = TR_STATUS_InsufficientFunds;
 				array[3] = TR_STATUS_AwatingConfirmation;
 				array[4] = TR_STATUS_AmountDifferent;
+				return array;
+			}
+
+			if (currentStatus.equals(TR_STATUS_FULLYRECIEVED)) {
+				String [] array= new String[1];
+				array[0] = TR_STATUS_FULLYRECIEVED;
 				return array;
 			}
 		}
