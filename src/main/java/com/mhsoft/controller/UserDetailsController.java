@@ -51,7 +51,7 @@ public class UserDetailsController {
     @PostMapping("/customer-details")
     // @RequestMapping(value = "/api/customer-details", method = RequestMethod.POST)
     public String getUserBankTransactionDetails(@RequestHeader String Authorization ,
-                                                @RequestBody String defaultAccount) {
+                                                @RequestBody String defaultAccount) throws JsonProcessingException {
         // JwtTokenUtil jwtTokenUtil = new JwtTokenUtil();
         int USER_ID = 0;
         String token = Utils.getInstance().getTokenFromAuthKey(Authorization);
@@ -61,17 +61,17 @@ public class UserDetailsController {
         DAOUser DAOUser = userRepo.getUserByUserName(username);
         USER_ID = DAOUser.getUserid();
 
-        //Processing Default account
+        ObjectMapper objectMapper = new ObjectMapper();
+        DefaultAccount customerData = objectMapper.readValue( defaultAccount, DefaultAccount.class);
 
-        //TODO : Replace this code from Agent Detils code
-        String [] temp1 = defaultAccount.split(":");
-        String [] temp2 = temp1[1].split(" ");
-        String temp3 = temp2[0].replace("\"","");
-        temp3 = temp3.replace("}", "");
-        if (! temp3.isEmpty() ) {
-            bankService.updateBankDetailsByUserID(USER_ID, temp3);
+        String [] defAccountOnly = null;
+        if (! customerData.getDefaultAccount().equals("")) {
+            defAccountOnly    = customerData.getDefaultAccount().split(" ");
         }
-        // System.out.println("user name ============ : " + username);
+
+        if (  defAccountOnly != null) {
+            bankService.updateBankDetailsByUserID(USER_ID, defAccountOnly[0]);
+        }
         DAOBank bankDetailsOfUser[] = bankService.getBankDetailsByIUserId(USER_ID);
         JSONObject userBankDetails = new JSONObject();
 
