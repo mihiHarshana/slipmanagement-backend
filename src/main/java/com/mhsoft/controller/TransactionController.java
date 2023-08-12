@@ -10,10 +10,7 @@ import com.mhsoft.repo.UserRepo;
 import com.mhsoft.service.CallCenterAgentService;
 import com.mhsoft.service.TransactionService;
 import com.mhsoft.service.UserDetailService;
-import com.mhsoft.utils.CustomerDetails;
-import com.mhsoft.utils.CustomerStatus;
-import com.mhsoft.utils.Utils;
-import com.mhsoft.utils.Withdrawal;
+import com.mhsoft.utils.*;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -294,7 +291,9 @@ public class TransactionController {
         return jo.toString();
     }
 
-/*    @RequestMapping (value ="/api/test-api" , method = RequestMethod.POST)
+/*
+ TODO:  To be removed after testing
+ @RequestMapping (value ="/api/test-api" , method = RequestMethod.POST)
     public String  testTransacton(@RequestBody CustomerDetails cusDetails, @RequestHeader String Authorization) {
         DAOTransaction [] daotrans = trccaService.getAllTransactionDetails();
 
@@ -302,9 +301,48 @@ public class TransactionController {
         jo.put("transactions", daotrans);
 
         return jo.toString();
-
     }*/
 
+    @RequestMapping (value ="/api/new-withdrawal-slip" , method = RequestMethod.POST)
+    public String UploadNewWidthrawalSlip ( @RequestParam("file") MultipartFile file ,
+            @RequestParam Integer transactionId, @RequestHeader String Authorization)
+            throws JsonProcessingException {
+
+        DAOTransaction tr = trService.getTransactionByTrId(transactionId);
+        int USER_ID = tr.getUserid();
+        if (file.isEmpty()) {
+            return Utils.getInstance().JsonMessage("Please select a file to upload", HttpStatus.NOT_ACCEPTABLE);
+        }
+        try {
+            // Get the file and save it somewhere
+            byte[] bytes = file.getBytes();
+            Path temp_path = Paths.get(UPLOADED_FOLDER + LocalDate.now() + "\\" + USER_ID + "\\");
+            Files.createDirectories(temp_path);
+            String originalName  = file.getOriginalFilename();
+            String filename =originalName.substring(0,file.getOriginalFilename().indexOf(".") );
+            String  extention = originalName.substring(file.getOriginalFilename().indexOf("."));
+            String fileNameToSave = filename+ "_" + LocalDateTime.now().toEpochSecond(ZoneOffset.UTC) + extention;
+
+            Path path = Paths.get(temp_path + "\\" + fileNameToSave);
+            Files.write(path, bytes);
+
+            tr.setSlip(temp_path + "\\");
+            tr.setFilename(fileNameToSave);
+            tr.setid(transactionId);
+
+            if (tr != null) {
+                DAOTransaction temp = transRepo.save(saveTrData(tr));
+                if (temp == null) {
+                    return Utils.getInstance().JsonMessage("Cannot save deposit Try again", HttpStatus.NOT_ACCEPTABLE);
+                }
+                return Utils.getInstance().JsonMessage("Deposit Successful", HttpStatus.ACCEPTED);
+            }
+            return Utils.getInstance().JsonMessage("No data available for Deposit", HttpStatus.NOT_ACCEPTABLE);
+
+        } catch (IOException e) {
+            return Utils.getInstance().JsonMessage("Somethign went wrong, please try again..! ", HttpStatus.NOT_ACCEPTABLE);
+        }
+    }
 
     private JSONArray setTrData(ArrayList<DAOTransaction> userTrDetails) {
         System.out.println("Printing recieved data ====== " + userTrDetails);

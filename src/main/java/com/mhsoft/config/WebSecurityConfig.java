@@ -84,7 +84,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 				"/api/cca/change-status",
 				"/api/change-call-center-agent-remarks",
 						"/api/cca/download",
-				"/api/view-transaction"
+				"/api/view-transaction",
+				"/api/new-withdrawal-slip"
 
 				).permitAll().
 				// all other requests need to be authenticated
