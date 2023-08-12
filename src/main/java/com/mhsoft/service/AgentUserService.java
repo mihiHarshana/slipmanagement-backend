@@ -1,6 +1,5 @@
 package com.mhsoft.service;
 
-import com.mhsoft.model.DAOAgentCode;
 import com.mhsoft.model.DAOAgentUser;
 import com.mhsoft.repo.AgentUserRepo;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +16,11 @@ public class AgentUserService {
 
         return agentData;
     }
+
+    public DAOAgentUser saveAgentUser(DAOAgentUser agentUser) {
+        return agentUserRepo.save(agentUser);
+    }
+
 
 
 }

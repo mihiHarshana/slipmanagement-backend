@@ -34,6 +34,28 @@ public class DAOBank {
     @Column
     private boolean defaultacc;
 
+    @Column (name="validto")
+    private Long validTo;
+
+    private Long lastUpdatedTime;
+
+
+    public String getBranchName() {
+        return branchName;
+    }
+
+    public void setBranchName(String branchName) {
+        this.branchName = branchName;
+    }
+
+    public Long getValidTo() {
+        return validTo;
+    }
+
+    public void setValidTo(Long validto) {
+        this.validTo = validto;
+    }
+
     public boolean isDefaultacc() {
         return defaultacc;
     }
@@ -96,5 +118,13 @@ public class DAOBank {
 
     public void setLatest(boolean latest) {
         this.latest = latest;
+    }
+
+    public Long getLastUpdatedTime() {
+        return lastUpdatedTime;
+    }
+
+    public void setLastUpdatedTime(Long lastUpdatedTime) {
+        this.lastUpdatedTime = lastUpdatedTime;
     }
 }

@@ -1,11 +1,15 @@
 package com.mhsoft.controller;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mhsoft.config.JwtTokenUtil;
 import com.mhsoft.dao.BankDao;
 import com.mhsoft.model.*;
 import com.mhsoft.repo.UserRepo;
 import com.mhsoft.service.*;
-import com.mhsoft.utils.AgentUserTransDetails;
+import com.mhsoft.utils.ChangeRemarks;
+import com.mhsoft.utils.CustomerStatus;
+import com.mhsoft.utils.DefaultAccount;
 import com.mhsoft.utils.Utils;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -47,7 +51,7 @@ public class UserDetailsController {
     @PostMapping("/customer-details")
     // @RequestMapping(value = "/api/customer-details", method = RequestMethod.POST)
     public String getUserBankTransactionDetails(@RequestHeader String Authorization ,
-                                                @RequestBody String defaultAccount) {
+                                                @RequestBody String defaultAccount) throws JsonProcessingException {
         // JwtTokenUtil jwtTokenUtil = new JwtTokenUtil();
         int USER_ID = 0;
         String token = Utils.getInstance().getTokenFromAuthKey(Authorization);
@@ -57,19 +61,17 @@ public class UserDetailsController {
         DAOUser DAOUser = userRepo.getUserByUserName(username);
         USER_ID = DAOUser.getUserid();
 
-        System.out.println("Default Account printing :  " + defaultAccount);
-        //Processing Default account
-        String [] temp1 = defaultAccount.split(":");
-        String [] temp2 = temp1[1].split(" ");
-        System.out.println("1nd split" + temp1[1]);
-        System.out.println("2nd split" + temp2[0]);
-        String temp3 = temp2[0].replace("\"","");
-        temp3 = temp3.replace("}", "");
-        System.out.println("temp3  : " + temp3);
-        if (! temp3.isEmpty() ) {
-            bankService.updateBankDetailsByUserID(USER_ID, temp3);
+        ObjectMapper objectMapper = new ObjectMapper();
+        DefaultAccount customerData = objectMapper.readValue( defaultAccount, DefaultAccount.class);
+
+        String [] defAccountOnly = null;
+        if (! customerData.getDefaultAccount().equals("")) {
+            defAccountOnly    = customerData.getDefaultAccount().split(" ");
         }
-        // System.out.println("user name ============ : " + username);
+
+        if (  defAccountOnly != null) {
+            bankService.updateBankDetailsByUserID(USER_ID, defAccountOnly[0]);
+        }
         DAOBank bankDetailsOfUser[] = bankService.getBankDetailsByIUserId(USER_ID);
         JSONObject userBankDetails = new JSONObject();
 
@@ -128,7 +130,7 @@ public class UserDetailsController {
         if (userTrDetails != null) {
             for (int i=0; i<userTrDetails.length; i++) {
                 if (userTrDetails[i].getStatus().equals(Utils.TR_STATUS_Cancelled) ||
-                        userTrDetails[i].getStatus().equals(Utils.TR_STATUS_UserConfirmed ) )  {
+                        userTrDetails[i].getStatus().equals(Utils.TR_STATUS_Completed ) )  {
                     arralList_com_can.add(userTrDetails[i]);
                 } else {
                     arralList_other.add(userTrDetails[i]);
@@ -155,6 +157,8 @@ public class UserDetailsController {
             jsonAgentDetalils.put(Utils.BANK_BRANCH, "null");
             jsonAgentDetalils.put(Utils.BANK_INS, "null");
             jsonAgentDetalils.put(Utils.BANK_ACC_NO, "null");
+            jsonAgentDetalils.put(Utils.VALID_TO, "null");
+            jsonAgentDetalils.put(Utils.LAST_UPDATED, "null");
         } else {
             bankacountsagent = new String[tempAgentDetails.length];
 
@@ -169,6 +173,9 @@ public class UserDetailsController {
                     jsonAgentDetalils.put(Utils.BANK_BRANCH, tempAgentDetails[i].getBranchname());
                     jsonAgentDetalils.put(Utils.BANK_INS, tempAgentDetails[i].getInstructions());
                     jsonAgentDetalils.put(Utils.BANK_ACC_NO, tempAgentDetails[i].getAccountNo());
+                    jsonAgentDetalils.put(Utils.VALID_TO, tempAgentDetails[i].getValidTo());
+                    jsonAgentDetalils.put(Utils.LAST_UPDATED, Utils.getInstance().
+                            calculateElaspedDays(tempAgentDetails[i].getLastUpdatedTime()));
                 }
             }
         }
@@ -262,7 +269,7 @@ public class UserDetailsController {
 
        @PostMapping( "/agent-details")
     public String getAgentBankTransactionDetails(@RequestHeader String Authorization,
-                    @RequestBody String defaultAccount) {
+                    @RequestBody String defaultAccount) throws JsonProcessingException {
            int USER_ID = 0;
            String[] bankacounts = null;
            String token = Authorization.substring(7);
@@ -270,20 +277,18 @@ public class UserDetailsController {
            DAOUser DAOUser = userRepo.getUserByUserName(username);
            USER_ID = DAOUser.getUserid();
 
+           ObjectMapper objectMapper = new ObjectMapper();
+           DefaultAccount customerData = objectMapper.readValue( defaultAccount, DefaultAccount.class);
 
-           System.out.println("Printing Agent Default Account : " + defaultAccount);
-           //Processing Default account
-           String [] temp1 = defaultAccount.split(":");
-           String [] temp2 = temp1[1].split(" ");
-           System.out.println("1nd split" + temp1[1]);
-           System.out.println("2nd split" + temp2[0]);
-           String temp3 = temp2[0].replace("\"","");
-           temp3 = temp3.replace("}", "");
-           System.out.println("temp3  : " + temp3);
-           if (! temp3.isEmpty() ) {
-               bankService.updateBankDetailsByUserID(USER_ID, temp3);
+           System.out.println(customerData.getDefaultAccount());
+           String [] defAccountOnly = null;
+           if (! customerData.getDefaultAccount().equals("")) {
+               defAccountOnly    = customerData.getDefaultAccount().split(" ");
            }
 
+           if (  defAccountOnly != null) {
+               bankService.updateBankDetailsByUserID(USER_ID, defAccountOnly[0]);
+           }
 
            DAOBank [] bankDetailsOfUser = bankService.getBankDetailsByIUserId(USER_ID);
            JSONObject userBankDetails = new JSONObject();
@@ -293,6 +298,8 @@ public class UserDetailsController {
                userBankDetails.put(Utils.BANK_BRANCH, "null");
                userBankDetails.put(Utils.BANK_INS, "null");
                userBankDetails.put(Utils.BANK_ACC_NO, "null");
+               userBankDetails.put(Utils.VALID_TO, "null");
+               userBankDetails.put(Utils.LAST_UPDATED, "null");
            } else {
                bankacounts = new String[bankDetailsOfUser.length];
 
@@ -308,18 +315,49 @@ public class UserDetailsController {
                        userBankDetails.put(Utils.BANK_BRANCH, bankDetailsOfUser[i].getBranchname());
                        userBankDetails.put(Utils.BANK_INS, bankDetailsOfUser[i].getInstructions());
                        userBankDetails.put(Utils.BANK_ACC_NO, bankDetailsOfUser[i].getAccountNo());
+                       userBankDetails.put(Utils.VALID_TO,bankDetailsOfUser[i].getValidTo());
+                       userBankDetails.put(Utils.LAST_UPDATED, Utils.getInstance()
+                               .calculateElaspedDays(bankDetailsOfUser[i].getLastUpdatedTime()));
                    }
                }
            }
 
         DAOAgentCode daoAgentCode =  agentCodeService.getLatestAgentDetails(USER_ID);
 
+           DAOUser [] trans = trService.getUserDetailsByAgentId(USER_ID);
+           JSONObject [] customerRecords;
+           JSONObject [] registeredCustomersRecords;
+           ArrayList<JSONObject> cusRec = new ArrayList<>();
+           ArrayList<JSONObject> otherCus = new ArrayList<>();
+
+           for (int i=0; i< trans.length; i++) {
+               if (trans[i].getUserStatus().equals("REGISTERED")) {
+                   JSONObject registered = new JSONObject();
+                   registered.put("customerId", trans[i].getUserid() );
+                   registered.put("userName",trans[i].getUsername());
+                   registered.put("firstName",trans[i].getUserfname());
+                   registered.put("customerStatus",trans[i].getUserStatus());
+                   registered.put("registeredTime", trans[i].getRegisterdate());
+                   cusRec.add(registered);
+               } else {
+                   JSONObject other = new JSONObject();
+                   other.put("customerId", trans[i].getUserid() );
+                   other.put("userName",trans[i].getUsername());
+                   other.put("firstName",trans[i].getUserfname());
+                   other.put("customerStatus",trans[i].getUserStatus());
+                   otherCus.add(other);
+               }
+
+           }
+
+
            JSONObject jo = new JSONObject();
            jo.put("agentId", USER_ID);
            jo.put("currentAgentCode",daoAgentCode.getAgentCode() );
            jo.put("agentBankAccounts",bankacounts );
            jo.put("agentBankDetails", userBankDetails);
-           jo.put("customersRecords", trService.getUserDetailsByAgentId(USER_ID));
+           jo.put("customersRecords", otherCus);
+           jo.put("registeredCustomersRecords", cusRec);
            //jo.put("withdrawalData", array_withdrawal);
            return jo.toString();
        }
@@ -341,7 +379,8 @@ public class UserDetailsController {
     }*/
 
     @PostMapping("/change-remarks")
-    public String changeRemarks(@RequestHeader String Authorization, @RequestBody String obj ) {
+    public String changeRemarks(@RequestHeader String Authorization, @RequestBody String obj )
+            throws JsonProcessingException {
         // JwtTokenUtil jwtTokenUtil = new JwtTokenUtil();
         int USER_ID = 0;
         String token = Utils.getInstance().getTokenFromAuthKey(Authorization);
@@ -349,8 +388,22 @@ public class UserDetailsController {
 
         DAOUser DAOUser = userRepo.getUserByUserName(username);
         USER_ID = DAOUser.getUserid();
-        System.out.println(obj);
 
+        System.out.println(obj);
+         // TODO : get user type and save the remarks accordingly.
+        ObjectMapper objectMapper = new ObjectMapper();
+        ChangeRemarks trs = objectMapper.readValue(obj, ChangeRemarks.class);
+        DAOTransaction trans = trService.getTransactionByTrId(trs.getId());
+        if (DAOUser.getUsertype().equalsIgnoreCase("CUSTOMER")) {
+            trans.setCustomerremarks(trs.getRemarks());
+        } else if (DAOUser.getUsertype().equalsIgnoreCase("AGENT")) {
+            trans.setAgentremarks(trs.getRemarks());
+        } else if (DAOUser.getUsertype().equalsIgnoreCase("CCAGENT")) {
+            trans.setCcagentremarks(trs.getRemarks());
+        } else {
+            return "Error saving data - User type not defined";
+        }
+         trService.setTransactionData(trans);
         return "done";
 
     }
@@ -377,12 +430,11 @@ public class UserDetailsController {
     }
 
     private JSONArray setTrData(ArrayList<DAOTransaction> userTrDetails) {
-        System.out.println("Printing recieved data ====== " + userTrDetails);
+     //   System.out.println("Printing recieved data ====== " + userTrDetails);
         JSONArray tr_array = new JSONArray();
 
         for (int i = 0; i < userTrDetails.size(); i++) {
             JSONObject tr_json = new JSONObject();
-            System.out.println("Priting trid ----------- " + userTrDetails.get(i).getid());
             tr_json.put(Utils.TR_AMOUNT, userTrDetails.get(i).getAmount());
             tr_json.put(Utils.TR_TYPE, userTrDetails.get(i).getTrtype());
             tr_json.put(Utils.TR_DATE, userTrDetails.get(i).getTrdatetime());
@@ -398,43 +450,12 @@ public class UserDetailsController {
             tr_json.put(Utils.TR_AGENT_REMARKS, userTrDetails.get(i).getAgentremarks());
             tr_json.put(Utils.TR_STATUS_LIST, Utils.getInstance().getTransStatus(userTrDetails.get(i).getStatus(),
                     userTrDetails.get(i).getTrtype()));
-
-            //File file = new File(userTrDetails.get(i).getSlip().concat(userTrDetails.get(i).getFilename() ));
-
-/*            Path path = Paths.get(userTrDetails.get(i).getSlip()
-                    .concat(userTrDetails.get(i).getFilename()));
-            try {
-                ByteArrayResource resource = new ByteArrayResource(Files.readAllBytes(path));
-                tr_json.put(Utils.TR_SLIP,resource);
-            }
-          catch (Exception e ) {
-              System.out.println(e);
-          }*/
-
-/*            try {
-                Path fiePath = Paths.get(userTrDetails.get(i).getSlip()
-                        .concat(userTrDetails.get(i).getFilename()));
-                Resource resource = new UrlResource(fiePath.toUri());
-                File multipartFile = new File(fiePath.toUri());
-                System.out.println(multipartFile);
-                System.out.println("is this a file " + multipartFile.isFile());
-
-                if(resource.exists()) {
-                    tr_json.put(Utils.TR_SLIP,multipartFile);
-                } else {;
-                    tr_json.put(Utils.TR_SLIP,"no file" );
-                }
-
-            }catch (Exception e ) {
-                System.err.println(e);;
-            }*/
-            // Adding the related file
             tr_array.put(i, tr_json);
         }
 
-        for (int i =0; i <=tr_array.length(); i++) {
+/*        for (int i =0; i <=tr_array.length(); i++) {
             System.out.println("Priting after wards " + tr_array);
-        }
+        }*/
 
         return tr_array;
     }

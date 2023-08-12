@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @CrossOrigin(origins = "*", allowedHeaders = "*")
-public class BankController {
+public class  BankController {
 
 
     @Autowired
@@ -72,6 +72,7 @@ public class BankController {
         newDetails.setBankName(bankdetails.getBankName());
         newDetails.setBranchname(bankdetails.getBranchname());
         newDetails.setBankCode(bankdetails.getBankCode());
+        newDetails.setValidTo(bankdetails.getValidTo());
 
 
         DAOBank bankDao1 = bankDao.save(newDetails);

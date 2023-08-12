@@ -7,15 +7,17 @@ import com.mhsoft.model.DAOTransaction;
 import com.mhsoft.model.DAOUser;
 import com.mhsoft.repo.TransactionRepo;
 import com.mhsoft.repo.UserRepo;
+import com.mhsoft.service.CallCenterAgentService;
 import com.mhsoft.service.TransactionService;
 import com.mhsoft.service.UserDetailService;
-import com.mhsoft.utils.CustomerStatus;
-import com.mhsoft.utils.Utils;
-import com.mhsoft.utils.Withdrawal;
+import com.mhsoft.utils.*;
+import org.json.JSONArray;
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -23,6 +25,7 @@ import java.nio.file.Paths;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
+import java.util.ArrayList;
 
 @RestController
 @CrossOrigin(origins = "*", allowedHeaders = "*")
@@ -33,6 +36,7 @@ public class TransactionController {
   @Autowired UserRepo userRepo;
   @Autowired TransactionService trService;
   @Autowired UserDetailService userDetailService;
+  @Autowired CallCenterAgentService trccaService;
 
     private static String UPLOADED_FOLDER = "E:\\projects\\fileuploads\\";
 
@@ -81,9 +85,7 @@ public class TransactionController {
         tempTr.setSlip(daoTrans.getSlip());
         tempTr.setSlipdate(daoTrans.getSlipdate());
         return tempTr;
-
     }
-
     @RequestMapping (value = "api/new-deposit", method = RequestMethod.POST)
     public String setNewDeposit (DAOTransaction daoTransaction,
                                  @RequestParam("file") MultipartFile file ,
@@ -92,7 +94,7 @@ public class TransactionController {
                                  @RequestParam String UTRNumber,
                                  @RequestParam String agentSystem,
                                  @RequestParam String playerUser,
-                                 @RequestParam long slipTime,
+                                 @RequestParam Long slipTime,
                                  @RequestParam String remarks,
                                  @RequestHeader String Authorization) {
 
@@ -129,12 +131,10 @@ public class TransactionController {
             String originalName  = file.getOriginalFilename();
             String filename =originalName.substring(0,file.getOriginalFilename().indexOf(".") );
             String  extention = originalName.substring(file.getOriginalFilename().indexOf("."));
-            System.out.println("fter substring + " + filename + " " +  extention);;
             String fileNameToSave = filename+ "_" + LocalDateTime.now().toEpochSecond(ZoneOffset.UTC) + extention;
 
             Path path = Paths.get(temp_path + "\\" + fileNameToSave);
             Files.write(path, bytes);
-            System.out.println("File uploaded sucessfully.");
 
             daoTransaction.setSlip(temp_path + "\\");
             daoTransaction.setFilename(fileNameToSave);
@@ -154,47 +154,64 @@ public class TransactionController {
     }
 
     @RequestMapping(value = "/api/change-status", method = RequestMethod.POST)
-    public String changeTransStatus(@RequestBody String daoTrans, @RequestHeader String Authorization ) throws JsonProcessingException {
+    public String changeTransStatus(@RequestBody String daoTrans, @RequestHeader String Authorization )
+            throws JsonProcessingException {
         int USER_ID = 0;
         String token = Authorization.substring(7);
         String username = jwtTokenUtil.getUsernameFromToken(token);
         DAOUser DAOUser = userRepo.getUserByUserName(username);
         USER_ID = DAOUser.getUserid();
-
-
         ObjectMapper objectMapper = new ObjectMapper();
         DAOTransaction trs = objectMapper.readValue(daoTrans, DAOTransaction.class);
-
-        DAOTransaction [] olddata = trService.getTransactionsByUserId(USER_ID);
         DAOTransaction  update = new DAOTransaction();
-        for (int i=0; i<olddata.length; i++) {
-            if (olddata[i].getid() == trs.getid()) {
-                update.setPlayerUser(olddata[i].getPlayerUser());
-                update.setAgentSystem(olddata[i].getAgentSystem());
-                update.setCurrency(olddata[i].getCurrency());
-                update.setAmount(olddata[i].getAmount());
-                update.setSlipdate(olddata[i].getSlipdate());
-                update.setCustomerremarks(olddata[i].getCustomerremarks());
-                update.setUtrnumber(olddata[i].getUtrnumber());
-                update.setSlip(olddata[i].getSlip());
-                update.setTrdatetime(olddata[i].getTrdatetime());
-                update.setUserid(olddata[i].getUserid());
-                update.setFilename(olddata[i].getFilename());
-                update.setSlip(olddata[i].getSlip());
-                break;
+        if (DAOUser.getUsertype().toString().equalsIgnoreCase(Utils.USERETYPE.CUSTOMER.toString())) {
+            DAOTransaction [] olddata = trService.getTransactionsByUserId(USER_ID);
+            for (int i=0; i<olddata.length; i++) {
+                if (olddata[i].getid() == trs.getid()) {
+                    update.setPlayerUser(olddata[i].getPlayerUser());
+                    update.setAgentSystem(olddata[i].getAgentSystem());
+                    update.setCurrency(olddata[i].getCurrency());
+                    update.setAmount(olddata[i].getAmount());
+                    update.setSlipdate(olddata[i].getSlipdate());
+                    update.setCustomerremarks(olddata[i].getCustomerremarks());
+                    update.setUtrnumber(olddata[i].getUtrnumber());
+                    update.setSlip(olddata[i].getSlip());
+                    update.setTrdatetime(olddata[i].getTrdatetime());
+                    update.setUserid(olddata[i].getUserid());
+                    update.setFilename(olddata[i].getFilename());
+                    update.setSlip(olddata[i].getSlip());
+                    update.setTrtype(olddata[i].getTrtype());
+                    update.setid(trs.getid());
+                    update.setStatus(trs.getStatus());
+                    break;
+                }
             }
-        }
-        if (daoTrans != null ) {
 
-            update.setTrtype(trs.getTrtype());
+        } else if ( DAOUser.getUsertype().equals(Utils.USERETYPE.CCAGENT)  ||
+                DAOUser.getUsertype().equals(Utils.USERETYPE.AGENT) ) {
+
+            DAOTransaction  olddata = trService.getTransactionByTrId(trs.getid());
+            update.setPlayerUser(olddata.getPlayerUser());
+            update.setAgentSystem(olddata.getAgentSystem());
+            update.setCurrency(olddata.getCurrency());
+            update.setAmount(olddata.getAmount());
+            update.setSlipdate(olddata.getSlipdate());
+            update.setCustomerremarks(olddata.getCustomerremarks());
+            update.setUtrnumber(olddata.getUtrnumber());
+            update.setSlip(olddata.getSlip());
+            update.setTrdatetime(olddata.getTrdatetime());
+            update.setUserid(olddata.getUserid());
+            update.setFilename(olddata.getFilename());
+            update.setSlip(olddata.getSlip());
+            update.setTrtype(olddata.getTrtype());
             update.setid(trs.getid());
             update.setStatus(trs.getStatus());
-
+        }
+        if (daoTrans != null ) {
             DAOTransaction temp = transRepo.save(update);
             if (temp == null) {
                 return Utils.getInstance().JsonMessage("Cannot change status  Try again", HttpStatus.NOT_ACCEPTABLE);
             }
-
             return Utils.getInstance().JsonMessage("Change Status Successful", HttpStatus.ACCEPTED);
         }
         return Utils.getInstance().JsonMessage("No data available for Change status", HttpStatus.NOT_ACCEPTABLE);
@@ -245,10 +262,112 @@ public class TransactionController {
         return Utils.getInstance().JsonMessage("User Status updated Successfully", HttpStatus.ACCEPTED);
     }
 
- /*   @RequestMapping (value ="api/view-transaction" , method = RequestMethod.POST)
-    public String  viewTransactions(@ String id,  @RequestHeader String Authorization) {
-        System.out.println("This is the id " + id);
+    @RequestMapping (value ="/api/view-transaction" , method = RequestMethod.POST)
+    public String  viewTransactions(@RequestBody CustomerDetails cusDetails, @RequestHeader String Authorization) {
+        System.out.println("This is the id " + cusDetails.getCustomerId());
+        DAOTransaction [] daoTrans = trService.getTransactionsByUserId(cusDetails.getCustomerId());
+       JSONObject jo = new JSONObject();
 
-        return "Hello";
+        DAOTransaction[] userTrDetails = trService.getTransactionsByUserId(cusDetails.getCustomerId());
+        ArrayList<DAOTransaction> arralList_com_can = new ArrayList<>();
+        ArrayList<DAOTransaction> arralList_other = new ArrayList<>();
+        if (userTrDetails != null) {
+            for (int i=0; i<userTrDetails.length; i++) {
+                if (userTrDetails[i].getStatus().equals(Utils.TR_STATUS_Cancelled) ||
+                        userTrDetails[i].getStatus().equals(Utils.TR_STATUS_Completed ) )  {
+                    arralList_com_can.add(userTrDetails[i]);
+                } else {
+                    arralList_other.add(userTrDetails[i]);
+                }
+            }
+        }
+
+        JSONArray tr_array_com_can = setTrData(arralList_com_can);
+        JSONArray tr_array_other = setTrData(arralList_other);
+
+        jo.put("customerTransactionDataOther", tr_array_other ); // this may need to change
+        jo.put("customerTransactionDataMajorStatus", tr_array_com_can ); // this may need to change
+
+        return jo.toString();
+    }
+
+/*
+ TODO:  To be removed after testing
+ @RequestMapping (value ="/api/test-api" , method = RequestMethod.POST)
+    public String  testTransacton(@RequestBody CustomerDetails cusDetails, @RequestHeader String Authorization) {
+        DAOTransaction [] daotrans = trccaService.getAllTransactionDetails();
+
+        JSONObject jo = new JSONObject();
+        jo.put("transactions", daotrans);
+
+        return jo.toString();
     }*/
+
+    @RequestMapping (value ="/api/new-withdrawal-slip" , method = RequestMethod.POST)
+    public String UploadNewWidthrawalSlip ( @RequestParam("file") MultipartFile file ,
+            @RequestParam Integer transactionId, @RequestHeader String Authorization)
+            throws JsonProcessingException {
+
+        DAOTransaction tr = trService.getTransactionByTrId(transactionId);
+        int USER_ID = tr.getUserid();
+        if (file.isEmpty()) {
+            return Utils.getInstance().JsonMessage("Please select a file to upload", HttpStatus.NOT_ACCEPTABLE);
+        }
+        try {
+            // Get the file and save it somewhere
+            byte[] bytes = file.getBytes();
+            Path temp_path = Paths.get(UPLOADED_FOLDER + LocalDate.now() + "\\" + USER_ID + "\\");
+            Files.createDirectories(temp_path);
+            String originalName  = file.getOriginalFilename();
+            String filename =originalName.substring(0,file.getOriginalFilename().indexOf(".") );
+            String  extention = originalName.substring(file.getOriginalFilename().indexOf("."));
+            String fileNameToSave = filename+ "_" + LocalDateTime.now().toEpochSecond(ZoneOffset.UTC) + extention;
+
+            Path path = Paths.get(temp_path + "\\" + fileNameToSave);
+            Files.write(path, bytes);
+
+            tr.setSlip(temp_path + "\\");
+            tr.setFilename(fileNameToSave);
+            tr.setid(transactionId);
+
+            if (tr != null) {
+                DAOTransaction temp = transRepo.save(saveTrData(tr));
+                if (temp == null) {
+                    return Utils.getInstance().JsonMessage("Cannot save deposit Try again", HttpStatus.NOT_ACCEPTABLE);
+                }
+                return Utils.getInstance().JsonMessage("Deposit Successful", HttpStatus.ACCEPTED);
+            }
+            return Utils.getInstance().JsonMessage("No data available for Deposit", HttpStatus.NOT_ACCEPTABLE);
+
+        } catch (IOException e) {
+            return Utils.getInstance().JsonMessage("Somethign went wrong, please try again..! ", HttpStatus.NOT_ACCEPTABLE);
+        }
+    }
+
+    private JSONArray setTrData(ArrayList<DAOTransaction> userTrDetails) {
+        System.out.println("Printing recieved data ====== " + userTrDetails);
+        JSONArray tr_array = new JSONArray();
+
+        for (int i = 0; i < userTrDetails.size(); i++) {
+            JSONObject tr_json = new JSONObject();
+            System.out.println("Priting trid ----------- " + userTrDetails.get(i).getid());
+            tr_json.put(Utils.TR_AMOUNT, userTrDetails.get(i).getAmount());
+            tr_json.put(Utils.TR_TYPE, userTrDetails.get(i).getTrtype());
+            tr_json.put(Utils.TR_DATE, userTrDetails.get(i).getTrdatetime());
+            tr_json.put(Utils.TR_USERID, userTrDetails.get(i).getUserid());
+            tr_json.put(Utils.TR_ID, userTrDetails.get(i).getid());
+            tr_json.put(Utils.TR_STATUS, userTrDetails.get(i).getStatus());
+            tr_json.put(Utils.TR_AMOUNT, userTrDetails.get(i).getAmount());
+            tr_json.put(Utils.TR_SLIP, userTrDetails.get(i).getSlip());
+            tr_json.put(Utils.TR_SLIP_NAME, userTrDetails.get(i).getFilename());
+            tr_json.put(Utils.TR_SLIP_DATe, userTrDetails.get(i).getSlipdate());
+            tr_json.put(Utils.TR_CUS_REMARKS, userTrDetails.get(i).getCustomerremarks());
+            tr_json.put(Utils.TR_CCAGENT_REMARKS, userTrDetails.get(i).getCcagentremarks());
+            tr_json.put(Utils.TR_AGENT_REMARKS, userTrDetails.get(i).getAgentremarks());
+            tr_json.put(Utils.TR_STATUS_LIST, Utils.getInstance().getTransStatus(userTrDetails.get(i).getStatus(),
+                    userTrDetails.get(i).getTrtype()));
+            tr_array.put(i, tr_json);
+        }
+        return tr_array;
+    }
 }

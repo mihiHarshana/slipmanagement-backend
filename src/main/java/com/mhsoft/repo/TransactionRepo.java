@@ -1,15 +1,8 @@
 package com.mhsoft.repo;
 
 import com.mhsoft.model.DAOTransaction;
-import com.mhsoft.model.IDAOTransaction;
-import com.mhsoft.utils.AgentUserTransDetails;
-import org.hibernate.mapping.Array;
-import org.json.JSONObject;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
-
-import java.sql.ResultSet;
-import java.util.ArrayList;
 
 public interface TransactionRepo extends JpaRepository<DAOTransaction, Integer> {
     @Query(value = "SELECT * from transaction WHERE userid = ?1 " , nativeQuery = true)
@@ -61,6 +54,16 @@ public interface TransactionRepo extends JpaRepository<DAOTransaction, Integer> 
             , nativeQuery = true)
     DAOTransaction   isUtrNumberValid(String utrnumber);
 
+    @Query(value = "SELECT u.id, u.username as username, tr.id AS trid,tr.trdatetime, tr.status as trstatus, tr.trtype, tr.amount, tr.currency,tr.utrnumber,tr.slip, tr.slipdate, tr.filename, tr.status, tr.ccagentremarks, tr.customerremarks,agu.agentid as agentID, usa.username as agentusername, ags.system, tr.playeruser from user u\n" +
+            "INNER JOIN transaction tr on tr.userid = u.id " +
+            "INNER JOIN agentuser agu on agu.userid = u.id " +
+            "INNER JOIN user usa on usa.id = agentID " +
+            "INNER join agentsystem ags on ags.id = tr.agentsystem " , nativeQuery = true)
+    String  [] getAllTransactions();
+
 /*    @Query(value = "SELECT tr.trid, tr.amount, tr.trdatetime, tr.trstatus, tr.trtype, tr.userid FROM transaction AS tr ")
     String [] getTransactionsByUserAgentId(int agentId);*/
+
+    @Query(value = "SELECT * from transaction where id = ?1 " , nativeQuery = true )
+    DAOTransaction getTransactionByTrId(int trId);
 }

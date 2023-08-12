@@ -15,6 +15,17 @@ public class UserDTO {
 	private String firstname;
 	@Column(name = "userlname")
 	private String lastname;
+
+	private Long registerdate;
+
+	public Long getRegisterdate() {
+		return registerdate;
+	}
+
+	public void setRegisterdate(Long registerdate) {
+		this.registerdate = registerdate;
+	}
+
 	public String getUsername() {
 		return username;
 	}

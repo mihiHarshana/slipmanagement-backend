@@ -1,11 +1,14 @@
 package com.mhsoft.controller;
 
 import com.mhsoft.config.JwtTokenUtil;
+import com.mhsoft.model.DAOAgentUser;
 import com.mhsoft.model.DAOUser;
 import com.mhsoft.model.JwtRequest;
 import com.mhsoft.model.UserDTO;
+import com.mhsoft.repo.AgentUserRepo;
 import com.mhsoft.repo.UserRepo;
 import com.mhsoft.service.JwtUserDetailsService;
+import com.mhsoft.utils.RegisterUser;
 import com.mhsoft.utils.Utils;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +19,9 @@ import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
+
+import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 
 @RestController
 @CrossOrigin(origins = "*", allowedHeaders = "*")
@@ -32,6 +38,9 @@ public class JwtAuthenticationController {
 
     @Autowired
     private UserRepo userRepo;
+
+    @Autowired
+    private AgentUserRepo agentUserRepo;
 
     @RequestMapping(value = "/login", method = RequestMethod.POST)
     public String createAuthenticationToken(@RequestBody JwtRequest authenticationRequest) throws Exception {
@@ -72,14 +81,30 @@ public class JwtAuthenticationController {
     }
 
     @RequestMapping(value = "/register", method = RequestMethod.POST)
-    public String saveUser(@RequestBody UserDTO user) {
-        String jo = userDetailsService.save(user);
+    public String saveUser(@RequestBody RegisterUser user) {
+        UserDTO newUser = new UserDTO();
+        newUser.setFirstname(user.getFirstname());
+        newUser.setUserStatus(user.getUserStatus());
+        newUser.setPassword(user.getPassword());
+        newUser.setLastname(user.getLastname());
+        newUser.setUserStatus(user.getUserStatus());
+        newUser.setUsername(user.getUsername());
+        newUser.setUserType(user.getUserType());
+        newUser.setRegisterdate(LocalDateTime.now().toEpochSecond(ZoneOffset.UTC));
+        String jo = userDetailsService.save(newUser);
+        DAOUser savedUser;
+        savedUser  = userRepo.getUserByUserName(user.getUsername());
+        DAOAgentUser agentUser = new DAOAgentUser();
+        agentUser.setAgentid(user.getAgentcode());
+        agentUser.setUserid( savedUser.getUserid());
+        agentUserRepo.save(agentUser);
         return jo;
     }
 
     @RequestMapping(value = "/update", method = RequestMethod.POST)
     public String updateUser(@RequestBody UserDTO user) {
         String jo = userDetailsService.update(user);
+
         return jo;
     }
 
