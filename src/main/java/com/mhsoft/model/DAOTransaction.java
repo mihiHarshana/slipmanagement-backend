@@ -23,6 +23,24 @@ public class DAOTransaction {
     private Long slipdate;
     private double trdisputeamount;
 
+    private int trcycle;
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public int getTrcycle() {
+        return trcycle;
+    }
+
+    public void setTrcycle(int trcycle) {
+        this.trcycle = trcycle;
+    }
+
     private String currency;
 
     public String getCurrency() {
