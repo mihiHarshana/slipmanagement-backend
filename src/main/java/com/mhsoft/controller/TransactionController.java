@@ -269,20 +269,56 @@ public class TransactionController {
         daoNewUser.setUserfname(DAOUser.getUserfname());
         daoNewUser.setUsername(DAOUser.getUsername());
 
-        if(customerData.getCustomerStatus().equalsIgnoreCase(Utils.USERSTATUS.APPROVED.toString())) {
+
+        System.out.println("+++++++++++++++++++++++++++++++++++++++++++++++++++++++");
+        System.out.println("Customer status -:  " + customerData.getCustomerStatus());
+        System.out.println("Customer Sus time -:  " + DAOUser.getSuspendeddatetime());
+        System.out.println("Customer Aproved time " +DAOUser.getApproveddatetime() );
+
+        if (customerData.getCustomerStatus().equalsIgnoreCase(Utils.USERSTATUS.APPROVED.toString())) {
             daoNewUser.setApproveddatetime(Utils.getInstance().getCurrentDateTime());
+            daoNewUser.setSuspendeddatetime(DAOUser.getSuspendeddatetime());
+            daoNewUser.setRegisterdate(daoNewUser.getApproveddatetime());
+          //  daoNewUser.setApproveddatetime(DAOUser.getApproveddatetime());
+            daoNewUser.setRegisterdate(daoNewUser.getApproveddatetime());
+        } else if (customerData.getCustomerStatus().equalsIgnoreCase(Utils.USERSTATUS.REJECTED.toString())) {
+            daoNewUser.setSuspendeddatetime(Utils.getInstance().getCurrentDateTime());
+         //   daoNewUser.setSuspendeddatetime(DAOUser.getSuspendeddatetime());
+            daoNewUser.setApproveddatetime(DAOUser.getApproveddatetime());
+            daoNewUser.setRegisterdate(daoNewUser.getApproveddatetime());
+        } else if (customerData.getCustomerStatus().equalsIgnoreCase(Utils.USERSTATUS.SUSPEND.toString())) {
+            daoNewUser.setSuspendeddatetime(Utils.getInstance().getCurrentDateTime());
+         //   daoNewUser.setSuspendeddatetime(DAOUser.getSuspendeddatetime());
+            daoNewUser.setApproveddatetime(DAOUser.getApproveddatetime());
+            daoNewUser.setRegisterdate(daoNewUser.getApproveddatetime());
         } else {
+            System.out.println("Something went wrong here");
+        }
+
+
+
+        /*if(customerData.getCustomerStatus().equalsIgnoreCase(Utils.USERSTATUS.APPROVED.toString())) {
+            daoNewUser.setApproveddatetime(Utils.getInstance().getCurrentDateTime());
+            System.out.println("New time for Approved " + daoNewUser.getApproveddatetime());
+        } else {
+            System.out.println("Approved Date time : "  +DAOUser.getApproveddatetime());
             daoNewUser.setApproveddatetime(DAOUser.getApproveddatetime());
         }
         if ((customerData.getCustomerStatus().equalsIgnoreCase(Utils.USERSTATUS.REJECTED.toString())))
         {
             daoNewUser.setSuspendeddatetime(Utils.getInstance().getCurrentDateTime());
+            daoNewUser.setApproveddatetime(DAOUser.getApproveddatetime());
         } else if ((customerData.getCustomerStatus().equalsIgnoreCase(Utils.USERSTATUS.SUSPENDED.toString())))
         {
             daoNewUser.setSuspendeddatetime(Utils.getInstance().getCurrentDateTime());
+            daoNewUser.setApproveddatetime(DAOUser.getApproveddatetime());
+
         } else {
+            System.out.println("is the else executing all the time");
             daoNewUser.setSuspendeddatetime(DAOUser.getSuspendeddatetime());
-        }
+            daoNewUser.setApproveddatetime(DAOUser.getApproveddatetime());
+            daoNewUser.setRegisterdate(daoNewUser.getApproveddatetime());
+        }*/
 
         userRepo.save(daoNewUser);
 

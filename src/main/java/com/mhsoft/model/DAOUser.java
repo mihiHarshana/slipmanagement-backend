@@ -31,6 +31,12 @@ public class DAOUser {
     @Column
     private Long logindatetime;
 
+    @Column
+    private Long approveddatetime;
+
+    @Column
+    private Long suspendeddatetime;
+
     public int getId() {
         return id;
     }
@@ -70,12 +76,6 @@ public class DAOUser {
     public void setSuspendeddatetime(Long suspendeddatetime) {
         this.suspendeddatetime = suspendeddatetime;
     }
-
-    @Column
-    private Long approveddatetime;
-
-    @Column
-    private Long suspendeddatetime;
 
     public Long getRegisterdate() {
         return registerdate;

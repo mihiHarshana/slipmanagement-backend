@@ -63,9 +63,9 @@ public class JwtAuthenticationController {
                     jo.put("user", userobj);
                     Utils.getInstance().setUserDetails(daoUser);
                     return jo.toString();
-                } else if (daoUser.getUserStatus().equalsIgnoreCase(Utils.USERSTATUS.PENDING.toString())) {
+                } else if (daoUser.getUserStatus().equalsIgnoreCase(Utils.USERSTATUS.REGISTERED.toString())) {
                     return Utils.getInstance().JsonMessage("User Not approved", HttpStatus.NOT_ACCEPTABLE);
-                } else if (daoUser.getUserStatus().equalsIgnoreCase(Utils.USERSTATUS.SUSPENDED.toString())) {
+                } else if (daoUser.getUserStatus().equalsIgnoreCase(Utils.USERSTATUS.SUSPEND.toString())) {
                     return Utils.getInstance().JsonMessage("User is Suspended", HttpStatus.NOT_ACCEPTABLE);
                 } else if (daoUser.getUserStatus().equalsIgnoreCase(Utils.USERSTATUS.REJECTED.toString())) {
                     return Utils.getInstance().JsonMessage("User Rejected", HttpStatus.NOT_ACCEPTABLE);

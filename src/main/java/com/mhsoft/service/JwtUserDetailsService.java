@@ -45,6 +45,8 @@ public class JwtUserDetailsService implements UserDetailsService {
             newUser.setUserfname(user.getFirstname());
             newUser.setUserlname(user.getLastname());
             newUser.setRegisterdate(user.getRegisterdate());
+            newUser.setSuspendeddatetime(user.getSuspendeddatetime());
+            newUser.setApproveddatetime(user.getApproveddatetime());
             userDao.save(newUser);
             return Utils.getInstance().JsonMessage("User registration successfull", HttpStatus.ACCEPTED).toString();
         }
@@ -60,6 +62,10 @@ public class JwtUserDetailsService implements UserDetailsService {
         newUser.setUserType(user.getUserType());
         newUser.setUserfname(user.getFirstname());
         newUser.setUserlname(user.getLastname());
+        newUser.setRegisterdate(user.getRegisterdate());
+        newUser.setSuspendeddatetime(user.getSuspendeddatetime());
+        newUser.setApproveddatetime(user.getApproveddatetime());
+
         userDao.save(newUser);
         return Utils.getInstance().JsonMessage("User details updated successfull", HttpStatus.ACCEPTED).toString();
     }

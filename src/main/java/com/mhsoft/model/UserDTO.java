@@ -18,6 +18,11 @@ public class UserDTO {
 
 	private Long registerdate;
 
+
+	private Long logindatetime;
+	private Long approveddatetime;
+	private Long suspendeddatetime;
+
 	public Long getRegisterdate() {
 		return registerdate;
 	}
@@ -77,5 +82,29 @@ public class UserDTO {
 
 	public void setLastname(String lastname) {
 		this.lastname = lastname;
+	}
+
+	public Long getLogindatetime() {
+		return logindatetime;
+	}
+
+	public void setLogindatetime(Long logindatetime) {
+		this.logindatetime = logindatetime;
+	}
+
+	public Long getApproveddatetime() {
+		return approveddatetime;
+	}
+
+	public void setApproveddatetime(Long approveddatetime) {
+		this.approveddatetime = approveddatetime;
+	}
+
+	public Long getSuspendeddatetime() {
+		return suspendeddatetime;
+	}
+
+	public void setSuspendeddatetime(Long suspendeddatetime) {
+		this.suspendeddatetime = suspendeddatetime;
 	}
 }

@@ -5,12 +5,9 @@ import com.mhsoft.model.DAOUser;
 import org.json.JSONObject;
 import org.springframework.http.HttpStatus;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.util.concurrent.TimeUnit;
-
-import static java.util.concurrent.TimeUnit.MICROSECONDS;
 
 public class Utils {
 
@@ -330,8 +327,7 @@ public class Utils {
 		APPROVED,
 		REGISTERED,
 		REJECTED,
-		SUSPENDED,
-		PENDING
+		SUSPEND,
 	}
 /**
 Gets the time in miliseconds and convert it to How many days passed.
