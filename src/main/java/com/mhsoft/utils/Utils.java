@@ -166,6 +166,11 @@ public class Utils {
 				array[0] = TR_STATUS_FULLYRECIEVED;
 				return array;
 			}
+			if (currentStatus.equals(TR_STATUS_UserConfirmed)) {
+				String [] array= new String[1];
+				array[0] = TR_STATUS_UserConfirmed;
+				return array;
+			}
 
 		} else if (trType.equals(Utils.TRTYPEWIDTHDRAW)){
 			if (currentStatus.equals(TR_STATUS_SUBMITTED)) {
@@ -175,7 +180,7 @@ public class Utils {
 				return array;
 			}
 			if (currentStatus.equals(TR_STATUS_AwatingConfirmation)) {
-				String [] array= new String[2];
+				String [] array= new String[3];
 				array[0] = TR_STATUS_AwatingConfirmation;
 				array[1] = TR_STATUS_UserConfirmed;
 				array[2] = TR_STATUS_NotReceived;
@@ -191,6 +196,24 @@ public class Utils {
 			if (currentStatus.equals(TR_STATUS_FULLYRECIEVED)) {
 				String [] array= new String[1];
 				array[0] = TR_STATUS_FULLYRECIEVED;
+				return array;
+			}
+			if (currentStatus.equals(TR_STATUS_NotReceived)) {
+				String [] array= new String[3];
+				array[0] = TR_STATUS_NotReceived;
+				array[1] = TR_STATUS_RESUBMITTED;
+				array[2] = TR_STATUS_Cancelled;
+				return array;
+			}
+			if (currentStatus.equals(TR_STATUS_InsufficientFunds)) {
+				String [] array= new String[1];
+				array[0] = TR_STATUS_InsufficientFunds;
+				return array;
+			}
+
+			if (currentStatus.equals(TR_STATUS_UserConfirmed)) {
+				String [] array= new String[1];
+				array[0] = TR_STATUS_UserConfirmed;
 				return array;
 			}
 		}
@@ -233,6 +256,16 @@ public class Utils {
 				return array;
 			}
 
+			if (currentStatus.equals(TR_STATUS_Cancelled)) {
+				String [] array= new String[1];
+				array[0] = TR_STATUS_Cancelled;
+				return array;
+			}
+			if (currentStatus.equals(TR_STATUS_UserConfirmed)) {
+				String [] array= new String[1];
+				array[0] = TR_STATUS_UserConfirmed;
+				return array;
+			}
 
 		} else if (trType.equals(Utils.TRTYPEWIDTHDRAW)){
 			if (currentStatus.equals(TR_STATUS_SUBMITTED)) {
@@ -259,10 +292,31 @@ public class Utils {
 				array[0] = TR_STATUS_FULLYRECIEVED;
 				return array;
 			}
+
+			if (currentStatus.equals(TR_STATUS_PROCESSING)) {
+				String [] array= new String[5];
+				array[0] = TR_STATUS_PROCESSING;
+				array[1] = TR_STATUS_InsufficientFunds;
+				array[2] = TR_STATUS_AwatingConfirmation;
+				array[3] = TR_STATUS_AmountDifferent;
+				array[4] = TR_STATUS_FULLYRECIEVED;
+				return array;
+			}
+
+			if (currentStatus.equals(TR_STATUS_Cancelled)) {
+				String [] array= new String[1];
+				array[0] = TR_STATUS_Cancelled;
+				return array;
+			}
+			if (currentStatus.equals(TR_STATUS_UserConfirmed)) {
+				String [] array= new String[1];
+				array[0] = TR_STATUS_UserConfirmed;
+				return array;
+			}
 		}
 		// TODO : Increase the count of the cycle by one
 		// TODO : 1. Widthrawal at processing
-		// TODO : 2. Deposit at Submit Status
+		// TODO : 2. Deposit at   Status
 		return null;
 	}
 

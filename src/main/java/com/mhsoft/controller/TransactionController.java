@@ -154,7 +154,7 @@ public class TransactionController {
     }
 
     @RequestMapping(value = "/api/change-status", method = RequestMethod.POST)
-    public String changeTransStatus(@RequestBody String daoTrans, @RequestHeader String Authorization )
+    public String changeTransStatus(@RequestBody String trans, @RequestHeader String Authorization )
             throws JsonProcessingException {
         int USER_ID = 0;
         String token = Authorization.substring(7);
@@ -162,12 +162,12 @@ public class TransactionController {
         DAOUser DAOUser = userRepo.getUserByUserName(username);
         USER_ID = DAOUser.getUserid();
         ObjectMapper objectMapper = new ObjectMapper();
-        DAOTransaction trs = objectMapper.readValue(daoTrans, DAOTransaction.class);
+        ChangeStatusInTrId trs = objectMapper.readValue(trans, ChangeStatusInTrId.class);
         DAOTransaction  update = new DAOTransaction();
         if (DAOUser.getUsertype().toString().equalsIgnoreCase(Utils.USERETYPE.CUSTOMER.toString())) {
             DAOTransaction [] olddata = trService.getTransactionsByUserId(USER_ID);
             for (int i=0; i<olddata.length; i++) {
-                if (olddata[i].getid() == trs.getid()) {
+                if (olddata[i].getid() == trs.getId()) {
                     update.setPlayerUser(olddata[i].getPlayerUser());
                     update.setAgentSystem(olddata[i].getAgentSystem());
                     update.setCurrency(olddata[i].getCurrency());
@@ -181,8 +181,11 @@ public class TransactionController {
                     update.setFilename(olddata[i].getFilename());
                     update.setSlip(olddata[i].getSlip());
                     update.setTrtype(olddata[i].getTrtype());
-                    update.setid(trs.getid());
+                    update.setid(trs.getId());
                     update.setStatus(trs.getStatus());
+                    if (trs.getStatus().equals(Utils.TR_STATUS_PROCESSING)) {
+                        update.setTrcycle(olddata[i].getTrcycle() + 1);
+                    }
                     break;
                 }
             }
@@ -190,7 +193,7 @@ public class TransactionController {
         } else if ( DAOUser.getUsertype().equals(Utils.USERETYPE.CCAGENT)  ||
                 DAOUser.getUsertype().equals(Utils.USERETYPE.AGENT) ) {
 
-            DAOTransaction  olddata = trService.getTransactionByTrId(trs.getid());
+            DAOTransaction  olddata = trService.getTransactionByTrId(trs.getId());
             update.setPlayerUser(olddata.getPlayerUser());
             update.setAgentSystem(olddata.getAgentSystem());
             update.setCurrency(olddata.getCurrency());
@@ -204,10 +207,17 @@ public class TransactionController {
             update.setFilename(olddata.getFilename());
             update.setSlip(olddata.getSlip());
             update.setTrtype(olddata.getTrtype());
-            update.setid(trs.getid());
+            update.setid(trs.getId());
+
+            if (olddata.getTrtype().equals(Utils.TRTRYOEDEPOSIT)  && trs.getStatus().equals(Utils.TR_STATUS_SUBMITTED)  ) {
+                update.setTrcycle(olddata.getTrcycle() + 1);
+            } else if (olddata.getTrtype().equals(Utils.TRTYPEWIDTHDRAW) && trs.getStatus().equals(Utils.TR_STATUS_SUBMITTED)) {
+                update.setTrcycle(olddata.getTrcycle() + 1);
+            }
+
             update.setStatus(trs.getStatus());
         }
-        if (daoTrans != null ) {
+        if (trs != null ) {
             DAOTransaction temp = transRepo.save(update);
             if (temp == null) {
                 return Utils.getInstance().JsonMessage("Cannot change status  Try again", HttpStatus.NOT_ACCEPTABLE);

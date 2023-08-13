@@ -46,7 +46,7 @@ public interface TransactionRepo extends JpaRepository<DAOTransaction, Integer> 
 
     @Query(value = "SELECT tr.userid, tr.id, tr.amount, tr.trdatetime, tr.status, tr.trtype, c.username, " +
             "tr.agentremarks, tr.ccagentremarks, tr.customerremarks, tr.filename, tr.trdisputeamount, " +
-            "tr.utrnumber, tr.slipdate, tr.slip, tr.currency, tr.agentsystem, tr.playeruser FROM transaction tr INNER JOIN user c ON c.id = tr.userid" +
+            "tr.utrnumber, tr.slipdate, tr.slip, tr.currency, tr.agentsystem, tr.playeruser, tr.trcycle FROM transaction tr INNER JOIN user c ON c.id = tr.userid" +
             " WHERE c.id =?1 ", nativeQuery = true)
     DAOTransaction [] getTransactionsByUserId(int agentId); //this is the one needed to check
 
