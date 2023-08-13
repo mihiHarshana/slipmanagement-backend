@@ -183,6 +183,9 @@ public class TransactionController {
                     update.setTrtype(olddata[i].getTrtype());
                     update.setid(trs.getid());
                     update.setStatus(trs.getStatus());
+                    if (trs.getStatus().equals(Utils.TR_STATUS_PROCESSING)) {
+                        update.setTrcycle(olddata[i].getTrcycle() + 1);
+                    }
                     break;
                 }
             }
@@ -205,6 +208,13 @@ public class TransactionController {
             update.setSlip(olddata.getSlip());
             update.setTrtype(olddata.getTrtype());
             update.setid(trs.getid());
+
+            if (trs.getTrtype().equals(Utils.TRTRYOEDEPOSIT)  && trs.getStatus().equals(Utils.TR_STATUS_SUBMITTED)  ) {
+                update.setTrcycle(olddata.getTrcycle() + 1);
+            } else if (trs.getTrtype().equals(Utils.TRTYPEWIDTHDRAW) && trs.getStatus().equals(Utils.TR_STATUS_SUBMITTED)) {
+                update.setTrcycle(olddata.getTrcycle() + 1);
+            }
+
             update.setStatus(trs.getStatus());
         }
         if (daoTrans != null ) {
