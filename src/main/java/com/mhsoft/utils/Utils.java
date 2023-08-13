@@ -325,6 +325,14 @@ public class Utils {
 		AGENT,
 		CCAGENT
 	}
+
+	public enum  USERSTATUS {
+		APPROVED,
+		REGISTERED,
+		REJECTED,
+		SUSPENDED,
+		PENDING
+	}
 /**
 Gets the time in miliseconds and convert it to How many days passed.
 and return a string.
@@ -344,9 +352,11 @@ public String calculateElaspedDays(Long lastRecordTime) {
 	}
 
 	return String.valueOf(diff /86400  + " day(s)");
-
-
 }
+	public  Long getCurrentDateTime() {
+		return LocalDateTime.now().toEpochSecond(ZoneOffset.UTC);
+
+	}
 
 }
 

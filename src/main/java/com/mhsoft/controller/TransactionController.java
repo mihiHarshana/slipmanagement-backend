@@ -84,6 +84,7 @@ public class TransactionController {
         tempTr.setPlayerUser(daoTrans.getPlayerUser());
         tempTr.setSlip(daoTrans.getSlip());
         tempTr.setSlipdate(daoTrans.getSlipdate());
+
         return tempTr;
     }
     @RequestMapping (value = "api/new-deposit", method = RequestMethod.POST)
@@ -267,6 +268,22 @@ public class TransactionController {
         daoNewUser.setUserlname(DAOUser.getUserlname());
         daoNewUser.setUserfname(DAOUser.getUserfname());
         daoNewUser.setUsername(DAOUser.getUsername());
+
+        if(customerData.getCustomerStatus().equalsIgnoreCase(Utils.USERSTATUS.APPROVED.toString())) {
+            daoNewUser.setApproveddatetime(Utils.getInstance().getCurrentDateTime());
+        } else {
+            daoNewUser.setApproveddatetime(DAOUser.getApproveddatetime());
+        }
+        if ((customerData.getCustomerStatus().equalsIgnoreCase(Utils.USERSTATUS.REJECTED.toString())))
+        {
+            daoNewUser.setSuspendeddatetime(Utils.getInstance().getCurrentDateTime());
+        } else if ((customerData.getCustomerStatus().equalsIgnoreCase(Utils.USERSTATUS.SUSPENDED.toString())))
+        {
+            daoNewUser.setSuspendeddatetime(Utils.getInstance().getCurrentDateTime());
+        } else {
+            daoNewUser.setSuspendeddatetime(DAOUser.getSuspendeddatetime());
+        }
+
         userRepo.save(daoNewUser);
 
         return Utils.getInstance().JsonMessage("User Status updated Successfully", HttpStatus.ACCEPTED);

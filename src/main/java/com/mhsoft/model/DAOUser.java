@@ -28,6 +28,55 @@ public class DAOUser {
     @Column
     private Long registerdate;
 
+    @Column
+    private Long logindatetime;
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public void setUsertype(String usertype) {
+        this.usertype = usertype;
+    }
+
+    public String getUserstatus() {
+        return userstatus;
+    }
+
+    public Long getLogindatetime() {
+        return logindatetime;
+    }
+
+    public void setLogindatetime(Long logindatetime) {
+        this.logindatetime = logindatetime;
+    }
+
+    public Long getApproveddatetime() {
+        return approveddatetime;
+    }
+
+    public void setApproveddatetime(Long approveddatetime) {
+        this.approveddatetime = approveddatetime;
+    }
+
+    public Long getSuspendeddatetime() {
+        return suspendeddatetime;
+    }
+
+    public void setSuspendeddatetime(Long suspendeddatetime) {
+        this.suspendeddatetime = suspendeddatetime;
+    }
+
+    @Column
+    private Long approveddatetime;
+
+    @Column
+    private Long suspendeddatetime;
+
     public Long getRegisterdate() {
         return registerdate;
     }

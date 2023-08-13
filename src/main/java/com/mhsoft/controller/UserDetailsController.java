@@ -331,7 +331,7 @@ public class UserDetailsController {
            ArrayList<JSONObject> otherCus = new ArrayList<>();
 
            for (int i=0; i< trans.length; i++) {
-               if (trans[i].getUserStatus().equals("REGISTERED")) {
+               if (trans[i].getUserStatus().equalsIgnoreCase(Utils.USERSTATUS.REGISTERED.toString())) {
                    JSONObject registered = new JSONObject();
                    registered.put("customerId", trans[i].getUserid() );
                    registered.put("userName",trans[i].getUsername());

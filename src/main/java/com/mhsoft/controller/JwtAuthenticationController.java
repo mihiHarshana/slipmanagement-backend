@@ -52,7 +52,7 @@ public class JwtAuthenticationController {
             DAOUser daoUser = userRepo.getUserByUserName(authenticationRequest.getUsername());
 
             if (daoUser != null) {
-                if (daoUser.getUserStatus().equals("APPROVED")) {
+                if (daoUser.getUserStatus().equalsIgnoreCase(Utils.USERSTATUS.APPROVED.toString())) {
                     JSONObject jo = new JSONObject();
                     JSONObject userobj = new JSONObject();
                    // userobj.put("mobile", daoUser.getUsername());
@@ -63,12 +63,12 @@ public class JwtAuthenticationController {
                     jo.put("user", userobj);
                     Utils.getInstance().setUserDetails(daoUser);
                     return jo.toString();
-                } else if (daoUser.getUserStatus().equals("PENDING")) {
+                } else if (daoUser.getUserStatus().equalsIgnoreCase(Utils.USERSTATUS.PENDING.toString())) {
                     return Utils.getInstance().JsonMessage("User Not approved", HttpStatus.NOT_ACCEPTABLE);
-                } else if (daoUser.getUserStatus().equals("SUSPENDED")) {
+                } else if (daoUser.getUserStatus().equalsIgnoreCase(Utils.USERSTATUS.SUSPENDED.toString())) {
                     return Utils.getInstance().JsonMessage("User is Suspended", HttpStatus.NOT_ACCEPTABLE);
-                } else if (daoUser.getUserStatus().equals("DEACTIVATED")) {
-                    return Utils.getInstance().JsonMessage("User Deactivated", HttpStatus.NOT_ACCEPTABLE);
+                } else if (daoUser.getUserStatus().equalsIgnoreCase(Utils.USERSTATUS.REJECTED.toString())) {
+                    return Utils.getInstance().JsonMessage("User Rejected", HttpStatus.NOT_ACCEPTABLE);
                 } else {
                     return Utils.getInstance().JsonMessage("Unknown status ", HttpStatus.NOT_ACCEPTABLE);
                 }
